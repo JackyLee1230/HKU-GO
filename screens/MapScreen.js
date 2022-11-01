@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import React, { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
+import { FAB } from "react-native-paper";
 
 const MapScreen = ({ navigation }) => {
 	const [region, setRegion] = useState({
@@ -56,6 +57,11 @@ const MapScreen = ({ navigation }) => {
 					</Marker>
 				))}
 			</MapView>
+			<FAB
+				icon="plus"
+				style={styles.fab}
+				onPress={() => console.log("Pressed")}
+			/>
 		</View>
 	);
 };
