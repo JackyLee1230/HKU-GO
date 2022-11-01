@@ -7,7 +7,7 @@ import { signOut } from "firebase/auth";
 const HomeScreen = ({ navigation }) => {
 	return (
 		<View>
-			<Text>{auth.currentUser ? auth.currentUser : "NULL"}</Text>
+			<Text>{auth.currentUser ? auth.currentUser.email : "NULL"}</Text>
 			<Text>HKU GO HomeScreen</Text>
 			<Button
 				title="Move to Map Screen"
@@ -33,7 +33,15 @@ const HomeScreen = ({ navigation }) => {
 					navigation.navigate("Login");
 				}}
 			></Button>
-			<Button title="signout" onPress={() => signOut(auth)}></Button>
+			<Button
+				title="Move to Profile Screen"
+				onPress={() => {
+					navigation.navigate("Profile");
+				}}
+			></Button>
+			{auth.currentUser && auth.currentUser.uid ? (
+				<Button title="signout" onPress={() => signOut(auth)}></Button>
+			) : null}
 		</View>
 	);
 };

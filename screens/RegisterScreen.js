@@ -2,6 +2,7 @@ import { auth } from "../firebase";
 import {
 	createUserWithEmailAndPassword,
 	onAuthStateChanged,
+	updateProfile,
 } from "firebase/auth";
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
@@ -13,6 +14,7 @@ const RegisterScreen = ({ navigation }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [name, setName] = useState("");
+	const [imageURL, setImageURL] = useState("");
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -28,8 +30,12 @@ const RegisterScreen = ({ navigation }) => {
 
 	const register = async () => {
 		const user = await createUserWithEmailAndPassword(auth, email, password)
-			.then((userCredentials) => {
+			.then(async (userCredentials) => {
 				const user = userCredentials.user;
+				await updateProfile(user, {
+					displayName: name,
+					photoURL: imageURL || `https://ui-avatars.com/api/?name=${name}`,
+				});
 				console.log(user);
 			})
 			.catch((err) => {
@@ -45,11 +51,18 @@ const RegisterScreen = ({ navigation }) => {
 			</Text>
 			<View>
 				<TextInput
-					placeholder="Full Name"
+					placeholder="User Name"
 					autoFocus
 					type="text"
 					value={name}
 					onChangeText={(text) => setName(text)}
+				/>
+				<TextInput
+					placeholder="Image URL (optional)"
+					autoFocus
+					type="text"
+					value={imageURL}
+					onChangeText={(text) => setImageURL(text)}
 				/>
 				<TextInput
 					placeholder="Email"

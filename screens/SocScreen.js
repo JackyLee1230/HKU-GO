@@ -45,26 +45,6 @@ const SocScreen = ({ navigation }) => {
 		console.log(socs);
 	}
 
-	// useEffect(() => {
-	// 	// async function t() {
-	// 	socRef.onSnapshot((querySnapshot) => {
-	// 		const s = [];
-	// 		querySnapshot.forEach((documentSnapshot) => {
-	// 			const { links, description, ID } = documentSnapshot.data();
-	// 			s.push({
-	// 				links,
-	// 				description,
-	// 				id: ID,
-	// 			});
-	// 		});
-	// 		console.log(s);
-	// 		setSocs(s);
-	// 	});
-	// 	// }
-	// 	// t();
-	// 	console.log(socs);
-	// }, []);
-
 	return (
 		<View style={{ flex: 1, marginTop: 100 }}>
 			<Text>Society Page</Text>
@@ -75,8 +55,16 @@ const SocScreen = ({ navigation }) => {
 				renderItem={({ item }) => (
 					<Pressable style={styles.container}>
 						<View>
+							<Text>{item.name}</Text>
 							<Text>{item.description}</Text>
-							<Text>{item.links}</Text>
+							{/* <Text>{item.links}</Text> */}
+							{item.links.map((link, idx) => {
+								return (
+									<Text>
+										{idx}: {link}
+									</Text>
+								);
+							})}
 						</View>
 					</Pressable>
 				)}
