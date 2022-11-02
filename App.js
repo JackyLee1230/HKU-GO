@@ -8,7 +8,7 @@ import { Provider as PaperProvider } from "react-native-paper";
 
 export default function App() {
 	return (
-		<PaperProvider theme={theme}>
+		<PaperProvider>
 			<SafeAreaProvider>
 				<NavigationContainer>
 					<StackNavigator />

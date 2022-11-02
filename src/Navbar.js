@@ -41,9 +41,9 @@ export default function Navbar() {
 
 			<Tab.Screen
 				name="DiscussionStack"
-				component={SocScreen}
+				component={MapScreen}
 				options={{
-					title: "Society",
+					title: "Map",
 					tabBarIcon: ({ focused, color }) => (
 						<Icon
 							name={focused ? "forum" : "forum-outline"}
