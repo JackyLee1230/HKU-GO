@@ -21,10 +21,12 @@ import {
 	setDoc,
 } from "firebase/firestore";
 
-const SocScreen = ({ navigation }) => {
+const SocDetailScreen = ({ route, navigation }) => {
+	const { id, name } = route.params;
+
 	const [isLoading, setIsLoading] = useState(true);
-	let [isRefreshing, setIsRefreshing] = React.useState(false);
-	const [socs, setSocs] = useState([]);
+	let [isRefreshing, setIsRefreshing] = useState(false);
+	const [soc, setSoc] = useState([]);
 	useLayoutEffect(() => {
 		navigation.setOptions({
 			headerBackTitle: "Back To Home Page",
@@ -32,7 +34,7 @@ const SocScreen = ({ navigation }) => {
 	}, [navigation]);
 
 	let loadSocs = async () => {
-		const q = query(collection(db, "society"));
+		const q = query(collection(db, "society"), where("name", "==", name));
 		const querySnapshot = await getDocs(q);
 
 		let result = [];
@@ -42,51 +44,29 @@ const SocScreen = ({ navigation }) => {
 			result.push(temp);
 		});
 
-		setSocs(result);
+		setSoc(result[0]);
 		setIsLoading(false);
 		setIsRefreshing(false);
 	};
 
 	if (isLoading) {
 		loadSocs();
-		console.log(socs);
 	}
 
 	return (
 		<View style={{ flex: 1, marginTop: 100 }}>
-			<Text>Society Page</Text>
-			<FlatList
-				data={socs}
-				style={{ height: "100%" }}
-				numColumns={1}
-				renderItem={({ item }) => (
-					<TouchableOpacity
-						style={styles.container}
-						onPress={() =>
-							navigation.navigate("SocDetail", { id: item.id, name: item.name })
-						}
-					>
-						<View>
-							<Text>{item.id}</Text>
-							<Text>{item.name}</Text>
-							<Text>{item.description}</Text>
-							{/* <Text>{item.links}</Text> */}
-							{item.links.map((link, idx) => {
-								return (
-									<Text>
-										{idx}: {link}
-									</Text>
-								);
-							})}
-						</View>
-					</TouchableOpacity>
-				)}
-			/>
+			<View>
+				<Text>{soc.name}</Text>
+				{/* <Text>{soc.id}</Text>
+				<Text>{soc.name}</Text>
+				<Text>{soc.description}</Text> */}
+				{/* <Text>{item.links}</Text> */}
+			</View>
 		</View>
 	);
 };
 
-export default SocScreen;
+export default SocDetailScreen;
 
 const styles = StyleSheet.create({
 	container: {
