@@ -23,9 +23,30 @@ const StackNavigator = () => {
 				}}
 				component={Navbar}
 			/>
-			<Stack.Screen name="Home" component={HomeScreen} />
-			<Stack.Screen name="Map" component={MapScreen} />
-			<Stack.Screen name="Login" component={LoginScreen} />
+			<Stack.Screen
+				name="Home"
+				component={HomeScreen}
+				options={{ title: "Home Page" }}
+			/>
+			<Stack.Screen
+				name="Map"
+				component={MapScreen}
+				options={{
+					title: "HKU Map",
+					headerStyle: {
+						backgroundColor: "#f4511e",
+					},
+					headerTintColor: "#fff",
+					headerTitleStyle: {
+						fontWeight: "bold",
+					},
+				}}
+			/>
+			<Stack.Screen
+				name="Login"
+				component={LoginScreen}
+				options={{ title: "Sign Up / Login In" }}
+			/>
 			<Stack.Screen name="Soc" component={SocScreen} />
 			<Stack.Screen name="Register" component={RegisterScreen} />
 			<Stack.Screen name="Profile" component={ProfileScreen} />

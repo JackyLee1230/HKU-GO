@@ -10,7 +10,7 @@ import {
 	signInWithPopup,
 } from "firebase/auth";
 import { KeyboardAvoidingView } from "react-native";
-import { TextInput, Button } from "react-native-paper";
+import { TextInput, Button, HelperText } from "react-native-paper";
 import { CurrentRenderContext } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
@@ -38,6 +38,10 @@ const LoginScreen = ({ navigation }) => {
 		}
 	};
 
+	const hasEmailError = () => {
+		return !email.includes("@") && email !== "";
+	};
+
 	return (
 		<View>
 			<TextInput
@@ -47,6 +51,9 @@ const LoginScreen = ({ navigation }) => {
 				value={email}
 				onChangeText={(text) => setEmail(text)}
 			/>
+			<HelperText type="error" visible={hasEmailError()}>
+				Email address is invalid!
+			</HelperText>
 			<TextInput
 				placeholder="Password"
 				autoFocus
@@ -55,7 +62,7 @@ const LoginScreen = ({ navigation }) => {
 				onChangeText={(text) => setPassword(text)}
 			/>
 			<Button mode="contained" onPress={() => login()}>
-				Test
+				Login
 			</Button>
 		</View>
 	);
