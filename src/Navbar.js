@@ -46,7 +46,7 @@ export default function Navbar() {
 					title: "Map",
 					tabBarIcon: ({ focused, color }) => (
 						<Icon
-							name={focused ? "forum" : "forum-outline"}
+							name={focused ? "map-marker" : "map-marker-outline"}
 							color={color}
 							size={24}
 						/>
@@ -61,7 +61,7 @@ export default function Navbar() {
 					title: "Profile",
 					tabBarIcon: ({ focused, color }) => (
 						<Icon
-							name={focused ? "account" : "account-outline"}
+							name={focused ? "account-circle" : "account-circle-outline"}
 							color={color}
 							size={24}
 						/>

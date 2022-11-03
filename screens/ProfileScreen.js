@@ -9,6 +9,7 @@ import {
 	RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import { RadioButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase";
 import { signOut } from "firebase/auth";
@@ -26,6 +27,7 @@ import {
 
 const ProfileScreen = ({ navigation }) => {
 	const [points, setPoints] = useState();
+	const [notification, setNotification] = React.useState("enabled");
 	const [refreshing, setRefreshing] = React.useState(false);
 
 	let getPoints = async () => {
@@ -84,14 +86,47 @@ const ProfileScreen = ({ navigation }) => {
 						: "Anonymous"}
 				</Text>
 				<Text style={styles.aboutUser}>
-					{auth.currentUser
-						? auth.currentUser.about || "No details added."
-						: ""}
-				</Text>
-				<Text style={styles.aboutUser}>
 					{auth.currentUser ? auth.currentUser.uid || "Unknown UID." : ""}
 				</Text>
-				<Text style={styles.aboutUser}>{points ?? 0}</Text>
+				<Text>GO Points: {points ?? 0}</Text>
+				<Text>Email: {auth.currentUser.email ?? 0}</Text>
+
+				<View
+					style={{
+						backgroundColor: "lightblue",
+					}}
+				>
+					<RadioButton.Group
+						onValueChange={(newValue) => setNotification(newValue)}
+						value={notification}
+					>
+						<Text style={{ marginLeft: "5%" }}>Device Notifications</Text>
+						<View
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								alignItems: "center",
+							}}
+						>
+							<RadioButton value="enabled" />
+							<Text>Enable Notification</Text>
+						</View>
+						<View
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								alignItems: "center",
+							}}
+						>
+							<RadioButton value="disabled" />
+							<Text>Disable Notification</Text>
+						</View>
+					</RadioButton.Group>
+				</View>
+
+				{auth.currentUser && auth.currentUser.uid ? (
+					<Button title="signout" onPress={() => signOut(auth)}></Button>
+				) : null}
 			</ScrollView>
 		</SafeAreaView>
 	);
@@ -111,8 +146,8 @@ const styles = StyleSheet.create({
 		borderRadius: 75,
 	},
 	userName: {
-		fontSize: 18,
-		fontWeight: "bold",
+		fontSize: 26,
+		// fontWeight: "bold",
 		marginTop: 10,
 		marginBottom: 10,
 	},
@@ -122,42 +157,5 @@ const styles = StyleSheet.create({
 		color: "#666",
 		textAlign: "center",
 		marginBottom: 10,
-	},
-	userBtnWrapper: {
-		flexDirection: "row",
-		justifyContent: "center",
-		width: "100%",
-		marginBottom: 10,
-	},
-	userBtn: {
-		borderColor: "#2e64e5",
-		borderWidth: 2,
-		borderRadius: 3,
-		paddingVertical: 8,
-		paddingHorizontal: 12,
-		marginHorizontal: 5,
-	},
-	userBtnTxt: {
-		color: "#2e64e5",
-	},
-	userInfoWrapper: {
-		flexDirection: "row",
-		justifyContent: "space-around",
-		width: "100%",
-		marginVertical: 20,
-	},
-	userInfoItem: {
-		justifyContent: "center",
-	},
-	userInfoTitle: {
-		fontSize: 20,
-		fontWeight: "bold",
-		marginBottom: 5,
-		textAlign: "center",
-	},
-	userInfoSubTitle: {
-		fontSize: 12,
-		color: "#666",
-		textAlign: "center",
 	},
 });
