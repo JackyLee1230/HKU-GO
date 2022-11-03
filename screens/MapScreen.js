@@ -70,6 +70,8 @@ const MapScreen = ({ navigation }) => {
 	const Images = [
 		{ image: require("../assets/library.png") },
 		{ image: require("../assets/chiwah.png") },
+		{ image: require("../assets/hakingwong.png") },
+		{ image: require("../assets/knowles.png") },
 	];
 	let markers = [
 		{
@@ -89,6 +91,24 @@ const MapScreen = ({ navigation }) => {
 			description: "Chi Wah Learning Commons",
 			image: Images[1].image,
 			ID: 1,
+		},
+		{
+			latitude: 22.28299,
+			longitude: 114.13654,
+			title: "Haking Wong Building",
+			subtitle: "HKU",
+			description: "Haking Wong Building",
+			image: Images[2].image,
+			ID: 2,
+		},
+		{
+			latitude: 22.283350359069324,
+			longitude: 114.13843503157959,
+			title: "Knowles Building",
+			subtitle: "HKU",
+			description: "Knowles Building",
+			image: Images[3].image,
+			ID: 3,
 		},
 	];
 
@@ -132,7 +152,7 @@ const MapScreen = ({ navigation }) => {
 					onDismiss={hideModal}
 					contentContainerStyle={containerStyle}
 				>
-					<Text>Temp Modal.</Text>
+					<Text>Usage!</Text>
 				</Modal>
 			</Portal>
 			<MapView
@@ -163,7 +183,7 @@ const MapScreen = ({ navigation }) => {
 					</Marker>
 				))}
 			</MapView>
-			<FAB icon="plus" style={styles.fab} onPress={() => showModal()} />
+			<FAB icon="help" style={styles.fab} onPress={() => showModal()} />
 			<Animated.ScrollView
 				ref={_scrollView}
 				horizontal
@@ -171,7 +191,8 @@ const MapScreen = ({ navigation }) => {
 				scrollEventThrottle={1}
 				showsHorizontalScrollIndicator={false}
 				snapToInterval={CARD_WIDTH + 20}
-				snapToAlignment="center"
+				snapToAlig
+				nment="center"
 				style={styles.scrollView}
 				contentInset={{
 					top: 0,
@@ -319,7 +340,7 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		margin: 16,
 		right: 5,
-		bottom: "3%",
+		top: "3%",
 	},
 	image: {
 		width: 80,

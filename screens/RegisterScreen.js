@@ -1,9 +1,19 @@
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import {
 	createUserWithEmailAndPassword,
 	onAuthStateChanged,
 	updateProfile,
 } from "firebase/auth";
+import {
+	collection,
+	addDoc,
+	query,
+	where,
+	getDocs,
+	deleteDoc,
+	doc,
+	setDoc,
+} from "firebase/firestore";
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import { TextInput, Button } from "react-native-paper";
@@ -23,7 +33,7 @@ const RegisterScreen = ({ navigation }) => {
 	}, [navigation]);
 
 	onAuthStateChanged(auth, (user) => {
-		if (user) {
+		if (user && user.uid) {
 			navigation.replace("Home");
 		}
 	});
@@ -36,7 +46,9 @@ const RegisterScreen = ({ navigation }) => {
 					displayName: name,
 					photoURL: imageURL || `https://ui-avatars.com/api/?name=${name}`,
 				});
-				console.log(user);
+				await addDoc(collection(db, "points"), { uid: user.uid, points: 0 });
+				console.log("New Points Doc written with ID : " + docRef.id);
+				console.log(user.user);
 			})
 			.catch((err) => {
 				console.log(err);

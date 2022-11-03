@@ -19,7 +19,7 @@ const LoginScreen = ({ navigation }) => {
 	const googleAuthProvider = new GoogleAuthProvider();
 
 	onAuthStateChanged(auth, (currentUser) => {
-		// navigation.replace("Home");
+		navigation.goBack();
 		console.log(currentUser);
 	});
 
@@ -28,7 +28,7 @@ const LoginScreen = ({ navigation }) => {
 			const user = signInWithEmailAndPassword(auth, email, password)
 				.then((userCredentials) => {
 					const user = userCredentials.user;
-					console.log(user);
+					// console.log(user);
 				})
 				.catch((err) => {
 					console.log(err);
