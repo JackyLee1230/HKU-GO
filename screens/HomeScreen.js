@@ -6,10 +6,21 @@ import { signOut } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen = ({ navigation }) => {
+	var user = auth?.currentUser;	
+
+	const signOutUser = async() => {
+		await signOut(auth);
+		user = null;
+		navigation.reset({
+			index: 0,
+			routes: [{ name: 'Home' }],
+		});
+	}
+
 	return (
 		<SafeAreaView>
 			<View>
-				<Text>{auth.currentUser ? auth.currentUser.email : "NULL"}</Text>
+				<Text>{user ? user?.email : "NULL"}</Text>
 				<Text>HKU GO HomeScreen</Text>
 				<Button
 					title="Move to Map Screen"
@@ -23,26 +34,36 @@ const HomeScreen = ({ navigation }) => {
 						navigation.navigate("Soc");
 					}}
 				></Button>
-				<Button
-					title="Move to Register Screen"
-					onPress={() => {
-						navigation.navigate("Register");
-					}}
-				></Button>
-				<Button
-					title="Move to Login Screen"
-					onPress={() => {
-						navigation.navigate("Login");
-					}}
-				></Button>
+				{!user &&
+					<Button
+						title="Move to Register Screen"
+						onPress={() => {
+							navigation.navigate("Register");
+						}}
+					></Button>
+				}
+				{!user &&
+					<Button
+						title="Move to Login Screen"
+						onPress={() => {
+							navigation.navigate("Login");
+						}}
+					></Button>
+				}
 				<Button
 					title="Move to Profile Screen"
 					onPress={() => {
 						navigation.navigate("Profile");
 					}}
 				></Button>
-				{auth.currentUser && auth.currentUser.uid ? (
-					<Button title="signout" onPress={() => signOut(auth)}></Button>
+				{user && user?.uid ? (
+					<Button 
+						title="signout" 
+						onPress={() => {
+							signOutUser();
+						}}
+					>
+					</Button>
 				) : null}
 			</View>
 		</SafeAreaView>

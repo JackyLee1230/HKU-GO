@@ -34,7 +34,10 @@ const RegisterScreen = ({ navigation }) => {
 
 	onAuthStateChanged(auth, (user) => {
 		if (user && user.uid) {
-			navigation.replace("Home");
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'Home' }],
+			});
 		}
 	});
 

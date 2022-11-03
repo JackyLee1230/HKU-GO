@@ -19,8 +19,12 @@ const LoginScreen = ({ navigation }) => {
 	const googleAuthProvider = new GoogleAuthProvider();
 
 	onAuthStateChanged(auth, (currentUser) => {
-		navigation.goBack();
-		console.log(currentUser);
+		if(currentUser){
+			navigation.reset({
+				index: 0,
+				routes: [{ name: 'Home' }],
+			});
+		}
 	});
 
 	const login = async () => {

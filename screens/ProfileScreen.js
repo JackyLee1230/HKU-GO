@@ -31,10 +31,10 @@ const ProfileScreen = ({ navigation }) => {
 	const [refreshing, setRefreshing] = React.useState(false);
 
 	let getPoints = async () => {
-		console.log("UID is " + auth.currentUser.uid);
+		console.log("UID is " + auth?.currentUser?.uid);
 		const q = query(
 			collection(db, "points"),
-			where("uid", "==", auth.currentUser.uid)
+			where("uid", "==", auth?.currentUser?.uid)
 		);
 		const querySnapshot = await getDocs(q);
 		querySnapshot.forEach((doc) => {
@@ -57,7 +57,7 @@ const ProfileScreen = ({ navigation }) => {
 		getPoints();
 	}, [navigation]);
 
-	// console.log(auth.currentUser);
+	// console.log(auth?.currentUser);
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
 			<ScrollView
@@ -74,22 +74,22 @@ const ProfileScreen = ({ navigation }) => {
 				<Image
 					style={styles.userImg}
 					source={{
-						uri: auth.currentUser
-							? auth.currentUser.userImg ||
+						uri: auth?.currentUser
+							? auth?.currentUser?.userImg ||
 							  "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
 							: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
 					}}
 				/>
 				<Text style={styles.userName}>
-					{auth.currentUser
-						? auth.currentUser.displayName || "Anonymous"
+					{auth?.currentUser
+						? auth?.currentUser?.displayName || "Anonymous"
 						: "Anonymous"}
 				</Text>
 				<Text style={styles.aboutUser}>
-					{auth.currentUser ? auth.currentUser.uid || "Unknown UID." : ""}
+					{auth?.currentUser ? auth?.currentUser?.uid || "Unknown UID." : ""}
 				</Text>
 				<Text>GO Points: {points ?? 0}</Text>
-				<Text>Email: {auth.currentUser.email ?? 0}</Text>
+				<Text>Email: {auth?.currentUser?.email ?? 0}</Text>
 
 				<View
 					style={{
@@ -124,7 +124,7 @@ const ProfileScreen = ({ navigation }) => {
 					</RadioButton.Group>
 				</View>
 
-				{auth.currentUser && auth.currentUser.uid ? (
+				{auth?.currentUser && auth?.currentUser?.uid ? (
 					<Button title="signout" onPress={() => signOut(auth)}></Button>
 				) : null}
 			</ScrollView>
