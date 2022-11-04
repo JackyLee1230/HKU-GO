@@ -19,10 +19,10 @@ const LoginScreen = ({ navigation }) => {
 	const googleAuthProvider = new GoogleAuthProvider();
 
 	onAuthStateChanged(auth, (currentUser) => {
-		if(currentUser){
+		if (currentUser) {
 			navigation.reset({
 				index: 0,
-				routes: [{ name: 'Home' }],
+				routes: [{ name: "Home" }],
 			});
 		}
 	});
@@ -61,7 +61,7 @@ const LoginScreen = ({ navigation }) => {
 			<TextInput
 				placeholder="Password"
 				autoFocus
-				type="password"
+				secureTextEntry={true}
 				value={password}
 				onChangeText={(text) => setPassword(text)}
 			/>

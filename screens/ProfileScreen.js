@@ -54,7 +54,9 @@ const ProfileScreen = ({ navigation }) => {
 	}, []);
 
 	useEffect(() => {
-		getPoints();
+		if (auth && auth?.currentUser) {
+			getPoints();
+		}
 	}, [navigation]);
 
 	// console.log(auth?.currentUser);
@@ -90,42 +92,54 @@ const ProfileScreen = ({ navigation }) => {
 				</Text>
 				<Text>GO Points: {points ?? 0}</Text>
 				<Text>Email: {auth?.currentUser?.email ?? 0}</Text>
-
-				<View
-					style={{
-						backgroundColor: "lightblue",
-					}}
-				>
-					<RadioButton.Group
-						onValueChange={(newValue) => setNotification(newValue)}
-						value={notification}
+				{auth && auth?.currentUser ? (
+					<View
+						style={{
+							backgroundColor: "lightblue",
+						}}
 					>
-						<Text style={{ marginLeft: "5%" }}>Device Notifications</Text>
-						<View
-							style={{
-								display: "flex",
-								flexDirection: "row",
-								alignItems: "center",
-							}}
+						<RadioButton.Group
+							onValueChange={(newValue) => setNotification(newValue)}
+							value={notification}
 						>
-							<RadioButton value="enabled" />
-							<Text>Enable Notification</Text>
-						</View>
-						<View
-							style={{
-								display: "flex",
-								flexDirection: "row",
-								alignItems: "center",
-							}}
-						>
-							<RadioButton value="disabled" />
-							<Text>Disable Notification</Text>
-						</View>
-					</RadioButton.Group>
-				</View>
+							<Text style={{ marginLeft: "5%" }}>Device Notifications</Text>
+							<View
+								style={{
+									display: "flex",
+									flexDirection: "row",
+									alignItems: "center",
+								}}
+							>
+								<RadioButton value="enabled" />
+								<Text>Enable Notification</Text>
+							</View>
+							<View
+								style={{
+									display: "flex",
+									flexDirection: "row",
+									alignItems: "center",
+								}}
+							>
+								<RadioButton value="disabled" />
+								<Text>Disable Notification</Text>
+							</View>
+						</RadioButton.Group>
+					</View>
+				) : null}
 
 				{auth?.currentUser && auth?.currentUser?.uid ? (
 					<Button title="signout" onPress={() => signOut(auth)}></Button>
+				) : null}
+				{!auth?.currentUser && !auth?.currentUser?.uid ? (
+					<Button
+						title="Sign In"
+						onPress={() =>
+							navigation.reset({
+								index: 0,
+								routes: [{ name: "Login" }],
+							})
+						}
+					></Button>
 				) : null}
 			</ScrollView>
 		</SafeAreaView>
