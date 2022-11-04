@@ -59,6 +59,14 @@ const ProfileScreen = ({ navigation }) => {
 		}
 	}, [navigation]);
 
+	const signOutUser = async() => {
+		await signOut(auth);
+		navigation.reset({
+			index: 0,
+			routes: [{ name: 'Initial' }],
+		});
+	}
+
 	// console.log(auth?.currentUser);
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -128,7 +136,7 @@ const ProfileScreen = ({ navigation }) => {
 				) : null}
 
 				{auth?.currentUser && auth?.currentUser?.uid ? (
-					<Button title="signout" onPress={() => signOut(auth)}></Button>
+					<Button title="signout" onPress={() => signOutUser()}></Button>
 				) : null}
 				{!auth?.currentUser && !auth?.currentUser?.uid ? (
 					<Button

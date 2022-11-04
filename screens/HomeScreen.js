@@ -13,7 +13,7 @@ const HomeScreen = ({ navigation }) => {
 		user = null;
 		navigation.reset({
 			index: 0,
-			routes: [{ name: 'Home' }],
+			routes: [{ name: 'Initial' }],
 		});
 	}
 

@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import InitialScreen from "./screens/InitialScreen/InitialScreen";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import MapScreen from "./screens/MapScreen";
@@ -16,6 +17,13 @@ const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
 	return (
 		<Stack.Navigator>
+			<Stack.Screen
+				name="Initial"
+				options={{
+					headerShown: false,
+				}}
+				component={InitialScreen}
+			/>
 			<Stack.Screen
 				name="Navbar"
 				options={{

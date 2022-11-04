@@ -13,6 +13,7 @@
     "@react-navigation/native-stack": "^6.9.1",
     "expo": "~46.0.16",
     "expo-google-app-auth": "~8.3.0",
+    "expo-linear-gradient": "~11.4.0",
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
     "expo-updates": "~0.14.6",
