@@ -4,6 +4,7 @@ import {
 	FlatList,
 	StyleSheet,
 	Pressable,
+	Image,
 	TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
@@ -59,13 +60,32 @@ const SocScreen = ({ navigation }) => {
 	const onChangeSearch = (query) => setSearch(query);
 
 	return (
-		<View style={{ flex: 1, marginTop: 100 }}>
+		<View style={{ flex: 1 }}>
 			<Text>Society Page</Text>
+
+			<View
+				style={{
+					backgroundColor: "pink",
+					marginTop: 12,
+					marginHorizontal: 32,
+					borderTopLeftRadius: 8,
+					borderBottomRightRadius: 8,
+					borderTopRightRadius: 32,
+					borderBottomLeftRadius: 32,
+
+					padding: 16,
+				}}
+			>
+				<Text style={{ fontSize: 24, textAlign: "center" }}>
+					Find out more about the Societies and Faculties @HKU
+				</Text>
+			</View>
 
 			<Searchbar
 				value={search}
 				onChangeText={onChangeSearch}
-				placeholder={"Search With Name"}
+				placeholder={"Search..."}
+				style={{ marginVertical: 16, borderRadius: 24, marginHorizontal: 32 }}
 			/>
 
 			<FlatList
@@ -87,15 +107,49 @@ const SocScreen = ({ navigation }) => {
 										})
 									}
 								>
-									<View>
-										<Text>{item.id}</Text>
-										<Text>{item.name}</Text>
-										<Text>{item.description}</Text>
-										{/* <Text>{item.links}</Text> */}
-										{item.links.map((link, idx) => {
+									<View
+										style={{
+											borderTopLeftRadius: 8,
+											borderBottomRightRadius: 8,
+											borderTopRightRadius: 32,
+											borderBottomLeftRadius: 32,
+										}}
+									>
+										{/* center the image */}
+										<View
+											style={{ justifyContent: "center", alignItems: "center" }}
+										>
+											<Image
+												style={{
+													width: "100%",
+													height: 157,
+												}}
+												source={{ uri: item.image }}
+											></Image>
+										</View>
+
+										<View style={{ marginHorizontal: 12 }}>
+											<Text
+												style={{
+													margin: 16,
+													fontSize: 24,
+													textAlign: "center",
+												}}
+											>
+												{item.name}
+											</Text>
+										</View>
+
+										<View style={styles.innerBox}>
+											<Text style={{ marginHorizontal: 12, marginVertical: 8 }}>
+												{item.description}
+											</Text>
+										</View>
+
+										{Object.keys(item.links).map((link, idx) => {
 											return (
 												<Text>
-													{idx}: {link}
+													{idx}: {item.links[link]}
 												</Text>
 											);
 										})}
@@ -115,9 +169,23 @@ export default SocScreen;
 const styles = StyleSheet.create({
 	container: {
 		margin: 5,
-		marginHorizontal: 10,
+		marginHorizontal: 32,
 		padding: 15,
-		borderRadius: 15,
-		backgroundColor: "#e5e5e5",
+		backgroundColor: "#fff",
+		borderTopLeftRadius: 16,
+		borderBottomRightRadius: 16,
+		borderTopRightRadius: 4,
+		borderBottomLeftRadius: 4,
+	},
+	innerBox: {
+		borderTopLeftRadius: 16,
+		borderBottomRightRadius: 16,
+		borderTopRightRadius: 4,
+		borderBottomLeftRadius: 4,
+		// backgroundColor: "red",
+		marginHorizontal: 12,
+		marginBottom: 16,
+		borderColor: "#256D85",
+		borderWidth: 1,
 	},
 });
