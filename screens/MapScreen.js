@@ -13,12 +13,25 @@ import React, { useState, useEffect } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
 import { Modal, Portal, FAB, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+	collection,
+	addDoc,
+	query,
+	where,
+	getDocs,
+	deleteDoc,
+	doc,
+	setDoc,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 const { width, height } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.6;
 const SPACING_FOR_CARD_INSET = (CARD_WIDTH / 0.6) * 0.1 - 5;
 
 const MapScreen = ({ navigation }) => {
+	const [facName, setFacName] = useState("");
+	const [result, setResult] = useState();
 	const [region, setRegion] = useState({
 		latitude: 22.28333,
 		longitude: 114.13643,
@@ -29,6 +42,29 @@ const MapScreen = ({ navigation }) => {
 	let mapAnimation = new Animated.Value(0);
 	const _map = React.useRef(null);
 	let mapIndex = 0;
+
+	let loadFacility = async () => {
+		const q = query(collection(db, "facility"), where("name", "==", facName));
+		const querySnapshot = await getDocs(q);
+
+		let r = [];
+		querySnapshot &&
+			querySnapshot.forEach((doc) => {
+				let temp = doc.data();
+				console.log(temp);
+				temp.id = doc.id;
+				r.push(temp);
+			});
+
+		setResult(r[0]);
+	};
+
+	useEffect(() => {
+		if (facName) {
+			loadFacility();
+			showModal();
+		}
+	}, [facName]);
 
 	useEffect(() => {
 		mapAnimation.addListener(({ value }) => {
@@ -77,7 +113,7 @@ const MapScreen = ({ navigation }) => {
 		{
 			latitude: 22.283284854186324,
 			longitude: 114.13772673346415,
-			title: "Library",
+			title: "Main Library",
 			subtitle: "HKU",
 			description: "HKU Main Library",
 			image: Images[0].image,
@@ -139,7 +175,10 @@ const MapScreen = ({ navigation }) => {
 	// pop up modal
 	const [visible, setVisible] = React.useState(false);
 	const showModal = () => setVisible(true);
-	const hideModal = () => setVisible(false);
+	const hideModal = () => {
+		setVisible(false);
+		setFacName("");
+	};
 	const containerStyle = { backgroundColor: "white", padding: 20 };
 
 	const _scrollView = React.useRef(null);
@@ -152,7 +191,18 @@ const MapScreen = ({ navigation }) => {
 					onDismiss={hideModal}
 					contentContainerStyle={containerStyle}
 				>
-					<Text>Usage!</Text>
+					<Text>{facName}</Text>
+					<Text>
+						{result &&
+							result.departments.map((dep, idx) => {
+								return (
+									<Text>
+										{dep}
+										{"\n"}
+									</Text>
+								);
+							})}
+					</Text>
 				</Modal>
 			</Portal>
 			<MapView
@@ -249,6 +299,22 @@ const MapScreen = ({ navigation }) => {
 										]}
 									>
 										Visit
+									</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									onPress={(e) => {
+										setFacName(marker.title);
+									}}
+								>
+									<Text
+										style={[
+											styles.textSign,
+											{
+												color: "#FF6347",
+											},
+										]}
+									>
+										Learn More
 									</Text>
 								</TouchableOpacity>
 							</View>
