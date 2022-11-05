@@ -84,8 +84,8 @@ const MapScreen = ({ navigation }) => {
 					const { latitude, longitude } = markers[index];
 					_map.current.animateToRegion(
 						{
-							latitudeDelta: latitude,
-							longitudeDelta: longitude,
+							latitude: latitude,
+							longitude: longitude,
 						},
 						350
 					);
