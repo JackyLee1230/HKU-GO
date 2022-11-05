@@ -12,10 +12,13 @@ import {
 import { KeyboardAvoidingView } from "react-native";
 import { TextInput, Button, HelperText } from "react-native-paper";
 import { CurrentRenderContext } from "@react-navigation/native";
+import { Modal, Portal } from "react-native-paper";
 
 const LoginScreen = ({ navigation }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [loginErr, setLoginErr] = useState();
+	const [visible, setVisible] = useState(false);
 	const googleAuthProvider = new GoogleAuthProvider();
 
 	onAuthStateChanged(auth, (currentUser) => {
@@ -27,6 +30,12 @@ const LoginScreen = ({ navigation }) => {
 		}
 	});
 
+	const showModal = () => setVisible(true);
+	const hideModal = () => {
+		setVisible(false);
+		setLoginErr();
+	};
+
 	const login = async () => {
 		try {
 			const user = signInWithEmailAndPassword(auth, email, password)
@@ -36,6 +45,8 @@ const LoginScreen = ({ navigation }) => {
 				})
 				.catch((err) => {
 					console.log(err);
+					setLoginErr(err.message);
+					showModal();
 				});
 		} catch (error) {
 			console.log(error.message);
@@ -46,8 +57,22 @@ const LoginScreen = ({ navigation }) => {
 		return !email.includes("@") && email !== "";
 	};
 
+	const containerStyle = { backgroundColor: "white", padding: 20 };
+
 	return (
 		<View>
+			<Portal>
+				<Modal
+					visible={visible}
+					onDismiss={hideModal}
+					contentContainerStyle={containerStyle}
+				>
+					<Text>{loginErr}</Text>
+					<Button mode="contained" onPress={hideModal}>
+						OK
+					</Button>
+				</Modal>
+			</Portal>
 			<TextInput
 				placeholder="Email"
 				autoFocus
@@ -65,7 +90,7 @@ const LoginScreen = ({ navigation }) => {
 				value={password}
 				onChangeText={(text) => setPassword(text)}
 			/>
-			<Button mode="contained" onPress={() => login()}>
+			<Button mode="containButtoned" onPress={() => login()}>
 				Login
 			</Button>
 		</View>

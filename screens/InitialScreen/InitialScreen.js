@@ -6,24 +6,45 @@ import {
 	Image,
 	ImageBackground,
 	TouchableOpacity,
+	Linking,
+	Button,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
+import { Modal } from "react-native-paper";
 
 const InitialScreen = ({ navigation }) => {
+	const handleClick = () => {
+		Linking.canOpenURL("https://www.infoday.hku.hk/").then((supported) => {
+			if (supported) {
+				Linking.openURL("https://www.infoday.hku.hk/");
+			} else {
+				console.log("Can not open URI: " + "https://www.infoday.hku.hk/");
+			}
+		});
+	};
+
+	const showModal = () => {
+		this.setState({ visible: true });
+	};
+
+	const hideModal = () => {
+		this.setState({ visible: false });
+	};
+
 	return (
 		<LinearGradient
 			colors={["#0098FF", "#DFF6FF"]}
 			style={styles.linearGradient}
 		>
 			<ScrollView contentContainerStyle={styles.mainFrame}>
-				<View style={styles.promoteContainer}>
+				<TouchableOpacity style={styles.promoteContainer} onPress={handleClick}>
 					<Image
 						source={require("../../assets/promotion.jpg")}
 						style={styles.promotionImage}
 						resizeMode="cover"
 					/>
-				</View>
+				</TouchableOpacity>
 
 				<ImageBackground
 					source={require("../../assets/HKUBackground.jpg")}
