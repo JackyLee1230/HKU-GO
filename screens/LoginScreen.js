@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, KeyboardAvoidingView } from "react-native";
 import React, { useState } from "react";
 import { auth } from "../firebase";
 import {
@@ -9,7 +9,6 @@ import {
 	signInWithEmailAndPassword,
 	signInWithPopup,
 } from "firebase/auth";
-import { KeyboardAvoidingView } from "react-native";
 import { TextInput, Button, HelperText } from "react-native-paper";
 import { CurrentRenderContext } from "@react-navigation/native";
 import { Modal, Portal } from "react-native-paper";
@@ -60,7 +59,7 @@ const LoginScreen = ({ navigation }) => {
 	const containerStyle = { backgroundColor: "white", padding: 20 };
 
 	return (
-		<View>
+		<KeyboardAvoidingView behavior="padding">
 			<Portal>
 				<Modal
 					visible={visible}
@@ -93,7 +92,7 @@ const LoginScreen = ({ navigation }) => {
 			<Button mode="containButtoned" onPress={() => login()}>
 				Login
 			</Button>
-		</View>
+		</KeyboardAvoidingView>
 	);
 };
 

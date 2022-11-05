@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	ScrollView,
 	View,
@@ -7,29 +7,29 @@ import {
 	ImageBackground,
 	TouchableOpacity,
 	Linking,
-	Button,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
-import { Modal } from "react-native-paper";
+import { Modal, Portal } from "react-native-paper";
+import { Button } from "react-native-paper";
 
 const InitialScreen = ({ navigation }) => {
-	const handleClick = () => {
-		Linking.canOpenURL("https://www.infoday.hku.hk/").then((supported) => {
-			if (supported) {
-				Linking.openURL("https://www.infoday.hku.hk/");
-			} else {
-				console.log("Can not open URI: " + "https://www.infoday.hku.hk/");
-			}
-		});
-	};
+	const [visible, setVisible] = React.useState(false);
 
 	const showModal = () => {
-		this.setState({ visible: true });
+		setVisible(true);
 	};
 
 	const hideModal = () => {
-		this.setState({ visible: false });
+		setVisible(false);
+	};
+
+	const containerStyle = {
+		backgroundColor: "white",
+		padding: 20,
+		marginHorizontal: 32,
+		paddingHorizontal: 32,
+		borderRadius: 32,
 	};
 
 	return (
@@ -37,8 +37,55 @@ const InitialScreen = ({ navigation }) => {
 			colors={["#0098FF", "#DFF6FF"]}
 			style={styles.linearGradient}
 		>
+			<Portal>
+				<Modal
+					visible={visible}
+					onDismiss={hideModal}
+					contentContainerStyle={containerStyle}
+				>
+					<View
+						style={{
+							flexDirection: "column",
+							alignSelf: "center",
+						}}
+					>
+						<Text style={{ fontSize: 20, justifyContent: "center" }}>
+							You are about to leave the app {"\n"}
+						</Text>
+						<Text style={{ fontSize: 20, justifyContent: "center" }}>
+							And visit the HKU Info Day Website.
+						</Text>
+					</View>
+
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+							marginTop: 16,
+						}}
+					>
+						<Button
+							mode="contained"
+							onPress={() => {
+								Linking.openURL("https://www.infoday.hku.hk/");
+								hideModal();
+							}}
+							style={{ marginHorizontal: 20 }}
+						>
+							OK
+						</Button>
+						<Button
+							mode="contained"
+							onPress={hideModal}
+							style={{ marginHorizontal: 20 }}
+						>
+							Cancel
+						</Button>
+					</View>
+				</Modal>
+			</Portal>
 			<ScrollView contentContainerStyle={styles.mainFrame}>
-				<TouchableOpacity style={styles.promoteContainer} onPress={handleClick}>
+				<TouchableOpacity style={styles.promoteContainer} onPress={showModal}>
 					<Image
 						source={require("../../assets/promotion.jpg")}
 						style={styles.promotionImage}

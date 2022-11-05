@@ -19,12 +19,15 @@ import { StyleSheet, Text, View, FlatList } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { KeyboardAvoidingView } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { Modal, Portal } from "react-native-paper";
 
 const RegisterScreen = ({ navigation }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [name, setName] = useState("");
 	const [imageURL, setImageURL] = useState("");
+	const [registerErr, setRegisterErr] = useState();
+	const [visible, setVisible] = useState(false);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -36,10 +39,17 @@ const RegisterScreen = ({ navigation }) => {
 		if (user && user.uid) {
 			navigation.reset({
 				index: 0,
-				routes: [{ name: 'Home' }],
+				routes: [{ name: "Home" }],
 			});
 		}
 	});
+
+	const showModal = () => setVisible(true);
+	const hideModal = () => {
+		setVisible(false);
+		setLoginErr();
+	};
+	const containerStyle = { backgroundColor: "white", padding: 20 };
 
 	const register = async () => {
 		const user = await createUserWithEmailAndPassword(auth, email, password)
@@ -55,12 +65,26 @@ const RegisterScreen = ({ navigation }) => {
 			})
 			.catch((err) => {
 				console.log(err);
+				setRegisterErr(err.message);
+				showModal();
 			});
 	};
 
 	return (
 		<KeyboardAvoidingView behavior="padding">
 			<StatusBar style="light" />
+			<Portal>
+				<Modal
+					visible={visible}
+					onDismiss={hideModal}
+					contentContainerStyle={containerStyle}
+				>
+					<Text>{registerErr}</Text>
+					<Button mode="contained" onPress={hideModal}>
+						OK
+					</Button>
+				</Modal>
+			</Portal>
 			<Text h3 style={{ marginBottom: 50 }}>
 				Create a HKU GO account
 			</Text>
@@ -93,7 +117,7 @@ const RegisterScreen = ({ navigation }) => {
 					value={password}
 					onChangeText={(text) => setPassword(text)}
 				/>
-				<Button mode="contained" onPress={() => register()}>
+				<Button mode="contained" onPress={async () => await register()}>
 					Register
 				</Button>
 			</View>
