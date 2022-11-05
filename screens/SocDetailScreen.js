@@ -5,9 +5,12 @@ import {
 	StyleSheet,
 	Pressable,
 	TouchableOpacity,
+	ScrollView,
+	Image,
+	Linking,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { FAB } from "react-native-paper";
+import { FAB, Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase";
 import {
@@ -20,6 +23,8 @@ import {
 	doc,
 	setDoc,
 } from "firebase/firestore";
+import { LinearGradient } from "expo-linear-gradient";
+import EventCard from "../src/EventCard";
 
 const SocDetailScreen = ({ route, navigation }) => {
 	const { id, name } = route.params;
@@ -27,6 +32,7 @@ const SocDetailScreen = ({ route, navigation }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	let [isRefreshing, setIsRefreshing] = useState(false);
 	const [soc, setSoc] = useState([]);
+	const [events, setEvents] = useState([]);
 	useLayoutEffect(() => {
 		navigation.setOptions({
 			headerBackTitle: "Back To Home Page",
@@ -44,7 +50,20 @@ const SocDetailScreen = ({ route, navigation }) => {
 			result.push(temp);
 		});
 
+		const q2 = query(collection(db, "events"), where("organiser", "==", name));
+		const querySnapshot2 = await getDocs(q2);
+
+		let result2 = [];
+		querySnapshot2.forEach((doc) => {
+			let temp = doc.data();
+			temp.id = doc.id;
+			result2.push(temp);
+		});
+
+		console.log(result2);
+
 		setSoc(result[0]);
+		setEvents(result2);
 		setIsLoading(false);
 		setIsRefreshing(false);
 	};
@@ -54,15 +73,181 @@ const SocDetailScreen = ({ route, navigation }) => {
 	}
 
 	return (
-		<View style={{ flex: 1, marginTop: 100 }}>
-			<View>
-				<Text>{soc.name}</Text>
-				{/* <Text>{soc.id}</Text>
-				<Text>{soc.name}</Text>
-				<Text>{soc.description}</Text> */}
-				{/* <Text>{item.links}</Text> */}
-			</View>
-		</View>
+		<LinearGradient colors={["#0098FF", "#DFF6FF"]} style={{ flex: 1 }}>
+			<ScrollView>
+				{soc && soc.name ? (
+					<View style={{ flex: 1 }}>
+						<View
+							style={{
+								margin: 5,
+								marginHorizontal: 32,
+								padding: 15,
+								backgroundColor: "#fff",
+								borderTopLeftRadius: 16,
+								borderBottomRightRadius: 4,
+								borderTopRightRadius: 16,
+								borderBottomLeftRadius: 4,
+							}}
+						>
+							<LinearGradient
+								colors={["#7FB77E", "#B6E399"]}
+								style={{
+									alignItems: "center",
+								}}
+							>
+								<Text
+									style={{
+										fontSize: 28,
+										paddingVertical: 12,
+										paddingHorizontal: 32,
+									}}
+								>
+									{soc.name}
+								</Text>
+							</LinearGradient>
+							<View>
+								{/* center the image */}
+								<View
+									style={{
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<Image
+										style={{
+											width: "100%",
+											height: 157,
+										}}
+										source={{ uri: soc.image }}
+									></Image>
+								</View>
+
+								<View style={styles.innerBox}>
+									<Text
+										style={{
+											marginHorizontal: 12,
+											marginVertical: 8,
+											fontSize: 16,
+										}}
+									>
+										{soc.description.length > 150
+											? soc.description.substring(0, 150) + "..."
+											: soc.description}
+									</Text>
+								</View>
+							</View>
+						</View>
+						{/* Soc Links */}
+						{soc.links && (
+							<View
+								style={{
+									width: "100%",
+									flexDirection: "row",
+									alignItems: "flex-start",
+								}}
+							>
+								{soc.links["instagram"] && (
+									<Button
+										mode="contained-tonal"
+										compact="true"
+										onPress={() => {
+											Linking.openURL(soc.links["instagram"]);
+										}}
+									>
+										Instagram
+									</Button>
+								)}
+								{soc.links["facebook"] && (
+									<Button
+										mode="contained-tonal"
+										compact="true"
+										onPress={() => {
+											Linking.openURL(soc.links["facebook"]);
+										}}
+									>
+										Facebook
+									</Button>
+								)}
+								{soc.links["official"] && (
+									<Button
+										mode="contained-tonal"
+										compact="true"
+										onPress={() => {
+											Linking.openURL(soc.links["official"]);
+										}}
+									>
+										Official Webpage
+									</Button>
+								)}
+							</View>
+						)}
+
+						<View style={{ width: "100%" }}>
+							<Text
+								style={{
+									width: "100%",
+									textAlign: "center",
+								}}
+							>
+								Join Our Upcoming Events(s):
+							</Text>
+
+							{events.map((event) => (
+								<EventCard event={event} />
+								// <View
+								// 	key={event.name}
+								// 	style={{
+								// 		margin: 5,
+								// 		marginHorizontal: 32,
+								// 		padding: 15,
+								// 		backgroundColor: "#fff",
+								// 		borderTopLeftRadius: 16,
+								// 		borderBottomRightRadius: 4,
+								// 		borderTopRightRadius: 16,
+								// 		borderBottomLeftRadius: 4,
+								// 	}}
+								// >
+								// 	<Text
+								// 		style={{
+								// 			fontSize: 16,
+								// 			fontWeight: "bold",
+								// 		}}
+								// 	>
+								// 		{event.name} By {event.organiser}
+								// 	</Text>
+								// 	<Text
+								// 		style={{
+								// 			fontSize: 14,
+								// 			fontWeight: "bold",
+								// 		}}
+								// 	>
+								// 		{event.date} {event.time}
+								// 	</Text>
+								// 	<Text
+								// 		style={{
+								// 			fontSize: 14,
+								// 			fontWeight: "bold",
+								// 		}}
+								// 	>
+								// 		{event.location}
+								// 	</Text>
+								// 	<Text
+								// 		style={{
+								// 			fontSize: 14,
+								// 			fontWeight: "bold",
+								// 		}}
+								// 	>
+								// 		{event.description.length > 150
+								// 			? event.description.substring(0, 150) + "..."
+								// 			: event.description}
+								// 	</Text>
+								// </View>
+							))}
+						</View>
+					</View>
+				) : null}
+			</ScrollView>
+		</LinearGradient>
 	);
 };
 
@@ -75,5 +260,16 @@ const styles = StyleSheet.create({
 		padding: 15,
 		borderRadius: 15,
 		backgroundColor: "#e5e5e5",
+	},
+	innerBox: {
+		borderTopLeftRadius: 16,
+		borderBottomRightRadius: 16,
+		borderTopRightRadius: 4,
+		borderBottomLeftRadius: 4,
+		marginTop: 16,
+		marginHorizontal: 12,
+		marginBottom: 16,
+		borderColor: "#256D85",
+		borderWidth: 1,
 	},
 });

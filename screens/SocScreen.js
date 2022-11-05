@@ -22,6 +22,7 @@ import {
 	doc,
 	setDoc,
 } from "firebase/firestore";
+import { LinearGradient } from "expo-linear-gradient";
 
 const SocScreen = ({ navigation }) => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -60,107 +61,124 @@ const SocScreen = ({ navigation }) => {
 	const onChangeSearch = (query) => setSearch(query);
 
 	return (
-		<View style={{ flex: 1 }}>
-			<Text>Society Page</Text>
+		<LinearGradient colors={["#0098FF", "#DFF6FF"]} style={{ flex: 1 }}>
+			<View style={{ flex: 1 }}>
+				<View
+					style={{
+						backgroundColor: "pink",
+						marginTop: 12,
+						marginHorizontal: 32,
+						borderTopLeftRadius: 8,
+						borderBottomRightRadius: 8,
+						borderTopRightRadius: 32,
+						borderBottomLeftRadius: 32,
+						padding: 16,
+					}}
+				>
+					<Text style={{ fontSize: 24, textAlign: "center" }}>
+						Find out more about the Societies and Faculties @HKU
+					</Text>
+				</View>
 
-			<View
-				style={{
-					backgroundColor: "pink",
-					marginTop: 12,
-					marginHorizontal: 32,
-					borderTopLeftRadius: 8,
-					borderBottomRightRadius: 8,
-					borderTopRightRadius: 32,
-					borderBottomLeftRadius: 32,
+				<Searchbar
+					value={search}
+					onChangeText={onChangeSearch}
+					placeholder={"Search..."}
+					style={{
+						marginVertical: 24,
+						borderRadius: 24,
+						marginHorizontal: 32,
+						borderColor: "#47B5FF",
+						borderWidth: 2,
+					}}
+				/>
 
-					padding: 16,
-				}}
-			>
-				<Text style={{ fontSize: 24, textAlign: "center" }}>
-					Find out more about the Societies and Faculties @HKU
-				</Text>
-			</View>
-
-			<Searchbar
-				value={search}
-				onChangeText={onChangeSearch}
-				placeholder={"Search..."}
-				style={{ marginVertical: 16, borderRadius: 24, marginHorizontal: 32 }}
-			/>
-
-			<FlatList
-				data={socs}
-				style={{ height: "100%" }}
-				numColumns={1}
-				renderItem={({ item }) => (
-					<>
-						{item.name
-							.toLowerCase()
-							.includes(debouncedSearch.toLowerCase()) && (
-							<>
-								<TouchableOpacity
-									style={styles.container}
-									onPress={() =>
-										navigation.navigate("SocDetail", {
-											id: item.id,
-											name: item.name,
-										})
-									}
-								>
-									<View
-										style={{
-											borderTopLeftRadius: 8,
-											borderBottomRightRadius: 8,
-											borderTopRightRadius: 32,
-											borderBottomLeftRadius: 32,
-										}}
+				<FlatList
+					data={socs}
+					style={{ height: "100%" }}
+					numColumns={1}
+					keyExtractor={(item, index) => item.id.toString()}
+					renderItem={({ item }) => (
+						<>
+							{item.name
+								.toLowerCase()
+								.includes(debouncedSearch.toLowerCase()) && (
+								<>
+									<TouchableOpacity
+										style={styles.container}
+										onPress={() =>
+											navigation.navigate("SocDetail", {
+												id: item.id,
+												name: item.name,
+											})
+										}
 									>
-										{/* center the image */}
 										<View
-											style={{ justifyContent: "center", alignItems: "center" }}
+											style={{
+												borderTopLeftRadius: 8,
+												borderBottomRightRadius: 8,
+												borderTopRightRadius: 32,
+												borderBottomLeftRadius: 32,
+											}}
 										>
-											<Image
+											{/* center the image */}
+											<View
 												style={{
-													width: "100%",
-													height: 157,
-												}}
-												source={{ uri: item.image }}
-											></Image>
-										</View>
-
-										<View style={{ marginHorizontal: 12 }}>
-											<Text
-												style={{
-													margin: 16,
-													fontSize: 24,
-													textAlign: "center",
+													justifyContent: "center",
+													alignItems: "center",
 												}}
 											>
-												{item.name}
-											</Text>
-										</View>
+												<Image
+													style={{
+														width: "100%",
+														height: 157,
+													}}
+													source={{ uri: item.image }}
+												></Image>
+											</View>
 
-										<View style={styles.innerBox}>
-											<Text style={{ marginHorizontal: 12, marginVertical: 8 }}>
-												{item.description}
-											</Text>
-										</View>
-
-										{Object.keys(item.links).map((link, idx) => {
-											return (
-												<Text>
-													{idx}: {item.links[link]}
+											<View style={{ marginHorizontal: 12 }}>
+												<Text
+													style={{
+														margin: 16,
+														fontSize: 24,
+														textAlign: "center",
+													}}
+												>
+													{item.name}
 												</Text>
-											);
-										})}
-									</View>
-								</TouchableOpacity>
-							</>
-						)}
-					</>
-				)}
-			/>
-		</View>
+											</View>
+
+											<View style={styles.innerBox}>
+												<Text
+													style={{
+														marginHorizontal: 12,
+														marginVertical: 8,
+														fontSize: 16,
+													}}
+												>
+													{item.description.length > 150
+														? item.description.substring(0, 150) + "..."
+														: item.description}
+												</Text>
+											</View>
+
+											{/* {Object.keys(item.links).map((link, idx) => {
+												return (
+													<Text key={idx}>
+														{idx}: {item.links[link]}
+													</Text>
+												);
+											})} */}
+										</View>
+									</TouchableOpacity>
+								</>
+							)}
+						</>
+					)}
+				/>
+			</View>
+		</LinearGradient>
 	);
 };
 
