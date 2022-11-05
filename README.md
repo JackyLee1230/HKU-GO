@@ -15,5 +15,5 @@ yarn
 ## Start application
 - Through android studio emulator
 ```
- npx expo start
+ npx expo start --tunnel
 ```
