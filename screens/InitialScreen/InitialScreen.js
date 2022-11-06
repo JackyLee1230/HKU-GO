@@ -27,9 +27,11 @@ const InitialScreen = ({ navigation }) => {
 	const containerStyle = {
 		backgroundColor: "white",
 		padding: 20,
-		marginHorizontal: 32,
-		paddingHorizontal: 32,
-		borderRadius: 32,
+		paddingVertical : 40,
+		marginHorizontal: 64,
+		borderRadius: 8,
+		elevation: 10,
+        shadowColor: '#171717',
 	};
 
 	return (
@@ -49,37 +51,42 @@ const InitialScreen = ({ navigation }) => {
 							alignSelf: "center",
 						}}
 					>
-						<Text style={{ fontSize: 20, justifyContent: "center" }}>
+						<Text style={{ fontSize: 20, justifyContent: "center", color: "#256D85" }}>
 							You are about to leave the app {"\n"}
 						</Text>
-						<Text style={{ fontSize: 20, justifyContent: "center" }}>
-							And visit the HKU Info Day Website.
+						<Text style={{ fontSize: 20, justifyContent: "center", color: "#256D85" }}>
+							Do you want to redirct to the HKU Info Day Website?
 						</Text>
 					</View>
 
 					<View
 						style={{
 							flexDirection: "row",
-							justifyContent: "center",
-							marginTop: 16,
+							alignItems: "center",
+							justifyContent: "space-between",
+							marginTop: 40,
 						}}
 					>
+						<Button
+							mode="contained"
+							onPress={hideModal}
+							style={{
+								backgroundColor: "#FF4444"
+							}}
+						>
+							CANCEL
+						</Button>
 						<Button
 							mode="contained"
 							onPress={() => {
 								Linking.openURL("https://www.infoday.hku.hk/");
 								hideModal();
 							}}
-							style={{ marginHorizontal: 20 }}
+							style={{
+								backgroundColor: "#00C851"
+							}}
 						>
-							OK
-						</Button>
-						<Button
-							mode="contained"
-							onPress={hideModal}
-							style={{ marginHorizontal: 20 }}
-						>
-							Cancel
+							CONFIRM
 						</Button>
 					</View>
 				</Modal>
