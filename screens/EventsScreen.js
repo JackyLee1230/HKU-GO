@@ -32,6 +32,7 @@ const EventsScreen = ({ navigation }) => {
 	const [registered, setRegistered] = useState([]);
 	const [search, setSearch] = useState("");
 	const [debouncedSearch] = useDebounce(search, 500);
+	const [disabledButtons, setDisabledButtons] = useState([]);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -54,6 +55,7 @@ const EventsScreen = ({ navigation }) => {
 				let temp = doc.data();
 				temp.id = doc.id;
 				result2.push(temp);
+				setDisabledButtons((disabledButtons) => [...disabledButtons, false]);
 			});
 			setRegistered(result2[0].registered);
 		}
@@ -74,10 +76,15 @@ const EventsScreen = ({ navigation }) => {
 		loadEvents();
 	}
 
-	const registerEvent = async (id, eventID, vancncy, registered) => {
+	const registerEvent = async (id, eventID, index, registered) => {
 		if (!id) {
 			return;
 		}
+
+		setDisabledButtons((disabledButtons) => {
+			disabledButtons[index] = true;
+			return disabledButtons;
+		});
 
 		if (!registered) {
 			const q = query(
@@ -147,6 +154,10 @@ const EventsScreen = ({ navigation }) => {
 			});
 		}
 
+		setDisabledButtons((disabledButtons) => {
+			disabledButtons[index] = false;
+			return disabledButtons;
+		});
 		loadEvents();
 	};
 
@@ -174,7 +185,7 @@ const EventsScreen = ({ navigation }) => {
 					style={{ height: "100%" }}
 					numColumns={1}
 					keyExtractor={(item, index) => item.id.toString()}
-					renderItem={({ item }) => (
+					renderItem={({ item, index }) => (
 						<>
 							{item.name
 								.toLowerCase()
@@ -197,7 +208,7 @@ const EventsScreen = ({ navigation }) => {
 														textAlign: "center",
 													}}
 												>
-													{item.name} {item.eventID}
+													{item.name} {String(disabledButtons[index])}
 												</Text>
 											</View>
 
@@ -240,11 +251,12 @@ const EventsScreen = ({ navigation }) => {
 																	backgroundColor: "red",
 																	justifyContent: "center",
 																}}
+																disabled={disabledButtons[index]}
 																onPress={() => {
 																	registerEvent(
 																		item.id,
 																		item.eventID,
-																		item.vacancy,
+																		index,
 																		true
 																	);
 																}}
@@ -264,11 +276,12 @@ const EventsScreen = ({ navigation }) => {
 																	backgroundColor: "red",
 																	justifyContent: "center",
 																}}
+																disabled={disabledButtons[index]}
 																onPress={() => {
 																	registerEvent(
 																		item.id,
 																		item.eventID,
-																		item.vacancy,
+																		index,
 																		false
 																	);
 																}}
