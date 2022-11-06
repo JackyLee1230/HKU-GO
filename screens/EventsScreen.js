@@ -27,9 +27,9 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const EventsScreen = ({ navigation }) => {
 	const [isLoading, setIsLoading] = useState(true);
-	let [isRefreshing, setIsRefreshing] = React.useState(false);
 	const [events, setEvents] = useState([]);
 	const [registered, setRegistered] = useState([]);
+	// debounce the search to prevent constant rerendering
 	const [search, setSearch] = useState("");
 	const [debouncedSearch] = useDebounce(search, 500);
 	const [disabledButtons, setDisabledButtons] = useState([]);
@@ -73,7 +73,6 @@ const EventsScreen = ({ navigation }) => {
 
 		setEvents(result);
 		setIsLoading(false);
-		setIsRefreshing(false);
 	};
 
 	if (isLoading) {
@@ -187,6 +186,7 @@ const EventsScreen = ({ navigation }) => {
 					<FAB.Group
 						open={open}
 						visible
+						backdropColor="rgba(70, 132, 180, 0.46)"
 						icon={open ? "filter" : "filter-variant"}
 						actions={[
 							{
@@ -203,6 +203,11 @@ const EventsScreen = ({ navigation }) => {
 								icon: "file-table",
 								label: "All",
 								onPress: () => setFilter("All"),
+								labelStyle: {
+									fontSize: 24,
+									color: "red",
+									backgroundColor: "#fff",
+								},
 							},
 						]}
 						onStateChange={onStateChange}
