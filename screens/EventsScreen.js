@@ -8,7 +8,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { FAB, Searchbar, Button } from "react-native-paper";
+import { FAB, Searchbar, Button, Portal } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase";
 import { useDebounce } from "use-debounce";
@@ -33,6 +33,10 @@ const EventsScreen = ({ navigation }) => {
 	const [search, setSearch] = useState("");
 	const [debouncedSearch] = useDebounce(search, 500);
 	const [disabledButtons, setDisabledButtons] = useState([]);
+	const [open, setOpen] = useState(false);
+	const [filter, setFilter] = useState("All");
+
+	const onStateChange = ({ open }) => setOpen((open) => !open);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -179,6 +183,36 @@ const EventsScreen = ({ navigation }) => {
 						backgroundColor: "#fff",
 					}}
 				/>
+				<Portal>
+					<FAB.Group
+						open={open}
+						visible
+						icon={open ? "filter" : "filter-variant"}
+						actions={[
+							{
+								icon: "account-check",
+								label: "Registered",
+								onPress: () => setFilter("Registered"),
+							},
+							{
+								icon: "account-cancel",
+								label: "Not Registered",
+								onPress: () => setFilter("NotRegistered"),
+							},
+							{
+								icon: "file-table",
+								label: "All",
+								onPress: () => setFilter("All"),
+							},
+						]}
+						onStateChange={onStateChange}
+						onPress={() => {
+							if (open) {
+								// do something if the speed dial is open
+							}
+						}}
+					/>
+				</Portal>
 
 				<FlatList
 					data={events}
@@ -187,132 +221,422 @@ const EventsScreen = ({ navigation }) => {
 					keyExtractor={(item, index) => item.id.toString()}
 					renderItem={({ item, index }) => (
 						<>
-							{item.name
-								.toLowerCase()
-								.includes(debouncedSearch.toLowerCase()) && (
-								<>
-									<View style={styles.container}>
-										<View
-											style={{
-												borderTopLeftRadius: 8,
-												borderBottomRightRadius: 8,
-												borderTopRightRadius: 32,
-												borderBottomLeftRadius: 32,
-											}}
-										>
-											<View style={{ marginHorizontal: 12 }}>
-												<Text
+							{filter === "All" ? (
+								<View>
+									{item.name
+										.toLowerCase()
+										.includes(debouncedSearch.toLowerCase()) && (
+										<>
+											<View style={styles.container}>
+												<View
 													style={{
-														margin: 16,
-														fontSize: 24,
-														textAlign: "center",
+														borderTopLeftRadius: 8,
+														borderBottomRightRadius: 8,
+														borderTopRightRadius: 32,
+														borderBottomLeftRadius: 32,
 													}}
 												>
-													{item.name}
-												</Text>
-											</View>
+													<View style={{ marginHorizontal: 12 }}>
+														<Text
+															style={{
+																margin: 16,
+																fontSize: 24,
+																textAlign: "center",
+															}}
+														>
+															{item.name}
+														</Text>
+													</View>
 
-											<View>
-												<Text
-													style={{
-														fontSize: 14,
-														fontWeight: "bold",
-													}}
-												>
-													{item.date} {item.time}
-												</Text>
-											</View>
+													<View>
+														<Text
+															style={{
+																fontSize: 14,
+																fontWeight: "bold",
+															}}
+														>
+															{item.date} {item.time}
+														</Text>
+													</View>
 
-											<View style={{ marginHorizontal: 12 }}>
-												<Text
-													style={{
-														margin: 16,
-														fontSize: 24,
-														textAlign: "center",
-													}}
-												>
-													Vacancy:{" "}
-													{item.vacancy
-														? item.vacancy
-														: "Unlimited/Unspecified"}
-												</Text>
-											</View>
+													<View style={{ marginHorizontal: 12 }}>
+														<Text
+															style={{
+																margin: 16,
+																fontSize: 24,
+																textAlign: "center",
+															}}
+														>
+															Vacancy:{" "}
+															{item.vacancy
+																? item.vacancy
+																: "Unlimited/Unspecified"}
+														</Text>
+													</View>
 
-											<View style={styles.innerBox}>
-												<Text
-													style={{
-														marginHorizontal: 12,
-														marginVertical: 8,
-														fontSize: 16,
-													}}
-												>
-													{item.description.length > 150
-														? item.description.substring(0, 150) + "..."
-														: item.description}
-												</Text>
-											</View>
+													<View style={styles.innerBox}>
+														<Text
+															style={{
+																marginHorizontal: 12,
+																marginVertical: 8,
+																fontSize: 16,
+															}}
+														>
+															{item.description.length > 150
+																? item.description.substring(0, 150) + "..."
+																: item.description}
+														</Text>
+													</View>
 
-											<View>
-												{auth && auth?.currentUser && auth.currentUser?.uid ? (
-													<>
-														{registered.includes(item.eventID) ? (
-															<Button
-																mode="contained-tonal"
-																style={{
-																	backgroundColor: "green",
-																	justifyContent: "center",
-																}}
-																disabled={disabledButtons[index]}
-																onPress={() => {
-																	registerEvent(
-																		item.id,
-																		item.eventID,
-																		index,
-																		true
-																	);
-																}}
-															>
-																<Text
-																	style={{
-																		color: "white",
-																	}}
-																>
-																	Already Registered
-																</Text>
-															</Button>
+													<View>
+														{auth &&
+														auth?.currentUser &&
+														auth.currentUser?.uid ? (
+															<>
+																{registered.includes(item.eventID) ? (
+																	<Button
+																		mode="contained-tonal"
+																		style={{
+																			backgroundColor: "green",
+																			justifyContent: "center",
+																		}}
+																		disabled={disabledButtons[index]}
+																		onPress={() => {
+																			registerEvent(
+																				item.id,
+																				item.eventID,
+																				index,
+																				true
+																			);
+																		}}
+																	>
+																		<Text
+																			style={{
+																				color: "white",
+																			}}
+																		>
+																			Already Registered
+																		</Text>
+																	</Button>
+																) : (
+																	<Button
+																		mode="contained-tonal"
+																		style={{
+																			backgroundColor: "red",
+																			justifyContent: "center",
+																		}}
+																		disabled={disabledButtons[index]}
+																		onPress={() => {
+																			registerEvent(
+																				item.id,
+																				item.eventID,
+																				index,
+																				false
+																			);
+																		}}
+																	>
+																		<Text
+																			style={{
+																				color: "white",
+																			}}
+																		>
+																			Register
+																		</Text>
+																	</Button>
+																)}
+															</>
 														) : (
-															<Button
-																mode="contained-tonal"
-																style={{
-																	backgroundColor: "red",
-																	justifyContent: "center",
-																}}
-																disabled={disabledButtons[index]}
-																onPress={() => {
-																	registerEvent(
-																		item.id,
-																		item.eventID,
-																		index,
-																		false
-																	);
-																}}
-															>
-																<Text
+															<Text>Login To Register For Events</Text>
+														)}
+													</View>
+												</View>
+											</View>
+										</>
+									)}
+								</View>
+							) : (
+								<>
+									{filter === "Registered" ? (
+										<>
+											{registered.includes(item.eventID) ? (
+												<View>
+													{item.name
+														.toLowerCase()
+														.includes(debouncedSearch.toLowerCase()) && (
+														<>
+															<View style={styles.container}>
+																<View
 																	style={{
-																		color: "white",
+																		borderTopLeftRadius: 8,
+																		borderBottomRightRadius: 8,
+																		borderTopRightRadius: 32,
+																		borderBottomLeftRadius: 32,
 																	}}
 																>
-																	Register
-																</Text>
-															</Button>
-														)}
-													</>
-												) : (
-													<Text>Login To Register For Events</Text>
-												)}
-											</View>
-										</View>
-									</View>
+																	<View style={{ marginHorizontal: 12 }}>
+																		<Text
+																			style={{
+																				margin: 16,
+																				fontSize: 24,
+																				textAlign: "center",
+																			}}
+																		>
+																			{item.name}
+																		</Text>
+																	</View>
+
+																	<View>
+																		<Text
+																			style={{
+																				fontSize: 14,
+																				fontWeight: "bold",
+																			}}
+																		>
+																			{item.date} {item.time}
+																		</Text>
+																	</View>
+
+																	<View style={{ marginHorizontal: 12 }}>
+																		<Text
+																			style={{
+																				margin: 16,
+																				fontSize: 24,
+																				textAlign: "center",
+																			}}
+																		>
+																			Vacancy:{" "}
+																			{item.vacancy
+																				? item.vacancy
+																				: "Unlimited/Unspecified"}
+																		</Text>
+																	</View>
+
+																	<View style={styles.innerBox}>
+																		<Text
+																			style={{
+																				marginHorizontal: 12,
+																				marginVertical: 8,
+																				fontSize: 16,
+																			}}
+																		>
+																			{item.description.length > 150
+																				? item.description.substring(0, 150) +
+																				  "..."
+																				: item.description}
+																		</Text>
+																	</View>
+
+																	<View>
+																		{auth &&
+																		auth?.currentUser &&
+																		auth.currentUser?.uid ? (
+																			<>
+																				{registered.includes(item.eventID) ? (
+																					<Button
+																						mode="contained-tonal"
+																						style={{
+																							backgroundColor: "green",
+																							justifyContent: "center",
+																						}}
+																						disabled={disabledButtons[index]}
+																						onPress={() => {
+																							registerEvent(
+																								item.id,
+																								item.eventID,
+																								index,
+																								true
+																							);
+																						}}
+																					>
+																						<Text
+																							style={{
+																								color: "white",
+																							}}
+																						>
+																							Already Registered
+																						</Text>
+																					</Button>
+																				) : (
+																					<Button
+																						mode="contained-tonal"
+																						style={{
+																							backgroundColor: "red",
+																							justifyContent: "center",
+																						}}
+																						disabled={disabledButtons[index]}
+																						onPress={() => {
+																							registerEvent(
+																								item.id,
+																								item.eventID,
+																								index,
+																								false
+																							);
+																						}}
+																					>
+																						<Text
+																							style={{
+																								color: "white",
+																							}}
+																						>
+																							Register
+																						</Text>
+																					</Button>
+																				)}
+																			</>
+																		) : (
+																			<Text>Login To Register For Events</Text>
+																		)}
+																	</View>
+																</View>
+															</View>
+														</>
+													)}
+												</View>
+											) : (
+												<></>
+											)}
+										</>
+									) : (
+										<>
+											{!registered.includes(item.eventID) ? (
+												<View>
+													{item.name
+														.toLowerCase()
+														.includes(debouncedSearch.toLowerCase()) && (
+														<>
+															<View style={styles.container}>
+																<View
+																	style={{
+																		borderTopLeftRadius: 8,
+																		borderBottomRightRadius: 8,
+																		borderTopRightRadius: 32,
+																		borderBottomLeftRadius: 32,
+																	}}
+																>
+																	<View style={{ marginHorizontal: 12 }}>
+																		<Text
+																			style={{
+																				margin: 16,
+																				fontSize: 24,
+																				textAlign: "center",
+																			}}
+																		>
+																			{item.name}
+																		</Text>
+																	</View>
+
+																	<View>
+																		<Text
+																			style={{
+																				fontSize: 14,
+																				fontWeight: "bold",
+																			}}
+																		>
+																			{item.date} {item.time}
+																		</Text>
+																	</View>
+
+																	<View style={{ marginHorizontal: 12 }}>
+																		<Text
+																			style={{
+																				margin: 16,
+																				fontSize: 24,
+																				textAlign: "center",
+																			}}
+																		>
+																			Vacancy:{" "}
+																			{item.vacancy
+																				? item.vacancy
+																				: "Unlimited/Unspecified"}
+																		</Text>
+																	</View>
+
+																	<View style={styles.innerBox}>
+																		<Text
+																			style={{
+																				marginHorizontal: 12,
+																				marginVertical: 8,
+																				fontSize: 16,
+																			}}
+																		>
+																			{item.description.length > 150
+																				? item.description.substring(0, 150) +
+																				  "..."
+																				: item.description}
+																		</Text>
+																	</View>
+
+																	<View>
+																		{auth &&
+																		auth?.currentUser &&
+																		auth.currentUser?.uid ? (
+																			<>
+																				{registered.includes(item.eventID) ? (
+																					<Button
+																						mode="contained-tonal"
+																						style={{
+																							backgroundColor: "green",
+																							justifyContent: "center",
+																						}}
+																						disabled={disabledButtons[index]}
+																						onPress={() => {
+																							registerEvent(
+																								item.id,
+																								item.eventID,
+																								index,
+																								true
+																							);
+																						}}
+																					>
+																						<Text
+																							style={{
+																								color: "white",
+																							}}
+																						>
+																							Already Registered
+																						</Text>
+																					</Button>
+																				) : (
+																					<Button
+																						mode="contained-tonal"
+																						style={{
+																							backgroundColor: "red",
+																							justifyContent: "center",
+																						}}
+																						disabled={disabledButtons[index]}
+																						onPress={() => {
+																							registerEvent(
+																								item.id,
+																								item.eventID,
+																								index,
+																								false
+																							);
+																						}}
+																					>
+																						<Text
+																							style={{
+																								color: "white",
+																							}}
+																						>
+																							Register
+																						</Text>
+																					</Button>
+																				)}
+																			</>
+																		) : (
+																			<Text>Login To Register For Events</Text>
+																		)}
+																	</View>
+																</View>
+															</View>
+														</>
+													)}
+												</View>
+											) : (
+												<></>
+											)}
+										</>
+									)}
 								</>
 							)}
 						</>
@@ -346,5 +670,11 @@ const styles = StyleSheet.create({
 		marginBottom: 16,
 		borderColor: "#256D85",
 		borderWidth: 1,
+	},
+	fab: {
+		position: "absolute",
+		margin: 16,
+		right: 5,
+		bottom: "3%",
 	},
 });
