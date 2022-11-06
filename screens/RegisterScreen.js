@@ -15,9 +15,8 @@ import {
 	setDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState, useLayoutEffect } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, KeyboardAvoidingView, Platform } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-import { KeyboardAvoidingView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Modal, Portal } from "react-native-paper";
 
@@ -71,8 +70,9 @@ const RegisterScreen = ({ navigation }) => {
 	};
 
 	return (
-		<KeyboardAvoidingView behavior="padding">
-			<StatusBar style="light" />
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+		>
 			<Portal>
 				<Modal
 					visible={visible}

@@ -5,7 +5,7 @@ import { useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import HomeScreen from "../screens/HomeScreen";
-import LoginScreen from "../screens/LoginScreen";
+import LoginScreen from "../screens/LoginScreen/LoginScreen";
 import MapScreen from "../screens/MapScreen";
 import SocScreen from "../screens/SocScreen";
 import RegisterScreen from "../screens/RegisterScreen";
