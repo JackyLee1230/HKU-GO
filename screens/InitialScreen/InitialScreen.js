@@ -51,7 +51,7 @@ const InitialScreen = ({ navigation }) => {
 							alignSelf: "center",
 						}}
 					>
-						<Text style={{ fontSize: 18, justifyContent: "center", textAlign: "center", color: "#256D85" }}>
+						<Text style={{ fontSize: 16, justifyContent: "center", textAlign: "center", color: "#256D85" }}>
 							You are about to leave the app {"\n"}
 						</Text>
 						<Text style={{ fontSize: 18, justifyContent: "center", textAlign: "center", color: "#256D85" }}>

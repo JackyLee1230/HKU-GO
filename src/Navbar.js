@@ -8,7 +8,7 @@ import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen/LoginScreen";
 import MapScreen from "../screens/MapScreen";
 import SocScreen from "../screens/SocScreen";
-import RegisterScreen from "../screens/RegisterScreen";
+import RegisterScreen from "../screens/RegisterScreen/RegisterScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import SocDetailScreen from "../screens/SocDetailScreen";
 

@@ -97,12 +97,12 @@ const LoginScreen = ({ navigation }) => {
 							backgroundColor: "#00C851"
 						}}
 					>
-						CONFIRM
+						CLOSE
 					</Button>
 				</Modal>
 			</Portal>
 			<KeyboardAvoidingView
-				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				behavior={Platform.OS === "ios" ? "padding" : null}
 				style={styles.mainFrame}
 			>
 				<Text
@@ -147,7 +147,7 @@ const LoginScreen = ({ navigation }) => {
 					activeOpacity={0.6}
 					style={{
 						width: "100%",
-						marginTop: 48,
+						marginTop: 40,
 					}}
 					onPress={() => login()}
 				>
