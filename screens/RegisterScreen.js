@@ -27,6 +27,7 @@ const RegisterScreen = ({ navigation }) => {
 	const [imageURL, setImageURL] = useState("");
 	const [registerErr, setRegisterErr] = useState();
 	const [visible, setVisible] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -35,7 +36,7 @@ const RegisterScreen = ({ navigation }) => {
 	}, [navigation]);
 
 	onAuthStateChanged(auth, (user) => {
-		if (user && user.uid) {
+		if (user && user.uid && isLoading === false) {
 			navigation.reset({
 				index: 0,
 				routes: [{ name: "Home" }],
@@ -59,8 +60,12 @@ const RegisterScreen = ({ navigation }) => {
 					photoURL: imageURL || `https://ui-avatars.com/api/?name=${name}`,
 				});
 				await addDoc(collection(db, "points"), { uid: user.uid, points: 0 });
-				console.log("New Points Doc written with ID : " + docRef.id);
-				console.log(user.user);
+				await addDoc(collection(db, "registered"), {
+					uid: user.uid,
+					registered: [],
+				});
+				setIsLoading(false);
+				console.log(user);
 			})
 			.catch((err) => {
 				console.log(err);
