@@ -10,6 +10,7 @@ import SocScreen from "./screens/SocScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SocDetailScreen from "./screens/SocDetailScreen";
+import EventsScreen from "./screens/EventsScreen";
 import Navbar from "./src/Navbar";
 
 const Stack = createNativeStackNavigator();
@@ -59,6 +60,7 @@ const StackNavigator = () => {
 			<Stack.Screen name="Register" component={RegisterScreen} />
 			<Stack.Screen name="Profile" component={ProfileScreen} />
 			<Stack.Screen name="SocDetail" component={SocDetailScreen} />
+			<Stack.Screen name="Events" component={EventsScreen} />
 			{/* <Navbar /> */}
 		</Stack.Navigator>
 	);

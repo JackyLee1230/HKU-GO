@@ -6,16 +6,16 @@ import { signOut } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen = ({ navigation }) => {
-	var user = auth?.currentUser;	
+	var user = auth?.currentUser;
 
-	const signOutUser = async() => {
+	const signOutUser = async () => {
 		await signOut(auth);
 		user = null;
 		navigation.reset({
 			index: 0,
-			routes: [{ name: 'Initial' }],
+			routes: [{ name: "Initial" }],
 		});
-	}
+	};
 
 	return (
 		<SafeAreaView>
@@ -34,36 +34,41 @@ const HomeScreen = ({ navigation }) => {
 						navigation.navigate("Soc");
 					}}
 				></Button>
-				{!user &&
+				{!user && (
 					<Button
 						title="Move to Register Screen"
 						onPress={() => {
 							navigation.navigate("Register");
 						}}
 					></Button>
-				}
-				{!user &&
+				)}
+				{!user && (
 					<Button
 						title="Move to Login Screen"
 						onPress={() => {
 							navigation.navigate("Login");
 						}}
 					></Button>
-				}
+				)}
 				<Button
 					title="Move to Profile Screen"
 					onPress={() => {
 						navigation.navigate("Profile");
 					}}
 				></Button>
+				<Button
+					title="Move to Events Screen"
+					onPress={() => {
+						navigation.navigate("Events");
+					}}
+				></Button>
 				{user && user?.uid ? (
-					<Button 
-						title="signout" 
+					<Button
+						title="signout"
 						onPress={() => {
 							signOutUser();
 						}}
-					>
-					</Button>
+					></Button>
 				) : null}
 			</View>
 		</SafeAreaView>
