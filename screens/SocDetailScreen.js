@@ -194,54 +194,6 @@ const SocDetailScreen = ({ route, navigation }) => {
 
 							{events.map((event) => (
 								<EventCard event={event} />
-								// <View
-								// 	key={event.name}
-								// 	style={{
-								// 		margin: 5,
-								// 		marginHorizontal: 32,
-								// 		padding: 15,
-								// 		backgroundColor: "#fff",
-								// 		borderTopLeftRadius: 16,
-								// 		borderBottomRightRadius: 4,
-								// 		borderTopRightRadius: 16,
-								// 		borderBottomLeftRadius: 4,
-								// 	}}
-								// >
-								// 	<Text
-								// 		style={{
-								// 			fontSize: 16,
-								// 			fontWeight: "bold",
-								// 		}}
-								// 	>
-								// 		{event.name} By {event.organiser}
-								// 	</Text>
-								// 	<Text
-								// 		style={{
-								// 			fontSize: 14,
-								// 			fontWeight: "bold",
-								// 		}}
-								// 	>
-								// 		{event.date} {event.time}
-								// 	</Text>
-								// 	<Text
-								// 		style={{
-								// 			fontSize: 14,
-								// 			fontWeight: "bold",
-								// 		}}
-								// 	>
-								// 		{event.location}
-								// 	</Text>
-								// 	<Text
-								// 		style={{
-								// 			fontSize: 14,
-								// 			fontWeight: "bold",
-								// 		}}
-								// 	>
-								// 		{event.description.length > 150
-								// 			? event.description.substring(0, 150) + "..."
-								// 			: event.description}
-								// 	</Text>
-								// </View>
 							))}
 						</View>
 					</View>

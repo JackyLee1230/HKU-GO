@@ -208,7 +208,18 @@ const EventsScreen = ({ navigation }) => {
 														textAlign: "center",
 													}}
 												>
-													{item.name} {String(disabledButtons[index])}
+													{item.name}
+												</Text>
+											</View>
+
+											<View>
+												<Text
+													style={{
+														fontSize: 14,
+														fontWeight: "bold",
+													}}
+												>
+													{item.date} {item.time}
 												</Text>
 											</View>
 
@@ -248,7 +259,7 @@ const EventsScreen = ({ navigation }) => {
 															<Button
 																mode="contained-tonal"
 																style={{
-																	backgroundColor: "red",
+																	backgroundColor: "green",
 																	justifyContent: "center",
 																}}
 																disabled={disabledButtons[index]}
