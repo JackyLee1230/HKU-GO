@@ -90,7 +90,14 @@ const RegisterScreen = ({ navigation }) => {
 			})
 			.catch((err) => {
 				console.log(err);
-				setRegisterErr(err.message);
+				setRegisterErr(
+					"Error! Reason: " +
+						err.code
+							.replace("auth/", "")
+							.split("-")
+							.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+							.join(" ")
+				);
 				showModal();
 			});
 	};
@@ -143,14 +150,21 @@ const RegisterScreen = ({ navigation }) => {
 						onChangeText={(text) => setName(text)}
 						underlineColor="#F7A76C"
 						activeUnderlineColor="#FF8787"
+						label={
+							<Text>
+								Name
+								<Text style={{ color: "red" }}> *</Text>
+							</Text>
+						}
 						style={{
 							backgroundColor: "#FFFFFF",
 							marginTop: 40,
 						}}
 					/>
 					<TextInput
-						placeholder="Image URL (optional)"
+						placeholder="Image URL"
 						type="text"
+						label={<Text>Image URL (optional)</Text>}
 						value={imageURL}
 						onChangeText={(text) => setImageURL(text)}
 						underlineColor="#F7A76C"
@@ -164,6 +178,12 @@ const RegisterScreen = ({ navigation }) => {
 						placeholder="Email"
 						type="email"
 						value={email}
+						label={
+							<Text>
+								Email
+								<Text style={{ color: "red" }}> *</Text>
+							</Text>
+						}
 						onChangeText={(text) => setEmail(text)}
 						underlineColor="#F7A76C"
 						activeUnderlineColor="#FF8787"
@@ -177,6 +197,12 @@ const RegisterScreen = ({ navigation }) => {
 						type="password"
 						secureTextEntry={!showPassword}
 						value={password}
+						label={
+							<Text>
+								Password
+								<Text style={{ color: "red" }}> *</Text>
+							</Text>
+						}
 						onChangeText={(text) => setPassword(text)}
 						underlineColor="#F7A76C"
 						activeUnderlineColor="#FF8787"
@@ -202,12 +228,17 @@ const RegisterScreen = ({ navigation }) => {
 							width: "100%",
 							marginTop: 40,
 						}}
+						disabled={true}
 						onPress={async () => await register()}
 					>
 						<LinearGradient
 							start={{ x: 0, y: 0 }}
 							end={{ x: 1, y: 0 }}
-							colors={["#B6E388", "#7FB77E"]}
+							colors={
+								email && password && name
+									? ["#B6E388", "#7FB77E"]
+									: ["#B6E388", "#ffffff"]
+							}
 							style={styles.buttonContainer}
 						>
 							<Text style={styles.button}>REGISTER</Text>

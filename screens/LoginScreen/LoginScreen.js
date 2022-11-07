@@ -52,7 +52,14 @@ const LoginScreen = ({ navigation }) => {
 				})
 				.catch((err) => {
 					console.log(err);
-					setLoginErr(err.message);
+					setLoginErr(
+						"Error! Reason: " +
+							err.code
+								.replace("auth/", "")
+								.split("-")
+								.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+								.join(" ")
+					);
 					showModal();
 				});
 		} catch (error) {
@@ -121,6 +128,12 @@ const LoginScreen = ({ navigation }) => {
 					autoFocus
 					type="email"
 					value={email}
+					label={
+						<Text>
+							Email
+							<Text style={{ color: "red" }}> *</Text>
+						</Text>
+					}
 					onChangeText={(text) => setEmail(text)}
 					underlineColor="#F7A76C"
 					activeUnderlineColor="#FF8787"
@@ -136,6 +149,12 @@ const LoginScreen = ({ navigation }) => {
 					placeholder="Password"
 					secureTextEntry={!showPassword}
 					value={password}
+					label={
+						<Text>
+							Password
+							<Text style={{ color: "red" }}> *</Text>
+						</Text>
+					}
 					onChangeText={(text) => setPassword(text)}
 					underlineColor="#F7A76C"
 					activeUnderlineColor="#FF8787"
