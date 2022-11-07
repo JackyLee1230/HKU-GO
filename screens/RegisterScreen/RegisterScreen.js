@@ -15,15 +15,24 @@ import {
 	setDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState, useLayoutEffect } from "react";
-import { StyleSheet, Text, View, FlatList, KeyboardAvoidingView, Platform, TouchableOpacity, ScrollView } from "react-native";
+import {
+	StyleSheet,
+	Text,
+	View,
+	FlatList,
+	KeyboardAvoidingView,
+	Platform,
+	TouchableOpacity,
+	ScrollView,
+} from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { Modal, Portal } from "react-native-paper";
 import styles from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
-import { useHeaderHeight } from '@react-navigation/elements'
+import { useHeaderHeight } from "@react-navigation/elements";
 
 const RegisterScreen = ({ navigation }) => {
-	const height = useHeaderHeight()
+	const height = useHeaderHeight();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [name, setName] = useState("");
@@ -31,6 +40,7 @@ const RegisterScreen = ({ navigation }) => {
 	const [registerErr, setRegisterErr] = useState();
 	const [visible, setVisible] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const [showPassword, setShowPassword] = useState(false);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -52,14 +62,14 @@ const RegisterScreen = ({ navigation }) => {
 		setVisible(false);
 		setRegisterErr();
 	};
-	const containerStyle = { 
+	const containerStyle = {
 		backgroundColor: "white",
 		padding: 20,
-		paddingVertical : 40,
+		paddingVertical: 40,
 		marginHorizontal: 64,
 		borderRadius: 8,
 		elevation: 10,
-        shadowColor: '#171717', 
+		shadowColor: "#171717",
 	};
 
 	const register = async () => {
@@ -98,35 +108,33 @@ const RegisterScreen = ({ navigation }) => {
 					contentContainerStyle={containerStyle}
 				>
 					<Text
-						style={{ 
-							fontSize: 18, 
-							justifyContent: "center", 
-							textAlign: "center", 
-							color: "#256D85" 
+						style={{
+							fontSize: 18,
+							justifyContent: "center",
+							textAlign: "center",
+							color: "#256D85",
 						}}
 					>
 						{registerErr}
 					</Text>
-					<Button 
-						mode="contained" 
+					<Button
+						mode="contained"
 						onPress={hideModal}
 						style={{
 							marginTop: 24,
-							backgroundColor: "#00C851"
+							backgroundColor: "#00C851",
 						}}
 					>
 						CLOSE
 					</Button>
 				</Modal>
 			</Portal>
-			<ScrollView contentContainerStyle={{flexGrow: 1}}>
+			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 				<LinearGradient
 					colors={["#9FDDFF", "#E1F5FF"]}
 					style={styles.mainFrame}
 				>
-					<Text style={styles.welcomeMessage}>
-						Create a HKU GO account
-					</Text>
+					<Text style={styles.welcomeMessage}>Create a HKU GO account</Text>
 					<TextInput
 						placeholder="User Name"
 						autoFocus
@@ -142,7 +150,6 @@ const RegisterScreen = ({ navigation }) => {
 					/>
 					<TextInput
 						placeholder="Image URL (optional)"
-						autoFocus
 						type="text"
 						value={imageURL}
 						onChangeText={(text) => setImageURL(text)}
@@ -155,7 +162,6 @@ const RegisterScreen = ({ navigation }) => {
 					/>
 					<TextInput
 						placeholder="Email"
-						autoFocus
 						type="email"
 						value={email}
 						onChangeText={(text) => setEmail(text)}
@@ -168,8 +174,8 @@ const RegisterScreen = ({ navigation }) => {
 					/>
 					<TextInput
 						placeholder="Password"
-						autoFocus
 						type="password"
+						secureTextEntry={!showPassword}
 						value={password}
 						onChangeText={(text) => setPassword(text)}
 						underlineColor="#F7A76C"
@@ -179,6 +185,15 @@ const RegisterScreen = ({ navigation }) => {
 							marginTop: 24,
 						}}
 					/>
+					<Button
+						mode="contained-tonal"
+						style={{ magin: "auto", marginTop: 16 }}
+						onPress={() => {
+							setShowPassword((prev) => !prev);
+						}}
+					>
+						{!showPassword ? "Show Password" : "Hide Password"}
+					</Button>
 
 					<TouchableOpacity
 						activeOpacity={0.6}
@@ -197,7 +212,7 @@ const RegisterScreen = ({ navigation }) => {
 							<Text style={styles.button}>REGISTER</Text>
 						</LinearGradient>
 					</TouchableOpacity>
-					<View 
+					<View
 						style={{
 							flexDirection: "row",
 							alignItems: "center",
@@ -214,7 +229,7 @@ const RegisterScreen = ({ navigation }) => {
 								marginRight: 8,
 							}}
 						>
-							Already have an account? 
+							Already have an account?
 						</Text>
 						<Text
 							onPress={() => navigation.replace("Login")}
@@ -231,7 +246,7 @@ const RegisterScreen = ({ navigation }) => {
 					</View>
 				</LinearGradient>
 			</ScrollView>
-		</KeyboardAvoidingView>	
+		</KeyboardAvoidingView>
 	);
 };
 

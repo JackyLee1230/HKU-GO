@@ -1,4 +1,10 @@
-import { View, Text, KeyboardAvoidingView, Platform, TouchableOpacity} from "react-native";
+import {
+	View,
+	Text,
+	KeyboardAvoidingView,
+	Platform,
+	TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
 import { auth } from "../../firebase";
 import {
@@ -20,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
 	const [password, setPassword] = useState("");
 	const [loginErr, setLoginErr] = useState();
 	const [visible, setVisible] = useState(false);
-	const googleAuthProvider = new GoogleAuthProvider();
+	const [showPassword, setShowPassword] = useState(false);
 
 	onAuthStateChanged(auth, (currentUser) => {
 		if (currentUser) {
@@ -58,14 +64,14 @@ const LoginScreen = ({ navigation }) => {
 		return !email.includes("@") && email !== "";
 	};
 
-	const containerStyle = { 
+	const containerStyle = {
 		backgroundColor: "white",
 		padding: 20,
-		paddingVertical : 40,
+		paddingVertical: 40,
 		marginHorizontal: 64,
 		borderRadius: 8,
 		elevation: 10,
-        shadowColor: '#171717',
+		shadowColor: "#171717",
 	};
 
 	return (
@@ -80,21 +86,21 @@ const LoginScreen = ({ navigation }) => {
 					contentContainerStyle={containerStyle}
 				>
 					<Text
-						style={{ 
-							fontSize: 18, 
-							justifyContent: "center", 
-							textAlign: "center", 
-							color: "#256D85" 
+						style={{
+							fontSize: 18,
+							justifyContent: "center",
+							textAlign: "center",
+							color: "#256D85",
 						}}
 					>
 						{loginErr}
 					</Text>
-					<Button 
-						mode="contained" 
+					<Button
+						mode="contained"
 						onPress={hideModal}
 						style={{
 							marginTop: 24,
-							backgroundColor: "#00C851"
+							backgroundColor: "#00C851",
 						}}
 					>
 						CLOSE
@@ -105,14 +111,8 @@ const LoginScreen = ({ navigation }) => {
 				behavior={Platform.OS === "ios" ? "padding" : null}
 				style={styles.mainFrame}
 			>
-				<Text
-					style={styles.welcomeMessage}
-				>
-					Welcome Back!
-				</Text>
-				<Text
-					style={styles.welcomeRemindMessage}
-				>
+				<Text style={styles.welcomeMessage}>Welcome Back!</Text>
+				<Text style={styles.welcomeRemindMessage}>
 					Please Sign in to continue.
 				</Text>
 
@@ -125,24 +125,34 @@ const LoginScreen = ({ navigation }) => {
 					underlineColor="#F7A76C"
 					activeUnderlineColor="#FF8787"
 					style={{
-						backgroundColor: "#FFFFFF"
+						backgroundColor: "#FFFFFF",
 					}}
 				/>
 				<HelperText type="error" visible={hasEmailError()}>
 					Email address is invalid!
 				</HelperText>
+
 				<TextInput
 					placeholder="Password"
-					autoFocus
-					secureTextEntry={true}
+					secureTextEntry={!showPassword}
 					value={password}
 					onChangeText={(text) => setPassword(text)}
 					underlineColor="#F7A76C"
 					activeUnderlineColor="#FF8787"
 					style={{
-						backgroundColor: "#FFFFFF"
+						backgroundColor: "#FFFFFF",
 					}}
 				/>
+				<Button
+					mode="contained-tonal"
+					style={{ magin: "auto", marginTop: 16 }}
+					onPress={() => {
+						setShowPassword((prev) => !prev);
+					}}
+				>
+					{!showPassword ? "Show Password" : "Hide Password"}
+				</Button>
+
 				<TouchableOpacity
 					activeOpacity={0.6}
 					style={{
@@ -161,7 +171,7 @@ const LoginScreen = ({ navigation }) => {
 					</LinearGradient>
 				</TouchableOpacity>
 
-				<View 
+				<View
 					style={{
 						flexDirection: "row",
 						alignItems: "center",
@@ -178,7 +188,7 @@ const LoginScreen = ({ navigation }) => {
 							marginRight: 8,
 						}}
 					>
-						Need an account? 
+						Need an account?
 					</Text>
 					<Text
 						onPress={() => navigation.replace("Register")}
