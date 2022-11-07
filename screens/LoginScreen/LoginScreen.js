@@ -142,16 +142,17 @@ const LoginScreen = ({ navigation }) => {
 					style={{
 						backgroundColor: "#FFFFFF",
 					}}
+					right={
+						<TextInput.Icon
+							icon={showPassword ? "eye" : "eye-off"}
+							iconColor={"#222222"}
+							size={24}
+							onPress={() => {
+								setShowPassword((prev) => !prev);
+							}}
+						/>
+					}
 				/>
-				<Button
-					mode="contained-tonal"
-					style={{ magin: "auto", marginTop: 16 }}
-					onPress={() => {
-						setShowPassword((prev) => !prev);
-					}}
-				>
-					{!showPassword ? "Show Password" : "Hide Password"}
-				</Button>
 
 				<TouchableOpacity
 					activeOpacity={0.6}
