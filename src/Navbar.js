@@ -1,73 +1,63 @@
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import React from "react";
-import { StyleSheet } from "react-native";
-import { useTheme } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import React, { Component } from 'react';
+import {
+    Collapse,
+    Nav,
+    Navbar,
+    NavbarBrand,
+    NavbarToggler,
+    NavItem,
+    NavLink
+} from 'reactstrap';
+import {
+    BrowserRouter,
+    Route,
+    Switch,
+    Link
+} from 'react-router-dom';
+import logo from '../assets/appLogo.png';
 
-import HomeScreen from "../screens/HomeScreen";
-import LoginScreen from "../screens/LoginScreen";
-import MapScreen from "../screens/MapScreen";
-import SocScreen from "../screens/SocScreen";
-import RegisterScreen from "../screens/RegisterScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import SocDetailScreen from "../screens/SocDetailScreen";
+class MyNavbar extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            collapse: true
+        };
+        this.toogleNavbar = this.toogleNavbar.bind(this);
+    }
 
-const Tab = createMaterialBottomTabNavigator();
+    toogleNavbar() {
+        this.setState({
+            collapse: !this.state.collapse
+        });
+    }
 
-const styles = StyleSheet.create({
-	bar: {
-		borderTopWidth: 1,
-		elevation: 0,
-	},
-});
-
-export default function Navbar() {
-	return (
-		<Tab.Navigator>
-			<Tab.Screen
-				name="HomeStack"
-				component={HomeScreen}
-				options={{
-					title: "Home",
-					tabBarIcon: ({ focused, color }) => (
-						<Icon
-							name={focused ? "home" : "home-outline"}
-							color={color}
-							size={24}
-						/>
-					),
-				}}
-			/>
-
-			<Tab.Screen
-				name="DiscussionStack"
-				component={MapScreen}
-				options={{
-					title: "Map",
-					tabBarIcon: ({ focused, color }) => (
-						<Icon
-							name={focused ? "map-marker" : "map-marker-outline"}
-							color={color}
-							size={24}
-						/>
-					),
-				}}
-			/>
-
-			<Tab.Screen
-				name="ProfileStack"
-				component={ProfileScreen}
-				options={{
-					title: "Profile",
-					tabBarIcon: ({ focused, color }) => (
-						<Icon
-							name={focused ? "account-circle" : "account-circle-outline"}
-							color={color}
-							size={24}
-						/>
-					),
-				}}
-			/>
-		</Tab.Navigator>
-	);
+    render() {
+        return (
+            <Navbar color="dark" dark>
+                <NavbarBrand href="/" className="mr-auto">
+                    <img
+                        alt=""
+                        src={logo}
+                        width="30"
+                        height="30"
+                        className="d-inline-block align-top"
+                    />
+                    {' Aiden'}
+                </NavbarBrand>
+                <NavbarToggler onClick={this.toogleNavbar} className="mr-2"/>
+                <Collapse isOpen={!this.state.collapse} navbar>
+                    <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <NavLink href="https://ithelp.ithome.com.tw/users/20119510/articles">關於我</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="https://github.com/AidenYang12345">GitHub</NavLink>
+                            </NavItem>
+                    </Nav>
+                </Collapse>
+            </Navbar >
+        )
+    }
 }
+
+export default MyNavbar;

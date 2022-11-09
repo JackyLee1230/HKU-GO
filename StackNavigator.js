@@ -10,7 +10,7 @@ import SocScreen from "./screens/SocScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SocDetailScreen from "./screens/SocDetailScreen";
-import Navbar from "./src/Navbar";
+import MyNavbar from "./src/Navbar";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,11 +25,11 @@ const StackNavigator = () => {
 				component={InitialScreen}
 			/>
 			<Stack.Screen
-				name="Navbar"
+				name="MyNavbar"
 				options={{
 					headerShown: false,
 				}}
-				component={Navbar}
+				component={MyNavbar}
 			/>
 			<Stack.Screen
 				name="Home"

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, LogBox } from "react-native";
 import StackNavigator from "./StackNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Navbar from "./src/Navbar";
+import MyNavbar from "./src/Navbar";
 import { Provider as PaperProvider } from "react-native-paper";
 
 export default function App() {
