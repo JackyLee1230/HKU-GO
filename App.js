@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, LogBox } from "react-native";
-import StackNavigator from "./StackNavigator";
+import RootStackNavigator from "./src/navigation/RootStackNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Navbar from "./src/Navbar";
+import TabBar from "./src/TabBar";
 import { Provider as PaperProvider } from "react-native-paper";
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
 		<PaperProvider>
 			<SafeAreaProvider>
 				<NavigationContainer>
-					<StackNavigator />
+					<RootStackNavigator />
 				</NavigationContainer>
 			</SafeAreaProvider>
 		</PaperProvider>

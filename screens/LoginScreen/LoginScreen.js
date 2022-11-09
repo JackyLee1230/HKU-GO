@@ -30,10 +30,7 @@ const LoginScreen = ({ navigation }) => {
 
 	onAuthStateChanged(auth, (currentUser) => {
 		if (currentUser) {
-			navigation.reset({
-				index: 0,
-				routes: [{ name: "Home" }],
-			});
+			navigation.navigate('WithTab', {screen: 'Home', screen: "TabBar"})
 		}
 	});
 

@@ -61,10 +61,7 @@ const ProfileScreen = ({ navigation }) => {
 
 	const signOutUser = async() => {
 		await signOut(auth);
-		navigation.reset({
-			index: 0,
-			routes: [{ name: 'Initial' }],
-		});
+		navigation.navigate('WithoutTab', {screen: 'Initial'})
 	}
 
 	// console.log(auth?.currentUser);

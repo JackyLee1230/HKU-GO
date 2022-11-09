@@ -11,10 +11,7 @@ const HomeScreen = ({ navigation }) => {
 	const signOutUser = async () => {
 		await signOut(auth);
 		user = null;
-		navigation.reset({
-			index: 0,
-			routes: [{ name: "Initial" }],
-		});
+		navigation.navigate('WithoutTab', {screen: 'Initial'})
 	};
 
 	return (
