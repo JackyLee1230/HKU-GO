@@ -30,7 +30,7 @@ const LoginScreen = ({ navigation }) => {
 
 	onAuthStateChanged(auth, (currentUser) => {
 		if (currentUser) {
-			navigation.navigate('WithTab', {screen: 'Home', screen: "TabBar"})
+			navigation.navigate("WithTab", { screen: "Home", screen: "TabBar" });
 		}
 	});
 
@@ -205,7 +205,7 @@ const LoginScreen = ({ navigation }) => {
 							marginRight: 8,
 						}}
 					>
-						Need an account?
+						Need An Account?
 					</Text>
 					<Text
 						onPress={() => navigation.replace("Register")}

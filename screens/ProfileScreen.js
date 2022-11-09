@@ -27,6 +27,7 @@ import {
 
 const ProfileScreen = ({ navigation }) => {
 	const [points, setPoints] = useState();
+	const [events, setEvents] = useState();
 	const [notification, setNotification] = React.useState("enabled");
 	const [refreshing, setRefreshing] = React.useState(false);
 
@@ -43,6 +44,22 @@ const ProfileScreen = ({ navigation }) => {
 			setPoints(temp.points);
 		});
 	};
+
+	let getRegisteredEvents = async () => {
+		const q = query(
+			collection(db, "registered"),
+			where("uid", "==", auth?.currentUser?.uid)
+		);
+		const querySnapshot2 = await getDocs(q);
+		let result2 = [];
+		querySnapshot2.forEach((doc) => {
+			let temp = doc.data();
+			temp.id = doc.id;
+			result2.push(temp);
+		});
+		setEvents(result2[0].registered);
+	};
+
 	const wait = (timeout) => {
 		return new Promise((resolve) => setTimeout(resolve, timeout));
 	};
@@ -50,19 +67,21 @@ const ProfileScreen = ({ navigation }) => {
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 		getPoints();
+		getRegisteredEvents();
 		wait(2000).then(() => setRefreshing(false));
 	}, []);
 
 	useEffect(() => {
 		if (auth && auth?.currentUser) {
 			getPoints();
+			getRegisteredEvents();
 		}
 	}, [navigation]);
 
-	const signOutUser = async() => {
+	const signOutUser = async () => {
 		await signOut(auth);
-		navigation.navigate('WithoutTab', {screen: 'Initial'})
-	}
+		navigation.navigate("WithoutTab", { screen: "Initial" });
+	};
 
 	// console.log(auth?.currentUser);
 	return (
@@ -87,16 +106,36 @@ const ProfileScreen = ({ navigation }) => {
 							: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
 					}}
 				/>
+
+				<Text style={styles.aboutUser}>
+					{auth?.currentUser ? auth?.currentUser?.uid || "Unknown UID." : ""}
+				</Text>
 				<Text style={styles.userName}>
 					{auth?.currentUser
 						? auth?.currentUser?.displayName || "Anonymous"
 						: "Anonymous"}
 				</Text>
-				<Text style={styles.aboutUser}>
-					{auth?.currentUser ? auth?.currentUser?.uid || "Unknown UID." : ""}
-				</Text>
-				<Text>GO Points: {points ?? 0}</Text>
-				<Text>Email: {auth?.currentUser?.email ?? 0}</Text>
+				<View
+					style={{
+						padding: 12,
+						gap: 12,
+						alignItems: "flex-start",
+						flex: 1,
+						alignItems: "center",
+					}}
+				>
+					<Text style={{ color: "#256D85", fontSize: 16 }}>
+						GO Points: {points ?? 0}
+					</Text>
+					<Text style={{ color: "#256D85", fontSize: 16 }}>
+						Email: {auth?.currentUser?.email ?? 0}
+					</Text>
+					<Text style={{ color: "#256D85", fontSize: 16 }}>
+						Registered Events:{" "}
+						{events && events.length !== 0 ? events.length : 0}
+					</Text>
+				</View>
+
 				{auth && auth?.currentUser ? (
 					<View
 						style={{
@@ -116,7 +155,7 @@ const ProfileScreen = ({ navigation }) => {
 								}}
 							>
 								<RadioButton value="enabled" />
-								<Text>Enable Notification</Text>
+								<Text>Enable Notifications</Text>
 							</View>
 							<View
 								style={{
@@ -126,7 +165,7 @@ const ProfileScreen = ({ navigation }) => {
 								}}
 							>
 								<RadioButton value="disabled" />
-								<Text>Disable Notification</Text>
+								<Text>Disable Notifications</Text>
 							</View>
 						</RadioButton.Group>
 					</View>
@@ -166,7 +205,6 @@ const styles = StyleSheet.create({
 	},
 	userName: {
 		fontSize: 26,
-		// fontWeight: "bold",
 		marginTop: 10,
 		marginBottom: 10,
 	},

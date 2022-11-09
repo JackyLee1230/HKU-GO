@@ -261,7 +261,7 @@ const RegisterScreen = ({ navigation }) => {
 								marginRight: 8,
 							}}
 						>
-							Already have an account?
+							Already Have An Account?
 						</Text>
 						<Text
 							onPress={() => navigation.replace("Login")}
