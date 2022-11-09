@@ -302,6 +302,23 @@ const MapScreen = ({ navigation }) => {
 									</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
+									onPress={() => {
+										navigation.navigate("MapHunt", {marker: markers[index]});
+									}}
+								>
+									<Text
+										style={[
+											styles.textSign,
+											{
+												color: "#FF6347",
+											},
+										]}
+									>
+										Start the Hunt
+									</Text>
+
+								</TouchableOpacity>
+								<TouchableOpacity
 									onPress={(e) => {
 										setFacName(marker.title);
 									}}
