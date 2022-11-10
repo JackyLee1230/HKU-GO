@@ -7,9 +7,8 @@ import TabBar from "./src/TabBar";
 import { Provider as PaperProvider } from "react-native-paper";
 
 export default function App() {
-	LogBox.ignoreLogs([
-		"Warning: Async Storage has been extracted from react-native core",
-	]);
+	// LogBox.ignoreAllLogs();
+
 	return (
 		<PaperProvider>
 			<SafeAreaProvider>
