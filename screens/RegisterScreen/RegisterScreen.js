@@ -228,18 +228,21 @@ const RegisterScreen = ({ navigation }) => {
 							width: "100%",
 							marginTop: 40,
 						}}
-						disabled={true}
+						disabled={email && password && name ? false : true} 
 						onPress={async () => await register()}
 					>
 						<LinearGradient
 							start={{ x: 0, y: 0 }}
 							end={{ x: 1, y: 0 }}
-							colors={
-								email && password && name
-									? ["#B6E388", "#7FB77E"]
-									: ["#B6E388", "#ffffff"]
-							}
-							style={styles.buttonContainer}
+							colors={["#B6E388", "#7FB77E"]}
+							style={{
+								width: "100%",
+								paddingVertical: 12,
+								borderRadius: 8,
+								elevation: 1,
+								shadowColor: '#171717',
+								opacity: (email && password && name) ? 1 : 0.35,
+							}}
 						>
 							<Text style={styles.button}>REGISTER</Text>
 						</LinearGradient>
