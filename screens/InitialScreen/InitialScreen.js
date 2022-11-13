@@ -12,9 +12,17 @@ import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
 import { Modal, Portal } from "react-native-paper";
 import { Button } from "react-native-paper";
+import { auth } from "../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const InitialScreen = ({ navigation }) => {
 	const [visible, setVisible] = React.useState(false);
+
+	onAuthStateChanged(auth, (currentUser) => {
+		if (currentUser) {
+			navigation.navigate("WithTab", { screen: "Home", screen: "TabBar" });
+		}
+	});
 
 	const showModal = () => {
 		setVisible(true);
