@@ -8,6 +8,7 @@ import {
 	TouchableOpacity,
 	ScrollView,
 	Animated,
+	Linking,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
@@ -44,19 +45,17 @@ const MapScreen = ({ navigation }) => {
 	let mapIndex = 0;
 
 	let loadFacility = async () => {
-		const q = query(collection(db, "facility"), where("name", "==", facName));
-		const querySnapshot = await getDocs(q);
-
 		let r = [];
-		querySnapshot &&
+		const q = query(collection(db, "facility"), where("name", "==", facName));
+		const querySnapshot = await getDocs(q).then((querySnapshot) => {
 			querySnapshot.forEach((doc) => {
 				let temp = doc.data();
 				console.log(temp);
 				temp.id = doc.id;
 				r.push(temp);
 			});
-
-		setResult(r[0]);
+			setResult(r[0]);
+		});
 	};
 
 	useEffect(() => {
@@ -146,10 +145,12 @@ const MapScreen = ({ navigation }) => {
 
 	// pop up modal
 	const [visible, setVisible] = React.useState(false);
+	const [hideDesc, setHideDesc] = React.useState(true);
 	const showModal = () => setVisible(true);
 	const hideModal = () => {
 		setVisible(false);
 		setFacName("");
+		setResult();
 	};
 	const containerStyle = { backgroundColor: "white", padding: 20 };
 
@@ -163,18 +164,72 @@ const MapScreen = ({ navigation }) => {
 					onDismiss={hideModal}
 					contentContainerStyle={containerStyle}
 				>
-					<Text>{facName}</Text>
+					<Text>
+						{facName}
+						{"\n"}
+					</Text>
+
 					<Text>
 						{result &&
-							result.departments.map((dep, idx) => {
-								return (
-									<Text>
-										{dep}
-										{"\n"}
-									</Text>
-								);
-							})}
+						result.description &&
+						result.description.length > 200 &&
+						hideDesc
+							? result.description.substring(0, 200) + "..."
+							: result && result.description}
 					</Text>
+
+					{result && result.description && result.description.length > 200 && (
+						<Button
+							mode="contained"
+							onPress={() => {
+								setHideDesc(!hideDesc);
+							}}
+						>
+							{hideDesc ? "Show More" : "Show Less"}
+						</Button>
+					)}
+
+					{result && result.departments && result.departments != [] ? (
+						<>
+							<Text>Departments Associated:</Text>
+							<Text>
+								{result &&
+									result.departments.map((dep, idx) => {
+										return (
+											<Text>
+												{idx + 1}: {dep}
+												{"\n"}
+											</Text>
+										);
+									})}
+							</Text>
+						</>
+					) : null}
+
+					{result && result.links && result.links != [] ? (
+						<>
+							{result && result.links && result.links.length !== 0 ? (
+								<Text>Links:</Text>
+							) : (
+								<Text>Links: N/A</Text>
+							)}
+							<Text>
+								{result && result.links
+									? result.links.map((link, idx) => {
+											return (
+												<Text
+													style={{ color: "blue" }}
+													onPress={() => Linking.openURL(link)}
+												>
+													{idx + 1}: {link}
+													{"\n"}
+												</Text>
+											);
+									  })
+									: null}
+							</Text>
+						</>
+					) : null}
 				</Modal>
 			</Portal>
 			<MapView
