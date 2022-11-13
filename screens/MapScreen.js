@@ -68,7 +68,7 @@ const MapScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		mapAnimation.addListener(({ value }) => {
-			let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
+			let index = Math.floor(value / CARD_WIDTH + 0.3);
 			if (index >= markers.length) {
 				index = markers.length - 1;
 			}
@@ -82,13 +82,6 @@ const MapScreen = ({ navigation }) => {
 				if (mapIndex !== index) {
 					mapIndex = index;
 					const { latitude, longitude } = markers[index];
-					_map.current.animateToRegion(
-						{
-							latitude: latitude,
-							longitude: longitude,
-						},
-						350
-					);
 				}
 			}, 10);
 		});
@@ -96,7 +89,6 @@ const MapScreen = ({ navigation }) => {
 
 	const onMarkerPress = (mapEventData) => {
 		const markerID = mapEventData._targetInst.return.key;
-		console.log(markerID);
 
 		let x = markerID * CARD_WIDTH + markerID * 20;
 
@@ -148,28 +140,8 @@ const MapScreen = ({ navigation }) => {
 		},
 	];
 
-	const interpolations = markers.map((marker, index) => {
-		const inputRange = [
-			(index - 1) * CARD_WIDTH,
-			index * CARD_WIDTH,
-			(index + 1) * CARD_WIDTH,
-		];
-
-		const scale = mapAnimation.interpolate({
-			inputRange,
-			outputRange: [1, 1.5, 1],
-			extrapolate: "clamp",
-		});
-
-		return { scale };
-	});
-
 	function onRegionChange(region) {
 		setRegion({ region });
-	}
-
-	function markerClick() {
-		alert("test");
 	}
 
 	// pop up modal
@@ -212,26 +184,28 @@ const MapScreen = ({ navigation }) => {
 				provider="google"
 				ref={_map}
 			>
-				{markers.map((key) => (
-					<Marker
-						onPress={(e) => onMarkerPress(e)}
-						key={key.ID}
-						coordinate={{
-							latitude: key.latitude,
-							longitude: key.longitude,
-						}}
-						title={key.title}
-						description={key.description}
-					>
-						<Animated.View style={[styles.markerWrap]}>
-							<Animated.Image
-								source={require("../assets/map-marker.png")}
-								style={[styles.marker]}
-								resizeMode="cover"
-							/>
-						</Animated.View>
-					</Marker>
-				))}
+				{markers.map((key, index) => {
+					return (
+						<Marker
+							onPress={(e) => onMarkerPress(e)}
+							key={key.ID}
+							coordinate={{
+								latitude: key.latitude,
+								longitude: key.longitude,
+							}}
+							title={key.title}
+							description={key.description}
+						>
+							<Animated.View style={[styles.markerWrap]}>
+								<Animated.Image
+									source={require("../assets/map-marker.png")}
+									style={[styles.marker]}
+									resizeMode="cover"
+								/>
+							</Animated.View>
+						</Marker>
+					);
+				})}
 			</MapView>
 			<FAB icon="help" style={styles.fab} onPress={() => showModal()} />
 			<Animated.ScrollView
