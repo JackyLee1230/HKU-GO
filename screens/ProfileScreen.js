@@ -83,7 +83,6 @@ const ProfileScreen = ({ navigation }) => {
 		navigation.navigate("WithoutTab", { screen: "Initial" });
 	};
 
-	// console.log(auth?.currentUser);
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
 			<ScrollView
@@ -135,6 +134,15 @@ const ProfileScreen = ({ navigation }) => {
 						{events && events.length !== 0 ? events.length : 0}
 					</Text>
 				</View>
+
+				{events && events.length !== 0 ? (
+					<Button
+						title="REGISTERED EVENTS"
+						onPress={() => {
+							navigation.navigate("Events", { type: "Registered" });
+						}}
+					/>
+				) : null}
 
 				{auth && auth?.currentUser ? (
 					<View

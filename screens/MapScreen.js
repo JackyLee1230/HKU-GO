@@ -50,7 +50,6 @@ const MapScreen = ({ navigation }) => {
 		const querySnapshot = await getDocs(q).then((querySnapshot) => {
 			querySnapshot.forEach((doc) => {
 				let temp = doc.data();
-				console.log(temp);
 				temp.id = doc.id;
 				r.push(temp);
 			});
@@ -317,7 +316,7 @@ const MapScreen = ({ navigation }) => {
 											latitudeDelta: 0.00922,
 											longitudeDelta: 0.00421,
 										});
-										console.log(marker.longitude, marker.latitude);
+										// console.log(marker.longitude, marker.latitude);
 									}}
 								>
 									<Text

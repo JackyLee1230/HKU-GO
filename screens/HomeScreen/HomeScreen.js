@@ -1,4 +1,11 @@
-import { View, Text, Button, ScrollView, TouchableOpacity, ImageBackground } from "react-native";
+import {
+	View,
+	Text,
+	Button,
+	ScrollView,
+	TouchableOpacity,
+	ImageBackground,
+} from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -11,23 +18,15 @@ const HomeScreen = ({ navigation }) => {
 	var user = auth?.currentUser;
 
 	return (
-		<LinearGradient			
+		<LinearGradient
 			colors={["#C3E8FD", "#EFF8FD"]}
 			style={styles.linearGradient}
 		>
 			<ScrollView contentContainerStyle={styles.mainFrame}>
-				<Text
-					style={styles.welcomeMessageTitle}
-				>
-					Welcome Back!
-				</Text>
-				<Text
-					style={styles.welcomeMessage}
-				>
-					What are you looking for now?
-				</Text>
+				<Text style={styles.welcomeMessageTitle}>Welcome Back!</Text>
+				<Text style={styles.welcomeMessage}>What are you looking for now?</Text>
 
-				<TouchableOpacity 
+				<TouchableOpacity
 					style={styles.campusHuntContainer}
 					onPress={() => {
 						navigation.navigate("Map");
@@ -39,20 +38,12 @@ const HomeScreen = ({ navigation }) => {
 						style={styles.campusHuntButtonContainer}
 						imageStyle={styles.campusHuntButtonImage}
 					>
-						<Text
-							style={styles.campusHunt}
-						>
-							Campus Hunt 
-						</Text>
-						<Icon
-							name={"menu-right-outline"}
-							color={"#FFFFFF"}
-							size={32}
-						/>
+						<Text style={styles.campusHunt}>Campus Hunt</Text>
+						<Icon name={"menu-right-outline"} color={"#FFFFFF"} size={32} />
 					</ImageBackground>
 				</TouchableOpacity>
 
-				<TouchableOpacity 
+				<TouchableOpacity
 					style={styles.socContainer}
 					onPress={() => {
 						navigation.navigate("Soc");
@@ -64,23 +55,15 @@ const HomeScreen = ({ navigation }) => {
 						style={styles.socButtonContainer}
 						imageStyle={styles.socButtonImage}
 					>
-						<Text
-							style={styles.soc}
-						>
-							HKU Societies 
-						</Text>
-						<Icon
-							name={"menu-right-outline"}
-							color={"#FFFFFF"}
-							size={32}
-						/>
+						<Text style={styles.soc}>HKU Societies</Text>
+						<Icon name={"menu-right-outline"} color={"#FFFFFF"} size={32} />
 					</ImageBackground>
 				</TouchableOpacity>
 
-				<TouchableOpacity 
+				<TouchableOpacity
 					style={styles.eventContainer}
 					onPress={() => {
-						navigation.navigate("Events");
+						navigation.navigate("Events", { type: "All" });
 					}}
 				>
 					<ImageBackground
@@ -89,19 +72,10 @@ const HomeScreen = ({ navigation }) => {
 						style={styles.eventButtonContainer}
 						imageStyle={styles.eventButtonImage}
 					>
-						<Text
-							style={styles.event}
-						>
-							Event Registrations 
-						</Text>
-						<Icon
-							name={"menu-right-outline"}
-							color={"#FFFFFF"}
-							size={32}
-						/>
+						<Text style={styles.event}>Event Registrations</Text>
+						<Icon name={"menu-right-outline"} color={"#FFFFFF"} size={32} />
 					</ImageBackground>
 				</TouchableOpacity>
-
 			</ScrollView>
 		</LinearGradient>
 	);

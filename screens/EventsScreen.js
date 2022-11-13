@@ -24,8 +24,9 @@ import {
 	setDoc,
 } from "firebase/firestore";
 import { LinearGradient } from "expo-linear-gradient";
+import moment from "moment";
 
-const EventsScreen = ({ navigation }) => {
+const EventsScreen = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [events, setEvents] = useState([]);
 	const [registered, setRegistered] = useState([]);
@@ -35,6 +36,13 @@ const EventsScreen = ({ navigation }) => {
 	const [disabledButtons, setDisabledButtons] = useState([]);
 	const [open, setOpen] = useState(false);
 	const [filter, setFilter] = useState("All");
+
+	const { type } = route.params;
+	useEffect(() => {
+		if (type === "Registered") {
+			setFilter("Registered");
+		}
+	}, []);
 
 	const onStateChange = ({ open }) => setOpen((open) => !open);
 
@@ -260,7 +268,10 @@ const EventsScreen = ({ navigation }) => {
 																fontWeight: "bold",
 															}}
 														>
-															{item.date} {item.time}
+															{moment(item.date, "DD-MM-YYYY").format(
+																"DD/MM/YYYY"
+															)}{" "}
+															{item.time}
 														</Text>
 													</View>
 
@@ -320,7 +331,7 @@ const EventsScreen = ({ navigation }) => {
 																				color: "white",
 																			}}
 																		>
-																			Already Registered
+																			Already Registered! Unregister?
 																		</Text>
 																	</Button>
 																) : (
@@ -458,7 +469,7 @@ const EventsScreen = ({ navigation }) => {
 																								color: "white",
 																							}}
 																						>
-																							Already Registered
+																							Already Registered! Unregister?
 																						</Text>
 																					</Button>
 																				) : (

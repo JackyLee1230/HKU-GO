@@ -34,6 +34,7 @@ const SocDetailScreen = ({ route, navigation }) => {
 	let [isRefreshing, setIsRefreshing] = useState(false);
 	const [soc, setSoc] = useState([]);
 	const [events, setEvents] = useState([]);
+	const [hideDesc, setHideDesc] = useState(true);
 	useLayoutEffect(() => {
 		navigation.setOptions({
 			headerBackTitle: "Back To Home Page",
@@ -61,8 +62,6 @@ const SocDetailScreen = ({ route, navigation }) => {
 			result2.push(temp);
 		});
 
-		console.log(result2);
-
 		setSoc(result[0]);
 		setEvents(result2);
 		setIsLoading(false);
@@ -71,6 +70,9 @@ const SocDetailScreen = ({ route, navigation }) => {
 
 	if (isLoading) {
 		loadSocs();
+		navigation.setOptions({
+			title: soc.name,
+		});
 	}
 
 	return (
@@ -132,9 +134,19 @@ const SocDetailScreen = ({ route, navigation }) => {
 										}}
 									>
 										{soc.description.length > 150
-											? soc.description.substring(0, 150) + "..."
+											? hideDesc
+												? soc.description.substring(0, 150) + "..."
+												: soc.description
 											: soc.description}
 									</Text>
+									{soc.description.length > 150 && (
+										<Button
+											mode="contained"
+											onPress={() => setHideDesc((prev) => !prev)}
+										>
+											{hideDesc ? "Show More" : "Show Less"}
+										</Button>
+									)}
 								</View>
 							</View>
 						</View>

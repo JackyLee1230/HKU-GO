@@ -39,10 +39,34 @@ const MainStackNavigator = () => {
 					},
 				}}
 			/>
-			<Stack.Screen name="Soc" component={SocScreen} />
-			<Stack.Screen name="Profile" component={ProfileScreen} />
-			<Stack.Screen name="SocDetail" component={SocDetailScreen} />
-			<Stack.Screen name="Events" component={EventsScreen} />
+			<Stack.Screen
+				name="Soc"
+				component={SocScreen}
+				options={{
+					title: "HKU Societies",
+				}}
+			/>
+			<Stack.Screen
+				name="Profile"
+				component={ProfileScreen}
+				options={{
+					title: "Your HKU Go Profile",
+				}}
+			/>
+			<Stack.Screen
+				name="SocDetail"
+				component={SocDetailScreen}
+				options={{
+					title: "HKU Societies",
+				}}
+			/>
+			<Stack.Screen
+				name="Events"
+				component={EventsScreen}
+				options={{
+					title: "HKU InfoDay Events",
+				}}
+			/>
 			{/* <TabBar /> */}
 		</Stack.Navigator>
 	);
