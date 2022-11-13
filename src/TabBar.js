@@ -20,9 +20,10 @@ export default function TabBar() {
 		<Tab.Navigator
 			activeColor="#47b5ff"
 			inactiveColor="#666666"
-			barStyle={{ 
-				backgroundColor: 'white',
+			barStyle={{
+				backgroundColor: "white",
 			}}
+			screenOptions={{ tabBarHideOnKeyboard: true }}
 		>
 			<Tab.Screen
 				name="HomeStack"

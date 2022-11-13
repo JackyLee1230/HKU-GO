@@ -9,9 +9,10 @@ import {
 	RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { RadioButton } from "react-native-paper";
+import { Modal, Portal, RadioButton, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase";
+import { updateProfile } from "firebase/auth";
 import { signOut } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -30,6 +31,16 @@ const ProfileScreen = ({ navigation }) => {
 	const [events, setEvents] = useState();
 	const [notification, setNotification] = React.useState("enabled");
 	const [refreshing, setRefreshing] = React.useState(false);
+	const [newUserName, setNewUserName] = useState("");
+	const [visible, setVisible] = useState(false);
+
+	const showModal = () => {
+		setVisible(true);
+	};
+
+	const hideModal = () => {
+		setVisible(false);
+	};
 
 	let getPoints = async () => {
 		console.log("UID is " + auth?.currentUser?.uid);
@@ -83,6 +94,26 @@ const ProfileScreen = ({ navigation }) => {
 		navigation.navigate("WithoutTab", { screen: "Initial" });
 	};
 
+	const updateUserName = async () => {
+		if (newUserName.length > 0) {
+			// update the user name using updateProfile
+			await updateProfile(auth.currentUser, {
+				displayName: newUserName,
+			})
+				.then(() => {
+					setRefreshing(true);
+					getPoints();
+					getRegisteredEvents();
+					setRefreshing(false);
+					setNewUserName("");
+					hideModal();
+				})
+				.catch((error) => {
+					hideModal();
+				});
+		}
+	};
+
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
 			<ScrollView
@@ -96,6 +127,29 @@ const ProfileScreen = ({ navigation }) => {
 				}
 				showsVerticalScrollIndicator={false}
 			>
+				<Portal>
+					<Modal
+						visible={visible}
+						onDismiss={hideModal}
+						contentContainerStyle={{
+							backgroundColor: "white",
+							padding: 20,
+							paddingVertical: 40,
+							marginHorizontal: 64,
+							borderRadius: 8,
+							elevation: 10,
+							shadowColor: "#171717",
+						}}
+					>
+						<TextInput
+							label="New User Name"
+							value={newUserName}
+							onChangeText={(text) => setNewUserName(text)}
+							style={{ width: "100%" }}
+						></TextInput>
+						<Button title="Update Username" onPress={updateUserName}></Button>
+					</Modal>
+				</Portal>
 				<Image
 					style={styles.userImg}
 					source={{
@@ -114,6 +168,9 @@ const ProfileScreen = ({ navigation }) => {
 						? auth?.currentUser?.displayName || "Anonymous"
 						: "Anonymous"}
 				</Text>
+
+				<Button onPress={showModal} title="Change User Name" />
+
 				<View
 					style={{
 						padding: 12,
