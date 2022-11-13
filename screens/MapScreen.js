@@ -196,7 +196,7 @@ const MapScreen = ({ navigation }) => {
 								{result &&
 									result.departments.map((dep, idx) => {
 										return (
-											<Text>
+											<Text key={idx}>
 												{idx + 1}: {dep}
 												{"\n"}
 											</Text>
@@ -218,6 +218,7 @@ const MapScreen = ({ navigation }) => {
 									? result.links.map((link, idx) => {
 											return (
 												<Text
+													key={idx}
 													style={{ color: "blue" }}
 													onPress={() => Linking.openURL(link)}
 												>

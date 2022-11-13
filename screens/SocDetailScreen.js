@@ -25,6 +25,7 @@ import {
 } from "firebase/firestore";
 import { LinearGradient } from "expo-linear-gradient";
 import EventCard from "../src/EventCard";
+import Swiper from "react-native-swiper";
 
 const SocDetailScreen = ({ route, navigation }) => {
 	const { id, name } = route.params;
@@ -180,6 +181,26 @@ const SocDetailScreen = ({ route, navigation }) => {
 									</Button>
 								)}
 							</View>
+						)}
+
+						{soc.images && soc.images.length !== 0 && (
+							<Swiper
+								autoplay
+								autoplayTimeout={4}
+								showsButtons={true}
+								activeDotColor={"blue"}
+								containerStyle={{ aspectRatio: 4 / 3 }}
+							>
+								{soc.images.map((image, index) => (
+									<View key={index}>
+										<Image
+											style={{ aspectRatio: 4 / 3 }}
+											source={{ uri: image }}
+											resizeMode="contain"
+										></Image>
+									</View>
+								))}
+							</Swiper>
 						)}
 
 						<View style={{ width: "100%" }}>
