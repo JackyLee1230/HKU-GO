@@ -33,6 +33,7 @@ const SPACING_FOR_CARD_INSET = (CARD_WIDTH / 0.6) * 0.1 - 5;
 const MapScreen = ({ navigation }) => {
 	const [facName, setFacName] = useState("");
 	const [result, setResult] = useState();
+	const [mapType, setMapType] = useState("standard");
 	const [region, setRegion] = useState({
 		latitude: 22.28333,
 		longitude: 114.13643,
@@ -63,6 +64,15 @@ const MapScreen = ({ navigation }) => {
 			showModal();
 		}
 	}, [facName]);
+
+	//  function that change the mapType to hybrid if standard and vice versa
+	const changeMapType = () => {
+		if (mapType == "standard") {
+			setMapType("hybrid");
+		} else {
+			setMapType("standard");
+		}
+	};
 
 	useEffect(() => {
 		mapAnimation.addListener(({ value }) => {
@@ -316,6 +326,7 @@ const MapScreen = ({ navigation }) => {
 				region={region}
 				onRegionChange={onRegionChange}
 				style={styles.map}
+				mapType={mapType}
 				provider="google"
 				ref={_map}
 			>
@@ -342,7 +353,11 @@ const MapScreen = ({ navigation }) => {
 					);
 				})}
 			</MapView>
-			<FAB icon="help" style={styles.fab} onPress={() => showModal()} />
+			<FAB
+				icon={mapType === "standard" ? "map-plus" : "map"}
+				style={styles.fab}
+				onPress={() => changeMapType()}
+			/>
 			<Animated.ScrollView
 				ref={_scrollView}
 				horizontal
