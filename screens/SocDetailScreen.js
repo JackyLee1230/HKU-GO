@@ -226,7 +226,7 @@ const SocDetailScreen = ({ route, navigation }) => {
 							</Text>
 
 							{events.map((event) => (
-								<EventCard event={event} />
+								<EventCard key={event.name} event={event} />
 							))}
 						</View>
 					</View>

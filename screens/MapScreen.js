@@ -241,7 +241,13 @@ const MapScreen = ({ navigation }) => {
 		setFacName("");
 		setResult();
 	};
-	const containerStyle = { backgroundColor: "white", padding: 20 };
+	const containerStyle = {
+		backgroundColor: "white",
+		padding: 20,
+		width: "80%",
+		alignSelf: "center",
+		borderRadius: 16,
+	};
 
 	const _scrollView = React.useRef(null);
 
@@ -253,7 +259,7 @@ const MapScreen = ({ navigation }) => {
 					onDismiss={hideModal}
 					contentContainerStyle={containerStyle}
 				>
-					<Text>
+					<Text style={{ fontSize: 24, alignSelf: "center" }}>
 						{facName}
 						{"\n"}
 					</Text>
@@ -320,6 +326,17 @@ const MapScreen = ({ navigation }) => {
 							</Text>
 						</>
 					) : null}
+
+					<Button
+						mode="contained"
+						onPress={hideModal}
+						style={{
+							marginTop: 24,
+							backgroundColor: "#00C851",
+						}}
+					>
+						CLOSE
+					</Button>
 				</Modal>
 			</Portal>
 			<MapView
