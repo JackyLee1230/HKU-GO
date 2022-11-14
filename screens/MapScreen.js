@@ -98,6 +98,14 @@ const MapScreen = ({ navigation }) => {
 		{ image: require("../assets/chiwah.png") },
 		{ image: require("../assets/hakingwong.png") },
 		{ image: require("../assets/knowles.png") },
+		{ image: require("../assets/mainbuilding.jpg") },
+		{ image: require("../assets/composite.png") },
+		{ image: require("../assets/chowyeiching.jpeg") },
+		{ image: require("../assets/raysonhuang.png") },
+		{ image: require("../assets/cya.jpg") },
+		{ image: require("../assets/cyp.jpg") },
+		{ image: require("../assets/cyc.jpg") },
+		{ image: require("../assets/mengwah.jpg") },
 	];
 	let markers = [
 		{
