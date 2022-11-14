@@ -4,7 +4,7 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 	TouchableOpacity,
-	ScrollView
+	ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { auth } from "../../firebase";
@@ -179,6 +179,7 @@ const LoginScreen = ({ navigation }) => {
 							width: "100%",
 							marginTop: 40,
 						}}
+						disabled={!email || !password || hasEmailError}
 						onPress={() => login()}
 					>
 						<LinearGradient

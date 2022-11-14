@@ -126,6 +126,7 @@ const ResetPassword = ({ navigation }) => {
 							width: "100%",
 							marginTop: 20,
 						}}
+						disabled={hasEmailError || !email}
 						onPress={() => reset()}
 					>
 						<LinearGradient
@@ -171,7 +172,7 @@ const ResetPassword = ({ navigation }) => {
 						</Text>
 					</View>
 				</LinearGradient>
-			</ScrollView>	
+			</ScrollView>
 		</KeyboardAvoidingView>
 	);
 };
