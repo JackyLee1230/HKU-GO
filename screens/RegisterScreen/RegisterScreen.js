@@ -86,7 +86,6 @@ const RegisterScreen = ({ navigation }) => {
 					registered: [],
 				});
 				setIsLoading(false);
-				console.log(user);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -228,7 +227,7 @@ const RegisterScreen = ({ navigation }) => {
 							width: "100%",
 							marginTop: 40,
 						}}
-						disabled={email && password && name ? false : true} 
+						disabled={email && password && name ? false : true}
 						onPress={async () => await register()}
 					>
 						<LinearGradient
@@ -240,8 +239,8 @@ const RegisterScreen = ({ navigation }) => {
 								paddingVertical: 12,
 								borderRadius: 8,
 								elevation: 1,
-								shadowColor: '#171717',
-								opacity: (email && password && name) ? 1 : 0.35,
+								shadowColor: "#171717",
+								opacity: email && password && name ? 1 : 0.35,
 							}}
 						>
 							<Text style={styles.button}>REGISTER</Text>

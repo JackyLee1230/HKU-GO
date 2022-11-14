@@ -301,6 +301,23 @@ const MapScreen = ({ navigation }) => {
 						</>
 					) : null}
 
+					{result && result.facilities && result.facilities != [] ? (
+						<>
+							<Text>Facilities:</Text>
+							<Text>
+								{result &&
+									result.facilities.map((f, idx) => {
+										return (
+											<Text key={idx}>
+												{f}
+												{"\n"}
+											</Text>
+										);
+									})}
+							</Text>
+						</>
+					) : null}
+
 					{result && result.links && result.links != [] ? (
 						<>
 							{result && result.links && result.links.length !== 0 ? (
