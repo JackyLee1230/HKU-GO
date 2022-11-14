@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     mainFrame: {
         flexDirection: "column",
         padding: 32,
+        flex: 1,
     },
     welcomeMessage: {
         fontSize: 32,

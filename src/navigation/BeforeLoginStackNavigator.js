@@ -26,11 +26,13 @@ const BeforeLoginStackNavigator = () => {
 			<Stack.Screen
 				name="ResetPassword"
 				component={ResetPasswordScreen}
-				options={{
-					headerShown: false,
-				}}
+				options={{ title: "Reset Password" }}
 			/>
-			<Stack.Screen name="Register" component={RegisterScreen} />
+			<Stack.Screen 
+				name="Register" 
+				component={RegisterScreen} 
+				options={{ title: "Register Account" }}
+			/>
 		</Stack.Navigator>
 	);
 };

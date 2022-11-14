@@ -4,6 +4,7 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 	TouchableOpacity,
+	ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { auth } from "../firebase";
@@ -49,8 +50,8 @@ const ResetPassword = ({ navigation }) => {
 	};
 
 	return (
-		<LinearGradient
-			colors={["#9FDDFF", "#E1F5FF"]}
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : null}
 			style={styles.linearGradient}
 		>
 			<Portal>
@@ -86,89 +87,92 @@ const ResetPassword = ({ navigation }) => {
 					</Button>
 				</Modal>
 			</Portal>
-			<KeyboardAvoidingView
-				behavior={Platform.OS === "ios" ? "padding" : null}
-				style={styles.mainFrame}
-			>
-				<Text style={styles.welcomeMessage}>Reset Password</Text>
-				<Text style={styles.welcomeRemindMessage}>
-					Please Enter The Email Associated With Your Account
-				</Text>
 
-				<TextInput
-					placeholder="Email"
-					autoFocus
-					type="email"
-					value={email}
-					label={
-						<Text>
-							Email
-							<Text style={{ color: "red" }}> *</Text>
+			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+				<LinearGradient
+					colors={["#9FDDFF", "#E1F5FF"]}
+					style={styles.mainFrame}
+				>
+					<Text style={styles.welcomeMessage}>Reset Password</Text>
+					<Text style={styles.welcomeRemindMessage}>
+						Please Enter The Email Associated With Your Account
+					</Text>
+
+					<TextInput
+						placeholder="Email"
+						autoFocus
+						type="email"
+						value={email}
+						label={
+							<Text>
+								Email
+								<Text style={{ color: "red" }}> *</Text>
+							</Text>
+						}
+						onChangeText={(text) => setEmail(text)}
+						underlineColor="#F7A76C"
+						activeUnderlineColor="#FF8787"
+						style={{
+							backgroundColor: "#FFFFFF",
+						}}
+					/>
+					<HelperText type="error" visible={hasEmailError()}>
+						Email address is invalid!
+					</HelperText>
+
+					<TouchableOpacity
+						activeOpacity={0.6}
+						style={{
+							width: "100%",
+							marginTop: 20,
+						}}
+						onPress={() => reset()}
+					>
+						<LinearGradient
+							start={{ x: 0, y: 0 }}
+							end={{ x: 1, y: 0 }}
+							colors={["#F8C4B4", "#FF8787"]}
+							style={styles.buttonContainer}
+						>
+							<Text style={styles.button}>Reset Password</Text>
+						</LinearGradient>
+					</TouchableOpacity>
+
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							justifyContent: "center",
+							marginTop: 12,
+						}}
+					>
+						<Text
+							style={{
+								fontSize: 14,
+								fontWeight: "500",
+								textAlign: "center",
+								color: "#F7A76C",
+								marginRight: 8,
+							}}
+						>
+							Need An Account?
 						</Text>
-					}
-					onChangeText={(text) => setEmail(text)}
-					underlineColor="#F7A76C"
-					activeUnderlineColor="#FF8787"
-					style={{
-						backgroundColor: "#FFFFFF",
-					}}
-				/>
-				<HelperText type="error" visible={hasEmailError()}>
-					Email address is invalid!
-				</HelperText>
-
-				<TouchableOpacity
-					activeOpacity={0.6}
-					style={{
-						width: "100%",
-						marginTop: 40,
-					}}
-					onPress={() => reset()}
-				>
-					<LinearGradient
-						start={{ x: 0, y: 0 }}
-						end={{ x: 1, y: 0 }}
-						colors={["#F8C4B4", "#FF8787"]}
-						style={styles.buttonContainer}
-					>
-						<Text style={styles.button}>Reset Password</Text>
-					</LinearGradient>
-				</TouchableOpacity>
-
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						justifyContent: "center",
-						marginTop: 12,
-					}}
-				>
-					<Text
-						style={{
-							fontSize: 14,
-							fontWeight: "500",
-							textAlign: "center",
-							color: "#F7A76C",
-							marginRight: 8,
-						}}
-					>
-						Need An Account?
-					</Text>
-					<Text
-						onPress={() => navigation.replace("Register")}
-						style={{
-							fontSize: 16,
-							fontWeight: "700",
-							textAlign: "center",
-							textDecorationLine: "underline",
-							color: "#F7A76C",
-						}}
-					>
-						Register Now
-					</Text>
-				</View>
-			</KeyboardAvoidingView>
-		</LinearGradient>
+						<Text
+							onPress={() => navigation.replace("Register")}
+							style={{
+								fontSize: 16,
+								fontWeight: "700",
+								textAlign: "center",
+								textDecorationLine: "underline",
+								color: "#F7A76C",
+							}}
+						>
+							Register Now
+						</Text>
+					</View>
+				</LinearGradient>
+			</ScrollView>	
+		</KeyboardAvoidingView>
 	);
 };
 
