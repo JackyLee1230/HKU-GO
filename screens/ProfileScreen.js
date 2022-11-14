@@ -43,7 +43,6 @@ const ProfileScreen = ({ navigation }) => {
 	};
 
 	let getPoints = async () => {
-		console.log("UID is " + auth?.currentUser?.uid);
 		const q = query(
 			collection(db, "points"),
 			where("uid", "==", auth?.currentUser?.uid)
@@ -51,7 +50,6 @@ const ProfileScreen = ({ navigation }) => {
 		const querySnapshot = await getDocs(q);
 		querySnapshot.forEach((doc) => {
 			let temp = doc.data();
-			console.log(temp);
 			setPoints(temp.points);
 		});
 	};
@@ -70,6 +68,15 @@ const ProfileScreen = ({ navigation }) => {
 		});
 		setEvents(result2[0].registered);
 	};
+
+	// call getPoints everytime every 30 seconds
+	useEffect(() => {
+		const interval = setInterval(() => {
+			getPoints();
+			getRegisteredEvents();
+		}, 30000);
+		return () => clearInterval(interval);
+	}, []);
 
 	const wait = (timeout) => {
 		return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -181,14 +188,17 @@ const ProfileScreen = ({ navigation }) => {
 					}}
 				>
 					<Text style={{ color: "#256D85", fontSize: 16 }}>
-						GO Points: {points ?? 0}
+						Email: {auth?.currentUser?.email ?? 0}
 					</Text>
 					<Text style={{ color: "#256D85", fontSize: 16 }}>
-						Email: {auth?.currentUser?.email ?? 0}
+						GO Points: {points ?? 0}
 					</Text>
 					<Text style={{ color: "#256D85", fontSize: 16 }}>
 						Registered Events:{" "}
 						{events && events.length !== 0 ? events.length : 0}
+					</Text>
+					<Text style={{ color: "#256D85", fontSize: 10 }}>
+						* GO Points and Register Events Count are updated every 30 seconds,
 					</Text>
 				</View>
 

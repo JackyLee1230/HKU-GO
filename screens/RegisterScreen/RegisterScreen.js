@@ -80,7 +80,12 @@ const RegisterScreen = ({ navigation }) => {
 					displayName: name,
 					photoURL: imageURL || `https://ui-avatars.com/api/?name=${name}`,
 				});
-				await addDoc(collection(db, "points"), { uid: user.uid, points: 0 });
+				await addDoc(collection(db, "points"), {
+					uid: user.uid,
+					points: 0,
+					mapHunt: [],
+					events: [],
+				});
 				await addDoc(collection(db, "registered"), {
 					uid: user.uid,
 					registered: [],

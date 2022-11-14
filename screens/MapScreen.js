@@ -357,7 +357,7 @@ const MapScreen = ({ navigation }) => {
 				</Modal>
 			</Portal>
 			<MapView
-				region={region}
+				region={region || { latitude: 22.28333, longitude: 114.13643 }}
 				onRegionChange={onRegionChange}
 				style={styles.map}
 				mapType={mapType}
@@ -442,10 +442,9 @@ const MapScreen = ({ navigation }) => {
 										setRegion({
 											latitude: marker.latitude,
 											longitude: marker.longitude,
-											latitudeDelta: 0.00922,
-											longitudeDelta: 0.00421,
+											latitudeDelta: 0.00222,
+											longitudeDelta: 0.00121,
 										});
-										// console.log(marker.longitude, marker.latitude);
 									}}
 								>
 									<Text

@@ -61,6 +61,7 @@ const EventsScreen = ({ navigation, route }) => {
 				collection(db, "registered"),
 				where("uid", "==", auth?.currentUser?.uid)
 			);
+
 			const querySnapshot2 = await getDocs(q2);
 			let result2 = [];
 			querySnapshot2.forEach((doc) => {
@@ -116,6 +117,27 @@ const EventsScreen = ({ navigation, route }) => {
 					vacancy: result[0].vacancy - 1,
 				});
 			}
+
+			const q3 = query(
+				collection(db, "points"),
+				where("uid", "==", auth?.currentUser?.uid)
+			);
+			const querySnapshot3 = await getDocs(q3);
+			let result3 = [];
+			querySnapshot3.forEach((doc) => {
+				let temp = doc.data();
+				temp.id = doc.id;
+				result3.push(temp);
+			});
+			if (result3.length > 0) {
+				if (!result3[0].events.includes(eventID)) {
+					const docRef3 = doc(db, "points", result3[0].id);
+					await updateDoc(docRef3, {
+						events: [...result3[0].events, eventID],
+						points: result3[0].points + 10,
+					});
+				}
+			}
 		} else {
 			const q = query(
 				collection(db, "infodayevents"),
@@ -134,6 +156,27 @@ const EventsScreen = ({ navigation, route }) => {
 				await updateDoc(docRef, {
 					vacancy: result[0].vacancy + 1,
 				});
+			}
+			// if points table with uid == auth.currentUser.uid exists,and eventID in events array, remove from events array and remove 1 point to user
+			const q3 = query(
+				collection(db, "points"),
+				where("uid", "==", auth?.currentUser?.uid)
+			);
+			const querySnapshot3 = await getDocs(q3);
+			let result3 = [];
+			querySnapshot3.forEach((doc) => {
+				let temp = doc.data();
+				temp.id = doc.id;
+				result3.push(temp);
+			});
+			if (result3.length > 0) {
+				if (result3[0].events.includes(eventID)) {
+					const docRef3 = doc(db, "points", result3[0].id);
+					await updateDoc(docRef3, {
+						events: result3[0].events.filter((item) => item !== eventID),
+						points: result3[0].points - 10,
+					});
+				}
 			}
 		}
 
