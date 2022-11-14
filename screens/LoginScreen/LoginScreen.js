@@ -179,7 +179,7 @@ const LoginScreen = ({ navigation }) => {
 							width: "100%",
 							marginTop: 40,
 						}}
-						disabled={!email || !password || hasEmailError}
+						disabled={!email || !password}
 						onPress={() => login()}
 					>
 						<LinearGradient
