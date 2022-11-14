@@ -205,6 +205,39 @@ const LoginScreen = ({ navigation }) => {
 							marginRight: 8,
 						}}
 					>
+						Forgot Password?
+					</Text>
+					<Text
+						onPress={() => navigation.replace("ResetPassword")}
+						style={{
+							fontSize: 16,
+							fontWeight: "700",
+							textAlign: "center",
+							textDecorationLine: "underline",
+							color: "#F7A76C",
+						}}
+					>
+						Reset Now!
+					</Text>
+				</View>
+
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "center",
+						marginTop: 12,
+					}}
+				>
+					<Text
+						style={{
+							fontSize: 14,
+							fontWeight: "500",
+							textAlign: "center",
+							color: "#F7A76C",
+							marginRight: 8,
+						}}
+					>
 						Need An Account?
 					</Text>
 					<Text
