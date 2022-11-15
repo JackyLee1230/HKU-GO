@@ -12,7 +12,8 @@ import ProfileScreen from "./screens/ProfileScreen";
 import SocDetailScreen from "./screens/SocDetailScreen";
 import MyNavbar from "./src/Navbar";
 import MapHuntScreen from "./screens/MapHuntScreen.js";
-import CameraScreen from './screens/CameraScreen.js'	
+import CameraScreen from './screens/CameraScreen.js'
+import AiScreen from './screens/AiScreen.js'
 
 const Stack = createNativeStackNavigator();
 
@@ -61,10 +62,30 @@ const StackNavigator = () => {
 			<Stack.Screen name="Register" component={RegisterScreen} />
 			<Stack.Screen name="Profile" component={ProfileScreen} />
 			<Stack.Screen name="SocDetail" component={SocDetailScreen} />
-			<Stack.Screen name="Camera" component={CameraScreen} />
+			<Stack.Screen name="Camera" component={CameraScreen} options={{
+				title: "HKU Hunt",
+				headerStyle: {
+					backgroundColor: "#f4511e",
+				},
+				headerTintColor: "#fff",
+				headerTitleStyle: {
+					fontWeight: "bold",
+				},
+			}} />
 			<Stack.Screen name="MapHunt" component={MapHuntScreen}
 				options={{
 					title: "HKU Hunt",
+					headerStyle: {
+						backgroundColor: "#f4511e",
+					},
+					headerTintColor: "#fff",
+					headerTitleStyle: {
+						fontWeight: "bold",
+					},
+				}} />
+			<Stack.Screen name="Ai" component={AiScreen}
+				options={{
+					title: "Result",
 					headerStyle: {
 						backgroundColor: "#f4511e",
 					},
