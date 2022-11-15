@@ -16,12 +16,18 @@ import {
 	signInWithEmailAndPassword,
 	signInWithPopup,
 } from "firebase/auth";
-import { TextInput, Button, HelperText } from "react-native-paper";
+import {
+	TextInput,
+	Button,
+	HelperText,
+	ActivityIndicator,
+	MD2Colors,
+} from "react-native-paper";
 import { CurrentRenderContext } from "@react-navigation/native";
 import { Modal, Portal } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
 	const [email, setEmail] = useState("");
@@ -29,10 +35,23 @@ const LoginScreen = ({ navigation }) => {
 	const [loginErr, setLoginErr] = useState();
 	const [visible, setVisible] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
+	const [loadingIndication, setLoadingIndication] = useState(false);
 
 	onAuthStateChanged(auth, (currentUser) => {
 		if (currentUser && currentUser.uid) {
-			navigation.navigate("WithTab", { screen: "Home", screen: "TabBar" });
+			setLoadingIndication(true);
+			// navigation.navigate("WithTab", { screen: "Home", screen: "TabBar" });
+			navigation.reset({
+				index: 0,
+				routes: [
+					{
+						name: "WithTab",
+						state: {
+							routes: [{ name: "TabBar" }, { name: "Home" }],
+						},
+					},
+				],
+			});
 		}
 	});
 
@@ -124,6 +143,12 @@ const LoginScreen = ({ navigation }) => {
 						Please Sign in to continue.
 					</Text>
 
+					<ActivityIndicator
+						animating={loadingIndication}
+						color={MD2Colors.red800}
+						size={"large"}
+					/>
+
 					<TextInput
 						placeholder="Email"
 						autoFocus
@@ -145,7 +170,6 @@ const LoginScreen = ({ navigation }) => {
 					<HelperText type="error" visible={hasEmailError()}>
 						Email address is invalid!
 					</HelperText>
-
 					<TextInput
 						placeholder="Password"
 						secureTextEntry={!showPassword}
@@ -173,7 +197,6 @@ const LoginScreen = ({ navigation }) => {
 							/>
 						}
 					/>
-
 					<TouchableOpacity
 						activeOpacity={0.6}
 						style={{
@@ -192,7 +215,6 @@ const LoginScreen = ({ navigation }) => {
 							<Text style={styles.button}>SIGN IN</Text>
 						</LinearGradient>
 					</TouchableOpacity>
-
 					<View
 						style={{
 							flexDirection: "row",
@@ -225,7 +247,6 @@ const LoginScreen = ({ navigation }) => {
 							Reset Now!
 						</Text>
 					</View>
-
 					<View
 						style={{
 							flexDirection: "row",
