@@ -33,6 +33,7 @@ const ProfileScreen = ({ navigation }) => {
 	const [refreshing, setRefreshing] = React.useState(false);
 	const [newUserName, setNewUserName] = useState("");
 	const [visible, setVisible] = useState(false);
+	const [hideUID, setHideUID] = useState(true);
 
 	const showModal = () => {
 		setVisible(true);
@@ -166,10 +167,27 @@ const ProfileScreen = ({ navigation }) => {
 							: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
 					}}
 				/>
+				{!hideUID ? (
+					<View style={{ flex: 1, flexDirection: "column" }}>
+						<Text style={styles.aboutUser}>
+							{auth?.currentUser
+								? auth?.currentUser?.uid || "Unknown UID."
+								: ""}
+						</Text>
+						<Button
+							title="Hide UID"
+							onPress={() => setHideUID((prev) => !prev)}
+						></Button>
+					</View>
+				) : (
+					<View style={{ flex: 1, flexDirection: "column" }}>
+						<Button
+							title="Show UID"
+							onPress={() => setHideUID((prev) => !prev)}
+						></Button>
+					</View>
+				)}
 
-				<Text style={styles.aboutUser}>
-					{auth?.currentUser ? auth?.currentUser?.uid || "Unknown UID." : ""}
-				</Text>
 				<Text style={styles.userName}>
 					{auth?.currentUser
 						? auth?.currentUser?.displayName || "Anonymous"
@@ -277,6 +295,7 @@ const styles = StyleSheet.create({
 		height: 150,
 		width: 150,
 		borderRadius: 75,
+		marginBottom: "3%",
 	},
 	userName: {
 		fontSize: 26,
