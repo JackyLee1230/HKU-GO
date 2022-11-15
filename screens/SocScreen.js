@@ -29,6 +29,8 @@ const SocScreen = ({ navigation }) => {
 	const [socs, setSocs] = useState([]);
 	const [search, setSearch] = useState("");
 	const [debouncedSearch] = useDebounce(search, 500);
+	const [onTop, setOnTop] = useState(true);
+	const [debouncedOnTop] = useDebounce(onTop, 200);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -58,27 +60,37 @@ const SocScreen = ({ navigation }) => {
 
 	const onChangeSearch = (query) => setSearch(query);
 
+	const handleScroll = (event) => {
+		if (event.nativeEvent.contentOffset.y != 0) {
+			setOnTop(false);
+		} else {
+			setOnTop(true);
+		}
+	};
+
 	return (
 		<>
 			{!isLoading && (
 				<LinearGradient colors={["#0098FF", "#DFF6FF"]} style={{ flex: 1 }}>
 					<View style={{ flex: 1 }}>
-						<View
-							style={{
-								backgroundColor: "pink",
-								marginTop: 12,
-								marginHorizontal: 32,
-								borderTopLeftRadius: 8,
-								borderBottomRightRadius: 8,
-								borderTopRightRadius: 32,
-								borderBottomLeftRadius: 32,
-								padding: 16,
-							}}
-						>
-							<Text style={{ fontSize: 24, textAlign: "center" }}>
-								Find out more about the Societies and Faculties @HKU
-							</Text>
-						</View>
+						{debouncedOnTop ? (
+							<View
+								style={{
+									backgroundColor: "pink",
+									marginTop: 12,
+									marginHorizontal: 32,
+									borderTopLeftRadius: 8,
+									borderBottomRightRadius: 8,
+									borderTopRightRadius: 32,
+									borderBottomLeftRadius: 32,
+									padding: 16,
+								}}
+							>
+								<Text style={{ fontSize: 24, textAlign: "center" }}>
+									Find out more about the Societies and Faculties @HKU
+								</Text>
+							</View>
+						) : null}
 
 						<Searchbar
 							value={search}
@@ -97,6 +109,7 @@ const SocScreen = ({ navigation }) => {
 							data={socs}
 							style={{ height: "100%" }}
 							numColumns={1}
+							onScroll={handleScroll}
 							keyExtractor={(item, index) => item.id.toString()}
 							renderItem={({ item }) => (
 								<>
