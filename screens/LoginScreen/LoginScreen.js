@@ -21,6 +21,7 @@ import { CurrentRenderContext } from "@react-navigation/native";
 import { Modal, Portal } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
+import { CommonActions } from '@react-navigation/native';
 
 const LoginScreen = ({ navigation }) => {
 	const [email, setEmail] = useState("");
@@ -30,7 +31,7 @@ const LoginScreen = ({ navigation }) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	onAuthStateChanged(auth, (currentUser) => {
-		if (currentUser) {
+		if (currentUser && currentUser.uid) {
 			navigation.navigate("WithTab", { screen: "Home", screen: "TabBar" });
 		}
 	});

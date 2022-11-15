@@ -50,10 +50,7 @@ const RegisterScreen = ({ navigation }) => {
 
 	onAuthStateChanged(auth, (user) => {
 		if (user && user.uid && isLoading === false) {
-			navigation.reset({
-				index: 0,
-				routes: [{ name: "Home" }],
-			});
+			navigation.navigate("WithTab", { screen: "Home", screen: "TabBar" });
 		}
 	});
 

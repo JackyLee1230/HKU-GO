@@ -233,7 +233,14 @@ const ProfileScreen = ({ navigation }) => {
 					<Button
 						title="REGISTERED EVENTS"
 						onPress={() => {
-							navigation.navigate("Events", { type: "Registered" });
+							navigation.navigate(
+								"EventsStack", 
+								{ screen: "Events",     
+									params: {
+										type: "Registered" ,
+									}
+								}
+							);
 						}}
 					/>
 				) : null}

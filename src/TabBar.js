@@ -5,6 +5,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import SocStackNavigator from "./navigation/SocStackNavigator";
+import EventRegisterStackNavigator from "./navigation/EventRegisterStackNavigator";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -14,6 +17,36 @@ const styles = StyleSheet.create({
 		elevation: 0,
 	},
 });
+
+const HomeStack = createNativeStackNavigator();
+
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen 
+	  	name="Home" 
+		component={HomeScreen} 
+		options={{
+			headerShown: false,
+		}}
+	/>
+      <HomeStack.Screen 
+	  	name="SocStack" 
+		component={SocStackNavigator} 
+		options={{
+			headerShown: false,
+		}}
+	/>
+	  <HomeStack.Screen 
+	  	name="EventsStack" 
+		component={EventRegisterStackNavigator} 
+		options={{
+			headerShown: false,
+		}}
+	/>
+    </HomeStack.Navigator>
+  );
+}
 
 export default function TabBar() {
 	return (
@@ -27,7 +60,7 @@ export default function TabBar() {
 		>
 			<Tab.Screen
 				name="HomeStack"
-				component={HomeScreen}
+				component={HomeStackScreen}
 				options={{
 					title: "Home",
 					tabBarIcon: ({ focused, color }) => (
@@ -42,10 +75,17 @@ export default function TabBar() {
 			/>
 
 			<Tab.Screen
-				name="DiscussionStack"
+				name="Map"
 				component={MapScreen}
 				options={{
 					title: "Map",
+					headerStyle: {
+						backgroundColor: "#f4511e",
+					},
+					headerTintColor: "#fff",
+					headerTitleStyle: {
+						fontWeight: "bold",
+					},
 					tabBarIcon: ({ focused, color }) => (
 						<Icon
 							name={focused ? "map-marker" : "map-marker-outline"}
@@ -57,7 +97,7 @@ export default function TabBar() {
 			/>
 
 			<Tab.Screen
-				name="ProfileStack"
+				name="Profile"
 				component={ProfileScreen}
 				options={{
 					title: "Profile",

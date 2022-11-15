@@ -186,6 +186,7 @@ const InitialScreen = ({ navigation }) => {
 				</TouchableOpacity>
 				<Text
 					style={{
+						marginTop: 12,
 						color: "grey",
 						fontSize: 12,
 						alignSelf: "center",

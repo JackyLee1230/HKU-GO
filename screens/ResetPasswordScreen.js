@@ -126,14 +126,21 @@ const ResetPassword = ({ navigation }) => {
 							width: "100%",
 							marginTop: 20,
 						}}
-						disabled={hasEmailError || !email}
+						disabled={hasEmailError() || !email}
 						onPress={() => reset()}
 					>
 						<LinearGradient
 							start={{ x: 0, y: 0 }}
 							end={{ x: 1, y: 0 }}
 							colors={["#F8C4B4", "#FF8787"]}
-							style={styles.buttonContainer}
+							style={{
+								width: "100%",
+								paddingVertical: 12,
+								borderRadius: 8,
+								elevation: 1,
+								shadowColor: '#171717',
+								opacity: (hasEmailError() || !email) ? 0.35 : 1,
+							}}
 						>
 							<Text style={styles.button}>Reset Password</Text>
 						</LinearGradient>

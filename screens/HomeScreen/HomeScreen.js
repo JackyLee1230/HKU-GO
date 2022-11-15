@@ -46,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
 				<TouchableOpacity
 					style={styles.socContainer}
 					onPress={() => {
-						navigation.navigate("Soc");
+						navigation.navigate("SocStack", { screen: "Soc"});
 					}}
 				>
 					<ImageBackground
@@ -63,7 +63,14 @@ const HomeScreen = ({ navigation }) => {
 				<TouchableOpacity
 					style={styles.eventContainer}
 					onPress={() => {
-						navigation.navigate("Events", { type: "All" });
+						navigation.navigate(
+							"EventsStack", 
+							{ screen: "Events",     
+								params: {
+									type: "All" ,
+								}
+							}
+						);
 					}}
 				>
 					<ImageBackground
