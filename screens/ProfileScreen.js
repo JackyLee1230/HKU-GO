@@ -25,6 +25,7 @@ import {
 	doc,
 	setDoc,
 } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = ({ navigation }) => {
 	const [points, setPoints] = useState();
@@ -34,6 +35,7 @@ const ProfileScreen = ({ navigation }) => {
 	const [newUserName, setNewUserName] = useState("");
 	const [visible, setVisible] = useState(false);
 	const [hideUID, setHideUID] = useState(true);
+	const [result, setResult] = useState("");
 
 	const showModal = () => {
 		setVisible(true);
@@ -44,6 +46,13 @@ const ProfileScreen = ({ navigation }) => {
 	};
 
 	let getPoints = async () => {
+		await AsyncStorage.getItem("notification").then((value) => {
+			if (value === "enabled") {
+				setResult("enabled");
+			} else {
+				setResult("disabled");
+			}
+		});
 		const q = query(
 			collection(db, "points"),
 			where("uid", "==", auth?.currentUser?.uid)
@@ -236,7 +245,14 @@ const ProfileScreen = ({ navigation }) => {
 						}}
 					>
 						<RadioButton.Group
-							onValueChange={(newValue) => setNotification(newValue)}
+							onValueChange={async (newValue) => {
+								setNotification(newValue);
+								try {
+									await AsyncStorage.setItem("notification", newValue);
+								} catch (err) {
+									console.log(err);
+								}
+							}}
 							value={notification}
 						>
 							<Text style={{ marginLeft: "5%" }}>Device Notifications</Text>

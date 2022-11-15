@@ -14,6 +14,7 @@ import { Modal, Portal } from "react-native-paper";
 import { Button } from "react-native-paper";
 import { auth } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import * as Device from "expo-device";
 
 const InitialScreen = ({ navigation }) => {
 	const [visible, setVisible] = React.useState(false);
@@ -183,6 +184,15 @@ const InitialScreen = ({ navigation }) => {
 						<Text style={styles.button}>REGISTER</Text>
 					</LinearGradient>
 				</TouchableOpacity>
+				<Text
+					style={{
+						color: "grey",
+						fontSize: 12,
+						alignSelf: "center",
+					}}
+				>
+					HKU GO Running on {Device.osName} {Device.osVersion}
+				</Text>
 			</ScrollView>
 		</LinearGradient>
 	);
