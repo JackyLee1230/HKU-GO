@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { FAB, Searchbar, Button, Portal } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { auth, db } from "../firebase";
 import { useDebounce } from "use-debounce";
 import {
@@ -25,6 +25,7 @@ import {
 } from "firebase/firestore";
 import { LinearGradient } from "expo-linear-gradient";
 import moment from "moment";
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const EventsScreen = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +37,7 @@ const EventsScreen = ({ navigation, route }) => {
 	const [disabledButtons, setDisabledButtons] = useState([]);
 	const [open, setOpen] = useState(false);
 	const [filter, setFilter] = useState("All");
+	const isFocused = useIsFocused();
 
 	const { type } = route.params;
 	useEffect(() => {
@@ -87,6 +89,11 @@ const EventsScreen = ({ navigation, route }) => {
 	if (isLoading) {
 		loadEvents();
 	}
+
+	useEffect(() => {
+		setOpen(false);
+	}, [isFocused]);
+	
 
 	const registerEvent = async (id, eventID, index, registered) => {
 		if (!id) {
@@ -219,6 +226,46 @@ const EventsScreen = ({ navigation, route }) => {
 
 	return (
 		<LinearGradient colors={["#0098FF", "#DFF6FF"]} style={{ flex: 1 }}>
+			<Portal>
+				<FAB.Group
+					visible={isFocused}
+					open={open}
+					backdropColor="rgba(70, 132, 180, 0.46)"
+					icon={open ? "filter" : "filter-variant"}
+					actions={[
+						{
+							icon: "account-check",
+							label: "Registered",
+							onPress: () => setFilter("Registered"),
+						},
+						{
+							icon: "account-cancel",
+							label: "Not Registered",
+							onPress: () => setFilter("NotRegistered"),
+						},
+						{
+							icon: "file-table",
+							label: "All",
+							onPress: () => setFilter("All"),
+							labelStyle: {
+								fontSize: 24,
+								color: "red",
+								backgroundColor: "#fff",
+							},
+						},
+					]}
+					onStateChange={onStateChange}
+					onPress={() => {
+						if (open) {
+							// do something if the speed dial is open
+						}
+					}}
+					style={{
+						marginBottom: 82,
+					}}
+				/>
+			</Portal>
+
 			<View style={{ flex: 1 }}>
 				<Searchbar
 					value={search}
@@ -233,42 +280,6 @@ const EventsScreen = ({ navigation, route }) => {
 						backgroundColor: "#fff",
 					}}
 				/>
-				<Portal>
-					<FAB.Group
-						open={open}
-						visible
-						backdropColor="rgba(70, 132, 180, 0.46)"
-						icon={open ? "filter" : "filter-variant"}
-						actions={[
-							{
-								icon: "account-check",
-								label: "Registered",
-								onPress: () => setFilter("Registered"),
-							},
-							{
-								icon: "account-cancel",
-								label: "Not Registered",
-								onPress: () => setFilter("NotRegistered"),
-							},
-							{
-								icon: "file-table",
-								label: "All",
-								onPress: () => setFilter("All"),
-								labelStyle: {
-									fontSize: 24,
-									color: "red",
-									backgroundColor: "#fff",
-								},
-							},
-						]}
-						onStateChange={onStateChange}
-						onPress={() => {
-							if (open) {
-								// do something if the speed dial is open
-							}
-						}}
-					/>
-				</Portal>
 
 				<FlatList
 					data={events}
