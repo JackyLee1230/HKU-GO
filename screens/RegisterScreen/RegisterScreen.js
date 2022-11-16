@@ -25,7 +25,7 @@ import {
 	TouchableOpacity,
 	ScrollView,
 } from "react-native";
-import { TextInput, Button } from "react-native-paper";
+import { TextInput, Button, ActivityIndicator } from "react-native-paper";
 import { Modal, Portal } from "react-native-paper";
 import styles from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
@@ -39,7 +39,7 @@ const RegisterScreen = ({ navigation }) => {
 	const [imageURL, setImageURL] = useState("");
 	const [registerErr, setRegisterErr] = useState();
 	const [visible, setVisible] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
+	const [loadingIndication, setLoadingIndication] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 
 	useLayoutEffect(() => {
@@ -47,12 +47,6 @@ const RegisterScreen = ({ navigation }) => {
 			headerBackTitle: "Back To Login",
 		});
 	}, [navigation]);
-
-	onAuthStateChanged(auth, (user) => {
-		if (user && user.uid && isLoading === false) {
-			navigation.navigate("WithTab", { screen: "Home", screen: "TabBar" });
-		}
-	});
 
 	const showModal = () => setVisible(true);
 	const hideModal = () => {
@@ -70,6 +64,7 @@ const RegisterScreen = ({ navigation }) => {
 	};
 
 	const register = async () => {
+		setLoadingIndication(true);
 		const user = await createUserWithEmailAndPassword(auth, email, password)
 			.then(async (userCredentials) => {
 				const user = userCredentials.user;
@@ -87,9 +82,20 @@ const RegisterScreen = ({ navigation }) => {
 					uid: user.uid,
 					registered: [],
 				});
-				setIsLoading(false);
+				navigation.reset({
+					index: 0,
+					routes: [
+						{
+							name: "WithTab",
+							state: {
+								routes: [{ name: "TabBar" }, { name: "Home" }],
+							},
+						},
+					],
+				});
 			})
 			.catch((err) => {
+				setLoadingIndication(false);
 				console.log(err);
 				setRegisterErr(
 					"Error! Reason: " +
@@ -109,6 +115,25 @@ const RegisterScreen = ({ navigation }) => {
 			style={styles.linearGradient}
 			enabled
 		>
+			{loadingIndication &&
+				<View style={{
+					position: "absolute",
+					zIndex: 1,
+					left: 0,
+					right: 0,
+					top: 0,
+					bottom: 0,
+					alignItems: "center",
+					justifyContent: "center",
+					backgroundColor: "#F5FCFF88",
+				}}>
+					<ActivityIndicator
+						color={"#47B5FF"}
+						size={"large"}
+					/>
+				</View>
+			}
+
 			<Portal>
 				<Modal
 					visible={visible}

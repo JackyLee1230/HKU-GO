@@ -36,25 +36,6 @@ const LoginScreen = ({ navigation }) => {
 	const [visible, setVisible] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [loadingIndication, setLoadingIndication] = useState(false);
-
-	onAuthStateChanged(auth, (currentUser) => {
-		if (currentUser && currentUser.uid) {
-			setLoadingIndication(true);
-			// navigation.navigate("WithTab", { screen: "Home", screen: "TabBar" });
-			navigation.reset({
-				index: 0,
-				routes: [
-					{
-						name: "WithTab",
-						state: {
-							routes: [{ name: "TabBar" }, { name: "Home" }],
-						},
-					},
-				],
-			});
-		}
-	});
-
 	const showModal = () => setVisible(true);
 	const hideModal = () => {
 		setVisible(false);
@@ -63,12 +44,25 @@ const LoginScreen = ({ navigation }) => {
 
 	const login = async () => {
 		try {
+			setLoadingIndication(true);
 			const user = signInWithEmailAndPassword(auth, email, password)
 				.then((userCredentials) => {
 					const user = userCredentials.user;
+					navigation.reset({
+						index: 0,
+						routes: [
+							{
+								name: "WithTab",
+								state: {
+									routes: [{ name: "TabBar" }, { name: "Home" }],
+								},
+							},
+						],
+					});
 					// console.log(user);
 				})
 				.catch((err) => {
+					setLoadingIndication(false);
 					console.log(err);
 					setLoginErr(
 						"Error! Reason: " +
@@ -104,6 +98,25 @@ const LoginScreen = ({ navigation }) => {
 			behavior={Platform.OS === "ios" ? "padding" : null}
 			style={styles.linearGradient}
 		>
+			{loadingIndication &&
+				<View style={{
+					position: "absolute",
+					zIndex: 1,
+					left: 0,
+					right: 0,
+					top: 0,
+					bottom: 0,
+					alignItems: "center",
+					justifyContent: "center",
+					backgroundColor: "#F5FCFF88",
+				}}>
+					<ActivityIndicator
+						color={"#47B5FF"}
+						size={"large"}
+					/>
+				</View>
+			}
+
 			<Portal>
 				<Modal
 					visible={visible}
@@ -142,12 +155,6 @@ const LoginScreen = ({ navigation }) => {
 					<Text style={styles.welcomeRemindMessage}>
 						Please Sign in to continue.
 					</Text>
-
-					<ActivityIndicator
-						animating={loadingIndication}
-						color={MD2Colors.red800}
-						size={"large"}
-					/>
 
 					<TextInput
 						placeholder="Email"

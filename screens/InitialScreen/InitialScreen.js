@@ -21,7 +21,17 @@ const InitialScreen = ({ navigation }) => {
 
 	onAuthStateChanged(auth, (currentUser) => {
 		if (currentUser) {
-			navigation.navigate("WithTab", { screen: "Home", screen: "TabBar" });
+			navigation.reset({
+				index: 0,
+				routes: [
+					{
+						name: "WithTab",
+						state: {
+							routes: [{ name: "TabBar" }, { name: "Home" }],
+						},
+					},
+				],
+			});
 		}
 	});
 
