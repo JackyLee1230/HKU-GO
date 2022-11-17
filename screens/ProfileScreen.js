@@ -79,12 +79,12 @@ const ProfileScreen = ({ navigation }) => {
 		setEvents(result2[0].registered);
 	};
 
-	// call getPoints everytime every 30 seconds
+	// call getPoints everytime every 2 minutes
 	useEffect(() => {
 		const interval = setInterval(() => {
 			getPoints();
 			getRegisteredEvents();
-		}, 30000);
+		}, 120000);
 		return () => clearInterval(interval);
 	}, []);
 
@@ -225,7 +225,7 @@ const ProfileScreen = ({ navigation }) => {
 						{events && events.length !== 0 ? events.length : 0}
 					</Text>
 					<Text style={{ color: "#256D85", fontSize: 10 }}>
-						* GO Points and Register Events Count are updated every 30 seconds,
+						* GO Points and Register Events Count are updated every 2 minutes,
 					</Text>
 				</View>
 
@@ -242,7 +242,7 @@ const ProfileScreen = ({ navigation }) => {
 						}}
 					/>
 				) : null}
-				
+
 				{auth && auth?.currentUser ? (
 					<View
 						style={{
