@@ -23,7 +23,7 @@ const RESULT_MAPPING = ["Centennial Campus", "Happy Park", "Main Building"];
 
 const CameraCompo = ({ navigation }) => {
 	const [type, setType] = useState(CameraType.back);
-
+	const [perm, setPerm] = useState(Camera.useCameraPermissions());
 	const cameraRef = React.useRef();
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [presentedShape, setPresentedShape] = useState("");
@@ -70,18 +70,34 @@ const CameraCompo = ({ navigation }) => {
 						</View>
 					</View>
 				</Modal>
-
-				<Camera
-					ref={cameraRef}
-					style={styles.camera}
-					type={Camera.Constants.Type.back}
-					autoFocus={true}
-					whiteBalance={Camera.Constants.WhiteBalance.auto}
-				></Camera>
-				<Pressable
-					onPress={() => handleImageCapture()}
-					style={styles.captureButton}
-				></Pressable>
+				{!perm.granted ? (
+					<>
+						<Button
+							onPress={async () => {
+								let res = await Camera.requestCameraPermissionsAsync();
+								if (res.granted == true) {
+									permission.granted = true;
+									setPerm(true);
+								}
+							}}
+							title="grant permission"
+						/>
+					</>
+				) : (
+					<>
+						<Camera
+							ref={cameraRef}
+							style={styles.camera}
+							type={Camera.Constants.Type.back}
+							autoFocus={true}
+							whiteBalance={Camera.Constants.WhiteBalance.auto}
+						></Camera>
+						<Pressable
+							onPress={() => handleImageCapture()}
+							style={styles.captureButton}
+						></Pressable>
+					</>
+				)}
 			</View>
 		</>
 	);
