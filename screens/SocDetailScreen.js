@@ -31,7 +31,6 @@ const SocDetailScreen = ({ route, navigation }) => {
 	const { id, name } = route.params;
 
 	const [isLoading, setIsLoading] = useState(true);
-	let [isRefreshing, setIsRefreshing] = useState(false);
 	const [soc, setSoc] = useState([]);
 	const [events, setEvents] = useState([]);
 	const [hideDesc, setHideDesc] = useState(true);
@@ -40,6 +39,12 @@ const SocDetailScreen = ({ route, navigation }) => {
 			headerBackTitle: "Back To Home Page",
 		});
 	}, [navigation]);
+
+	useEffect(() => {
+		navigation.setOptions({
+			title: soc.name,
+		});
+	}, [soc]);
 
 	let loadSocs = async () => {
 		const q = query(collection(db, "society"), where("name", "==", name));
@@ -65,14 +70,10 @@ const SocDetailScreen = ({ route, navigation }) => {
 		setSoc(result[0]);
 		setEvents(result2);
 		setIsLoading(false);
-		setIsRefreshing(false);
 	};
 
 	if (isLoading) {
 		loadSocs();
-		navigation.setOptions({
-			title: soc.name,
-		});
 	}
 
 	return (
@@ -215,20 +216,22 @@ const SocDetailScreen = ({ route, navigation }) => {
 							</Swiper>
 						)}
 
-						<View style={{ width: "100%" }}>
-							<Text
-								style={{
-									width: "100%",
-									textAlign: "center",
-								}}
-							>
-								Join Our Upcoming Events(s):
-							</Text>
+						{events && events.length > 0 ? (
+							<View style={{ width: "100%" }}>
+								<Text
+									style={{
+										width: "100%",
+										textAlign: "center",
+									}}
+								>
+									Join Our Upcoming Events(s):
+								</Text>
 
-							{events.map((event) => (
-								<EventCard key={event.name} event={event} />
-							))}
-						</View>
+								{events.map((event) => (
+									<EventCard key={event.name} event={event} />
+								))}
+							</View>
+						) : null}
 					</View>
 				) : null}
 			</ScrollView>
