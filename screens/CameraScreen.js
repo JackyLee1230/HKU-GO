@@ -1,179 +1,137 @@
 import { Camera, CameraType } from "expo-camera";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
 	StyleSheet,
 	Text,
-	TouchableOpacity,
 	View,
 	Dimensions,
-	Image,
 	Button,
-
+	Pressable,
+	Modal,
+	ActivityIndicator,
 } from "react-native";
 import { FAB } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
+import {
+	getModel,
+	convertBase64ToTensor,
+	startPrediction,
+} from "../src/tensor-helper";
+import { cropPicture } from "../src/image-helper";
 
+const RESULT_MAPPING = ["Centennial Campus", "Happy Park", "Main Building"];
 
 const CameraCompo = ({ navigation }) => {
 	const [type, setType] = useState(CameraType.back);
-	const [permission, requestPermission] = Camera.useCameraPermissions();
-	const [photo, setPhoto] = useState(null)
-	const [camera, setCamera] = useState(null)
-	let photoDir = ''
 
+	const cameraRef = React.useRef();
+	const [isProcessing, setIsProcessing] = useState(false);
+	const [presentedShape, setPresentedShape] = useState("");
 
-	async function takePhoto() {
-		const res = await camera.takePictureAsync(null);
-		photoDir = res.uri
-		setPhoto(res.uri);
-		console.log('sdf', photo)
+	const handleImageCapture = async () => {
+		setIsProcessing(true);
+		const imageData = await cameraRef.current.takePictureAsync({
+			base64: true,
+		});
+		processImagePrediction(imageData);
+	};
 
-	}
+	const processImagePrediction = async (base64Image) => {
+		const croppedData = await cropPicture(base64Image, 300);
+		const model = await getModel();
+		const tensor = await convertBase64ToTensor(croppedData.base64);
 
+		const prediction = await startPrediction(model, tensor);
+
+		const highestPrediction = prediction.indexOf(
+			Math.max.apply(null, prediction)
+		);
+		console.log(highestPrediction);
+		setPresentedShape(RESULT_MAPPING[highestPrediction]);
+	};
 
 	return (
 		<>
-			{!permission ? (
-				<View>
-					<Text>Loading</Text>
-				</View>
-			) : (
-				<>
-					{!permission.granted ? (
-						<View style={styles.container}>
-							<Text style={{ textAlign: "center" }}>
-								Please Grant Permission To Use Your Phone's Camera
-							</Text>
-							<Button onPress={async () => {
-								let res = await Camera.requestCameraPermissionsAsync();
-								if (res.granted == true) {
-									permission.granted = true;
-								}
-							}} title="grant permission" />
+			<View style={styles.container}>
+				<Modal visible={isProcessing} transparent={true} animationType="slide">
+					<View style={styles.modal}>
+						<View style={styles.modalContent}>
+							<Text>Your current shape is {presentedShape}</Text>
+							{presentedShape === "" && <ActivityIndicator size="large" />}
+							<Pressable
+								style={styles.dismissButton}
+								onPress={() => {
+									setPresentedShape("");
+									setIsProcessing(false);
+								}}
+							>
+								<Text>Dismiss</Text>
+							</Pressable>
 						</View>
-					) : (
-						<>
-							{!photo ? (<View style={styles.containerStyle}>
-								<Camera
-									style={styles.fixedRatio}
-									type={type}
-									ratio={"16:9"}
-									whiteBalance={900}
-									ref={ref => setCamera(ref)}
-								>
-									<View >
-										<FAB style={styles.photoBtn} onPress={takePhoto}></FAB>
-									</View>
+					</View>
+				</Modal>
 
-
-
-								</Camera>
-
-							</View>) : (
-								<View style={{flex: 1}}>
-									<Image
-										style={styles.photoStyle}
-										source={{
-											uri: photo
-										}}
-									/>
-									<View style={{flex: 1,  justifyContent: 'flex-end',}}>
-
-										<Button
-											style={styles.buttonContainer}
-											onPress={() => {
-												setPhoto(null)
-											}}
-											color="#F8C4B4"
-											title='Retake'
-										>
-
-										</Button>
-										<Button
-											style={{
-												width: "43%",
-												marginTop: Dimensions.get("window").height * 0.81,
-												flex: ' 3',
-												marginLeft: '2%',
-												marginRight: '2%',
-												backgroundColor: "#F8C4B4"
-
-												
-											}}
-											color="#F8C4B4"
-											onPress={() => {
-												navigation.navigate("Ai", {photo: photo});
-											}}
-											title='Check'
-										>
-										</Button>
-
-									</View>
-
-								</View>
-
-							)}
-						</>
-
-					)}
-				</>
-			)}
+				<Camera
+					ref={cameraRef}
+					style={styles.camera}
+					type={Camera.Constants.Type.back}
+					autoFocus={true}
+					whiteBalance={Camera.Constants.WhiteBalance.auto}
+				></Camera>
+				<Pressable
+					onPress={() => handleImageCapture()}
+					style={styles.captureButton}
+				></Pressable>
+			</View>
 		</>
 	);
-}
+};
+
 const styles = StyleSheet.create({
-	containerStyle: {
+	container: {
 		flex: 1,
-	
-	},
-	fixedRatio: {
-		width: Dimensions.get("window").width,
-		height: Dimensions.get("window").height,
-	},
-	photoBtn: {
-		position: "absolute",
-
-		left: Dimensions.get("window").width * 0.39,
-		top: Dimensions.get("window").height * 0.8,
-		backgroundColor: '#FFFFFF',
-		borderRadius: 32,
-		margin: 16,
-		zIndex: 1,
-	},
-	photoStyle: {
-		width: Dimensions.get("window").width,
-		height: Dimensions.get("window").height * 0.8,
-		resizeMode: 'stretch',
-		position: "absolute",
-	},
-	bottomBarStyle: {
-
-		backgroundColor: "#000000",
-
-	},
-	textSign: {
-		fontSize: 20,
-		fontWeight: "bold",
-		color: "#FF6347",
-		top: Dimensions.get("window").height * 0.8,
-	},
-	button: {
 		width: "100%",
-		fontWeight: "500",
-		fontSize: 18,
-		textAlign: "center",
-		color: '#fff',
+		height: "100%",
 	},
-	buttonContainer: {
+	camera: {
 		width: "100%",
-		paddingVertical: 12,
-		borderRadius: 8,
-		elevation: 1,
-		shadowColor: '#171717',
-
-
+		height: "100%",
 	},
-
+	captureButton: {
+		position: "absolute",
+		left: Dimensions.get("screen").width / 2 - 50,
+		bottom: 40,
+		width: 100,
+		zIndex: 100,
+		height: 100,
+		backgroundColor: "white",
+		borderRadius: 50,
+	},
+	modal: {
+		flex: 1,
+		width: "100%",
+		height: "100%",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	modalContent: {
+		alignItems: "center",
+		justifyContent: "center",
+		width: 300,
+		height: 300,
+		borderRadius: 24,
+		backgroundColor: "gray",
+	},
+	dismissButton: {
+		width: 150,
+		height: 50,
+		marginTop: 60,
+		borderRadius: 24,
+		color: "white",
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "red",
+	},
 });
 
 export default CameraCompo;
