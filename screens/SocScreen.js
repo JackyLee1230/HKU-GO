@@ -8,7 +8,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { FAB, Searchbar } from "react-native-paper";
+import { FAB, Searchbar, ActivityIndicator } from "react-native-paper";
 import { auth, db } from "../firebase";
 import { useDebounce } from "use-debounce";
 import {
@@ -70,6 +70,12 @@ const SocScreen = ({ navigation }) => {
 
 	return (
 		<>
+			{isLoading && (
+				<ActivityIndicator
+					color={"#47B5FF"}
+					size={"large"}
+				/>
+			)}
 			{!isLoading && (
 				<LinearGradient colors={["#C3E8FD", "#EFF8FD"]} style={{ flex: 1 }}>
 					<View style={{ flex: 1 }}>
@@ -106,6 +112,7 @@ const SocScreen = ({ navigation }) => {
 						<Searchbar
 							value={search}
 							onChangeText={onChangeSearch}
+							iconColor="#256D85"
 							placeholder={"Search..."}
 							style={{
 								marginVertical: 24,
@@ -113,7 +120,11 @@ const SocScreen = ({ navigation }) => {
 								marginHorizontal: 32,
 								borderColor: "#47B5FF",
 								borderWidth: 2,
-								backgroundColor: "#EFF5FF"
+								backgroundColor: "#EFF5FF",
+							}}
+							placeholderTextColor={'#g5g5g5'}
+							inputStyle={{
+								color: "#06283D",
 							}}
 						/>
 
