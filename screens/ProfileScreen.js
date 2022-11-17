@@ -233,17 +233,24 @@ const ProfileScreen = ({ navigation }) => {
 					<Button
 						title="REGISTERED EVENTS"
 						onPress={() => {
-							navigation.navigate(
-								"EventsStack", 
-								{ screen: "Events",     
-									params: {
-										type: "Registered" ,
-									}
-								}
-							);
+							navigation.navigate("EventsStack", {
+								screen: "Events",
+								params: {
+									type: "Registered",
+								},
+							});
 						}}
 					/>
 				) : null}
+
+				<Button
+					title="CHAT ROOM"
+					onPress={() => {
+						navigation.navigate("SocStack", {
+							screen: "ChatRoom",
+						});
+					}}
+				/>
 
 				{auth && auth?.currentUser ? (
 					<View
