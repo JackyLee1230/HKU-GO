@@ -23,7 +23,7 @@ const RESULT_MAPPING = ["Centennial Campus", "Happy Park", "Main Building"];
 
 const CameraCompo = ({ navigation }) => {
 	const [type, setType] = useState(CameraType.back);
-	const [perm, setPerm] = useState(Camera.useCameraPermissions());
+	const [permission, setPermission] = Camera.useCameraPermissions();
 	const cameraRef = React.useRef();
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [presentedShape, setPresentedShape] = useState("");
@@ -52,53 +52,64 @@ const CameraCompo = ({ navigation }) => {
 
 	return (
 		<>
-			<View style={styles.container}>
-				<Modal visible={isProcessing} transparent={true} animationType="slide">
-					<View style={styles.modal}>
-						<View style={styles.modalContent}>
-							<Text>Your current shape is {presentedShape}</Text>
-							{presentedShape === "" && <ActivityIndicator size="large" />}
-							<Pressable
-								style={styles.dismissButton}
-								onPress={() => {
-									setPresentedShape("");
-									setIsProcessing(false);
-								}}
-							>
-								<Text>Dismiss</Text>
-							</Pressable>
-						</View>
+			{!permission ? (
+				<>
+					<Text>Loading</Text>
+				</>
+			) : (
+				<>
+					<View style={styles.container}>
+						<Modal
+							visible={isProcessing}
+							transparent={true}
+							animationType="slide"
+						>
+							<View style={styles.modal}>
+								<View style={styles.modalContent}>
+									<Text>Your current shape is {presentedShape}</Text>
+									{presentedShape === "" && <ActivityIndicator size="large" />}
+									<Pressable
+										style={styles.dismissButton}
+										onPress={() => {
+											setPresentedShape("");
+											setIsProcessing(false);
+										}}
+									>
+										<Text>Dismiss</Text>
+									</Pressable>
+								</View>
+							</View>
+						</Modal>
+						{!permission.granted ? (
+							<>
+								<Button
+									onPress={async () => {
+										let res = await Camera.requestCameraPermissionsAsync();
+										if (res.granted == true) {
+											permission.granted = true;
+										}
+									}}
+									title="grant permission"
+								/>
+							</>
+						) : (
+							<>
+								<Camera
+									ref={cameraRef}
+									style={styles.camera}
+									type={Camera.Constants.Type.back}
+									autoFocus={true}
+									whiteBalance={Camera.Constants.WhiteBalance.auto}
+								></Camera>
+								<Pressable
+									onPress={() => handleImageCapture()}
+									style={styles.captureButton}
+								></Pressable>
+							</>
+						)}
 					</View>
-				</Modal>
-				{!perm.granted ? (
-					<>
-						<Button
-							onPress={async () => {
-								let res = await Camera.requestCameraPermissionsAsync();
-								if (res.granted == true) {
-									permission.granted = true;
-									setPerm(true);
-								}
-							}}
-							title="grant permission"
-						/>
-					</>
-				) : (
-					<>
-						<Camera
-							ref={cameraRef}
-							style={styles.camera}
-							type={Camera.Constants.Type.back}
-							autoFocus={true}
-							whiteBalance={Camera.Constants.WhiteBalance.auto}
-						></Camera>
-						<Pressable
-							onPress={() => handleImageCapture()}
-							style={styles.captureButton}
-						></Pressable>
-					</>
-				)}
-			</View>
+				</>
+			)}
 		</>
 	);
 };
