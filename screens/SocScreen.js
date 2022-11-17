@@ -71,25 +71,36 @@ const SocScreen = ({ navigation }) => {
 	return (
 		<>
 			{!isLoading && (
-				<LinearGradient colors={["#0098FF", "#DFF6FF"]} style={{ flex: 1 }}>
+				<LinearGradient colors={["#C3E8FD", "#EFF8FD"]} style={{ flex: 1 }}>
 					<View style={{ flex: 1 }}>
 						{debouncedOnTop ? (
-							<View
-								style={{
-									backgroundColor: "pink",
-									marginTop: 12,
-									marginHorizontal: 32,
-									borderTopLeftRadius: 8,
-									borderBottomRightRadius: 8,
-									borderTopRightRadius: 32,
-									borderBottomLeftRadius: 32,
-									padding: 16,
-								}}
-							>
-								<Text style={{ fontSize: 24, textAlign: "center" }}>
-									Find out more about the Societies and Faculties @HKU
-								</Text>
-							</View>
+							<LinearGradient 
+									colors={["#EF9F9F", "#F8C4B4"]}
+									start={{ x: 0, y: 0 }}
+									end={{ x: 1, y: 0 }}
+									style={{
+										backgroundColor: "pink",
+										marginTop: 12,
+										marginHorizontal: 32,
+										borderTopLeftRadius: 8,
+										borderBottomRightRadius: 8,
+										borderTopRightRadius: 32,
+										borderBottomLeftRadius: 32,
+										padding: 16,
+									}}
+								>
+									<Text
+										style={{ 
+											fontSize: 20, 
+											fontWeight: "600",
+											lineHeight: 30,
+											textAlign: "center",
+											color: "#06283D",
+										}}
+									>
+										Find out more about the Societies and Faculties @HKU
+									</Text>
+							</LinearGradient>
 						) : null}
 
 						<Searchbar
@@ -98,10 +109,11 @@ const SocScreen = ({ navigation }) => {
 							placeholder={"Search..."}
 							style={{
 								marginVertical: 24,
-								borderRadius: 24,
+								borderRadius: 48,
 								marginHorizontal: 32,
 								borderColor: "#47B5FF",
 								borderWidth: 2,
+								backgroundColor: "#EFF5FF"
 							}}
 						/>
 
@@ -139,12 +151,15 @@ const SocScreen = ({ navigation }) => {
 														style={{
 															justifyContent: "center",
 															alignItems: "center",
+															width: "100%",
 														}}
 													>
 														<Image
+															resizeMode="cover"
 															style={{
 																width: "100%",
 																height: 157,
+																borderRadius: 8,
 															}}
 															source={{ uri: item.image }}
 														></Image>
@@ -153,7 +168,10 @@ const SocScreen = ({ navigation }) => {
 													<View style={{ marginHorizontal: 12 }}>
 														<Text
 															style={{
-																margin: 16,
+																color: "#06283D",
+																fontWeight: "600",
+																marginTop: 16,
+																marginBottom: 16,
 																fontSize: 24,
 																textAlign: "center",
 															}}
@@ -168,6 +186,7 @@ const SocScreen = ({ navigation }) => {
 																marginHorizontal: 12,
 																marginVertical: 8,
 																fontSize: 16,
+																color: "#256D85",
 															}}
 														>
 															{item.description.length > 150
@@ -193,14 +212,21 @@ export default SocScreen;
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 5,
+		margin: 12,
 		marginHorizontal: 32,
-		padding: 15,
+		padding: 16,
 		backgroundColor: "#fff",
 		borderTopLeftRadius: 16,
 		borderBottomRightRadius: 16,
 		borderTopRightRadius: 4,
 		borderBottomLeftRadius: 4,
+		borderColor: "#06283D",
+		borderWidth: 1.5,
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.5,
+		shadowRadius: 5,
+		elevation: 5,
+		shadowColor: "#171717",
 	},
 	innerBox: {
 		borderTopLeftRadius: 16,
