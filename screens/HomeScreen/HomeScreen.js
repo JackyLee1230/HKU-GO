@@ -7,21 +7,52 @@ import {
 	ImageBackground,
 } from "react-native";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { auth } from "../../firebase";
-import { signOut } from "firebase/auth";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
+import { FAB, Portal } from 'react-native-paper'
 
 const HomeScreen = ({ navigation }) => {
 	var user = auth?.currentUser;
+	const isFocused = useIsFocused();
 
 	return (
 		<LinearGradient
 			colors={["#C3E8FD", "#EFF8FD"]}
 			style={styles.linearGradient}
 		>
+			<Portal>
+				<FAB
+					icon="chat"
+					visible={isFocused}
+					label="Chat Room"
+					color="#06283D"
+					style={{
+						position: "absolute",
+						alignSelf: 'center',
+						marginBottom: 102,
+						bottom: 0,
+						backgroundColor: "#FF8787",
+						fabText: {
+							textAlign: "center",
+						},
+						container: {
+							flexDirection: 'row',
+						},
+						action: {
+							flex: 1,
+						},
+					}}
+					onPress={() => {
+						navigation.navigate("ChatRoomStack", {
+							screen: "ChatRoom",
+						});
+					}}
+				/>
+			</Portal>
+
 			<ScrollView contentContainerStyle={styles.mainFrame}>
 				<Text style={styles.welcomeMessageTitle}>Welcome Back!</Text>
 				<Text style={styles.welcomeMessage}>What are you looking for now?</Text>

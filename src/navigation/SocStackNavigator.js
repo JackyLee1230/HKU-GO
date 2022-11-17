@@ -2,7 +2,6 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SocScreen from "../../screens/SocScreen";
 import SocDetailScreen from "../../screens/SocDetailScreen";
-import ChatRoomScreen from "../../screens/ChatRoomScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,13 +20,6 @@ const SocStackNavigator = () => {
 				component={SocDetailScreen}
 				options={{
 					title: "Societies Detail",
-				}}
-			/>
-			<Stack.Screen
-				name="ChatRoom"
-				component={ChatRoomScreen}
-				options={{
-					title: "Chat Room",
 				}}
 			/>
 		</Stack.Navigator>

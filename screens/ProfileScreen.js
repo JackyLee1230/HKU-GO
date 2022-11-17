@@ -242,16 +242,7 @@ const ProfileScreen = ({ navigation }) => {
 						}}
 					/>
 				) : null}
-
-				<Button
-					title="CHAT ROOM"
-					onPress={() => {
-						navigation.navigate("SocStack", {
-							screen: "ChatRoom",
-						});
-					}}
-				/>
-
+				
 				{auth && auth?.currentUser ? (
 					<View
 						style={{

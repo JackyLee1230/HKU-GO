@@ -7,6 +7,7 @@ import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import SocStackNavigator from "./navigation/SocStackNavigator";
 import EventRegisterStackNavigator from "./navigation/EventRegisterStackNavigator";
+import ChatRoomStackNavigator from "./navigation/ChatRoomStackNavigator";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Tab = createMaterialBottomTabNavigator();
@@ -30,14 +31,21 @@ function HomeStackScreen() {
 			headerShown: false,
 		}}
 	/>
-      <HomeStack.Screen 
+	<HomeStack.Screen 
+	  	name="ChatRoomStack" 
+		component={ChatRoomStackNavigator} 
+		options={{
+			headerShown: false,
+		}}
+	/>
+    <HomeStack.Screen 
 	  	name="SocStack" 
 		component={SocStackNavigator} 
 		options={{
 			headerShown: false,
 		}}
 	/>
-	  <HomeStack.Screen 
+	<HomeStack.Screen 
 	  	name="EventsStack" 
 		component={EventRegisterStackNavigator} 
 		options={{
