@@ -7,9 +7,10 @@ import {
 	View,
 	Dimensions,
 	Image,
+	Button,
 
 } from "react-native";
-import { FAB, Button } from "react-native-paper";
+import { FAB } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 
 
@@ -69,59 +70,43 @@ const CameraCompo = ({ navigation }) => {
 								</Camera>
 
 							</View>) : (
-								<View style={styles.containerStyle}>
+								<View style={{flex: 1}}>
 									<Image
 										style={styles.photoStyle}
 										source={{
 											uri: photo
 										}}
 									/>
-									<View style={{flexDirection: "row"}}>
+									<View style={{flex: 1,  justifyContent: 'flex-end',}}>
 
-										<TouchableOpacity
-											activeOpacity={0.6}
-											style={{
-												width: "43%",
-												marginTop: Dimensions.get("window").height * 0.81,
-												marginLeft: '2%',
-												flex: '3',
-											}}
+										<Button
+											style={styles.buttonContainer}
 											onPress={() => {
 												setPhoto(null)
 											}}
+											color="#F8C4B4"
+											title='Retake'
 										>
-											<LinearGradient
-												start={{ x: 0, y: 0 }}
-												end={{ x: 1, y: 0 }}
-												colors={["#F8C4B4", "#FF8787"]}
-												style={styles.buttonContainer}
-											>
-												<Text style={styles.button}>Retake</Text>
-											</LinearGradient>
-										</TouchableOpacity>
-										<TouchableOpacity
-											activeOpacity={0.6}
+
+										</Button>
+										<Button
 											style={{
 												width: "43%",
 												marginTop: Dimensions.get("window").height * 0.81,
-												flex:' 3',
+												flex: ' 3',
 												marginLeft: '2%',
 												marginRight: '2%',
+												backgroundColor: "#F8C4B4"
 
+												
 											}}
+											color="#F8C4B4"
 											onPress={() => {
 												navigation.navigate("Ai", {photo: photo});
 											}}
+											title='Check'
 										>
-											<LinearGradient
-												start={{ x: 0, y: 0 }}
-												end={{ x: 1, y: 0 }}
-												colors={["#F8C4B4", "#FF8787"]}
-												style={styles.buttonContainer}
-											>
-												<Text style={styles.button}>Check</Text>
-											</LinearGradient>
-										</TouchableOpacity>
+										</Button>
 
 									</View>
 
@@ -139,7 +124,7 @@ const CameraCompo = ({ navigation }) => {
 const styles = StyleSheet.create({
 	containerStyle: {
 		flex: 1,
-		flexDirection: "column",
+	
 	},
 	fixedRatio: {
 		width: Dimensions.get("window").width,
