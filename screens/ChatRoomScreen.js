@@ -23,7 +23,7 @@ import {
 	onSnapshot,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import { Modal, Portal, RadioButton, TextInput } from "react-native-paper";
+import { Modal, Portal, RadioButton, TextInput, ActivityIndicator } from "react-native-paper";
 
 const filterBotMessages = (message) =>
 	!message.system && message.user && message.user._id && message.user._id === 2;
@@ -37,6 +37,7 @@ export default function ChatScreen({ navigation }) {
 	const [visible, setVisible] = useState(false);
 	const [userInfo, setUserInfo] = useState([]);
 	const [userName, setUserName] = useState("");
+	const [loadingIndication, setLoadingIndication] = useState(false);
 
 	const showModal = () => {
 		setVisible(true);
@@ -100,6 +101,26 @@ export default function ChatScreen({ navigation }) {
 
 	return (
 		<View style={styles.container}>
+			{loadingIndication &&
+				<View style={{
+					position: "absolute",
+					zIndex: 1,
+					left: 0,
+					right: 0,
+					top: 0,
+					bottom: 0,
+					alignItems: "center",
+					justifyContent: "center",
+					backgroundColor: "#F5FCFF88",
+				}}>
+					<ActivityIndicator
+						color={"#47B5FF"}
+						size={"large"}
+					/>
+				</View>
+			}
+
+
 			<Portal>
 				<Modal
 					visible={visible}
@@ -124,16 +145,17 @@ export default function ChatScreen({ navigation }) {
 									: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
 							}}
 						/>
-						<Text>Username: {userName ?? "N/A"}</Text>
+						<Text style={{color: "#06283D", fontSize: 16, marginBottom: 8, marginTop: 24}}>Username: {userName ?? "N/A"}</Text>
 
-						<Text>
+						<Text style={{color: "#06283D", fontSize: 16, marginBottom: 8}}>
 							Events: {(userInfo.events && userInfo.events.length) ?? "0"}{" "}
 							Registered
 						</Text>
-						<Text>Points: {userInfo.points ?? 0}</Text>
+						<Text style={{color: "#06283D", fontSize: 16, marginBottom: 24}}>Points: {userInfo.points ?? 0}</Text>
 					</View>
 					<Button
 						title="Close"
+						color="#47B5FF"
 						onPress={() => {
 							hideModal();
 						}}
@@ -146,12 +168,16 @@ export default function ChatScreen({ navigation }) {
 				loadEarlier={loadEarlier}
 				isLoadingEarlier={isLoadingEarlier}
 				scrollToBottom
-				onLongPressAvatar={(user) => {
-					getUserData(user._id);
+				onLongPressAvatar= {async(user) => {
+					setLoadingIndication(true);
+					await getUserData(user._id);
+					setLoadingIndication(false);
 					showModal();
 				}}
-				onPressAvatar={(user) => {
-					getUserData(user._id, user.name);
+				onPressAvatar={async(user) => {
+					setLoadingIndication(true);
+					await getUserData(user._id, user.name);
+					setLoadingIndication(false);
 					showModal();
 				}}
 				user={{

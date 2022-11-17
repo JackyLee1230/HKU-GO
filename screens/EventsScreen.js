@@ -8,7 +8,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { FAB, Searchbar, Button, Portal } from "react-native-paper";
+import { FAB, Searchbar, Button, Portal, ActivityIndicator } from "react-native-paper";
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { auth, db } from "../firebase";
 import { useDebounce } from "use-debounce";
@@ -38,6 +38,7 @@ const EventsScreen = ({ navigation, route }) => {
 	const [open, setOpen] = useState(false);
 	const [filter, setFilter] = useState("All");
 	const isFocused = useIsFocused();
+	const [loadingIndication, setLoadingIndication] = useState(false);
 
 	const { type } = route.params;
 	useEffect(() => {
@@ -96,6 +97,8 @@ const EventsScreen = ({ navigation, route }) => {
 	
 
 	const registerEvent = async (id, eventID, index, registered) => {
+		setLoadingIndication(true);
+
 		if (!id) {
 			return;
 		}
@@ -220,38 +223,63 @@ const EventsScreen = ({ navigation, route }) => {
 			return disabledButtons;
 		});
 		loadEvents();
+
+		setLoadingIndication(false);
 	};
 
 	const onChangeSearch = (query) => setSearch(query);
 
 	return (
-		<LinearGradient colors={["#0098FF", "#DFF6FF"]} style={{ flex: 1 }}>
+		<LinearGradient colors={["#C3E8FD", "#EFF8FD"]} style={{ flex: 1 }}>
 			<Portal>
 				<FAB.Group
 					visible={isFocused}
 					open={open}
-					backdropColor="rgba(70, 132, 180, 0.46)"
+					backdropColor="rgba(70, 132, 180, 0.65)"
+					color="#fff"
 					icon={open ? "filter" : "filter-variant"}
 					actions={[
 						{
 							icon: "account-check",
 							label: "Registered",
 							onPress: () => setFilter("Registered"),
+							labelStyle: {
+								fontSize: 20,
+								fontWeight: "500",
+								color: "#fff",
+							},
+							style: {
+								backgroundColor: "#FF8787",
+							},
+							color: "#fff"
 						},
 						{
 							icon: "account-cancel",
 							label: "Not Registered",
 							onPress: () => setFilter("NotRegistered"),
+							labelStyle: {
+								fontSize: 20,
+								fontWeight: "500",
+								color: "#fff",
+							},
+							style: {
+								backgroundColor: "#FF8787",
+							},
+							color: "#fff"
 						},
 						{
 							icon: "file-table",
 							label: "All",
 							onPress: () => setFilter("All"),
 							labelStyle: {
-								fontSize: 24,
-								color: "red",
-								backgroundColor: "#fff",
+								fontSize: 20,
+								fontWeight: "500",
+								color: "#fff",
 							},
+							style: {
+								backgroundColor: "#FF8787",
+							},
+							color: "#fff"
 						},
 					]}
 					onStateChange={onStateChange}
@@ -262,22 +290,58 @@ const EventsScreen = ({ navigation, route }) => {
 					}}
 					style={{
 						marginBottom: 82,
+						fabText: {
+							textAlign: "center",
+						},
+						container: {
+							flexDirection: 'row',
+						},
+						action: {
+							flex: 1,
+						},
+					}}
+					fabStyle={{
+						backgroundColor: "#FF8787",
 					}}
 				/>
 			</Portal>
+	
+			{loadingIndication &&
+				<View style={{
+					position: "absolute",
+					zIndex: 1,
+					left: 0,
+					right: 0,
+					top: 0,
+					bottom: 0,
+					alignItems: "center",
+					justifyContent: "center",
+					backgroundColor: "#F5FCFF88",
+				}}>
+					<ActivityIndicator
+						color={"#47B5FF"}
+						size={"large"}
+					/>
+				</View>
+			}
 
 			<View style={{ flex: 1 }}>
 				<Searchbar
 					value={search}
 					onChangeText={onChangeSearch}
+					iconColor="#256D85"
 					placeholder={"Search..."}
 					style={{
 						marginVertical: 24,
-						borderRadius: 24,
+						borderRadius: 48,
 						marginHorizontal: 32,
 						borderColor: "#47B5FF",
 						borderWidth: 2,
-						backgroundColor: "#fff",
+						backgroundColor: "#EFF5FF",
+					}}
+					placeholderTextColor={'#g5g5g5'}
+					inputStyle={{
+						color: "#06283D",
 					}}
 				/>
 
@@ -306,9 +370,11 @@ const EventsScreen = ({ navigation, route }) => {
 													<View style={{ marginHorizontal: 12 }}>
 														<Text
 															style={{
-																margin: 16,
 																fontSize: 24,
 																textAlign: "center",
+																fontWeight: "600",
+																color: "#111111",
+																marginBottom: 8,
 															}}
 														>
 															{item.name}
@@ -318,8 +384,11 @@ const EventsScreen = ({ navigation, route }) => {
 													<View>
 														<Text
 															style={{
+																textAlign: "left",
 																fontSize: 14,
-																fontWeight: "bold",
+																fontWeight: "500",
+																color: "#47B5FF",
+																marginBottom: 8,
 															}}
 														>
 															{moment(item.date, "DD-MM-YYYY").format(
@@ -332,9 +401,11 @@ const EventsScreen = ({ navigation, route }) => {
 													<View style={{ marginHorizontal: 12 }}>
 														<Text
 															style={{
-																margin: 16,
-																fontSize: 24,
+																fontSize: 22,
 																textAlign: "center",
+																fontWeight: "500",
+																color: "#47B5FF",
+																marginBottom: 8,
 															}}
 														>
 															Vacancy:{" "}
@@ -350,6 +421,8 @@ const EventsScreen = ({ navigation, route }) => {
 																marginHorizontal: 12,
 																marginVertical: 8,
 																fontSize: 16,
+																fontWeight: "400",
+																color: "#256D85",
 															}}
 														>
 															{item.description.length > 150
@@ -367,7 +440,8 @@ const EventsScreen = ({ navigation, route }) => {
 																	<Button
 																		mode="contained-tonal"
 																		style={{
-																			backgroundColor: "green",
+																			alignSelf: "center",
+																			backgroundColor: "#00C851",
 																			justifyContent: "center",
 																		}}
 																		disabled={disabledButtons[index]}
@@ -383,16 +457,19 @@ const EventsScreen = ({ navigation, route }) => {
 																		<Text
 																			style={{
 																				color: "white",
+																				fontSize: 14,
+																				textTransform: "uppercase",
 																			}}
 																		>
-																			Already Registered! Unregister?
+																			Unregister
 																		</Text>
 																	</Button>
 																) : (
 																	<Button
 																		mode="contained-tonal"
 																		style={{
-																			backgroundColor: "red",
+																			alignSelf: "center",
+																			backgroundColor: "#FF4444",
 																			justifyContent: "center",
 																		}}
 																		disabled={disabledButtons[index]}
@@ -407,7 +484,9 @@ const EventsScreen = ({ navigation, route }) => {
 																	>
 																		<Text
 																			style={{
+																				fontSize: 14,
 																				color: "white",
+																				textTransform: "uppercase",
 																			}}
 																		>
 																			Register
@@ -446,9 +525,11 @@ const EventsScreen = ({ navigation, route }) => {
 																	<View style={{ marginHorizontal: 12 }}>
 																		<Text
 																			style={{
-																				margin: 16,
 																				fontSize: 24,
 																				textAlign: "center",
+																				fontWeight: "600",
+																				color: "#111111",
+																				marginBottom: 8,
 																			}}
 																		>
 																			{item.name}
@@ -458,20 +539,28 @@ const EventsScreen = ({ navigation, route }) => {
 																	<View>
 																		<Text
 																			style={{
+																				textAlign: "left",
 																				fontSize: 14,
-																				fontWeight: "bold",
+																				fontWeight: "500",
+																				color: "#47B5FF",
+																				marginBottom: 8,
 																			}}
 																		>
-																			{item.date} {item.time}
+																			{moment(item.date, "DD-MM-YYYY").format(
+																				"DD/MM/YYYY"
+																			)}{" "}
+																			{item.time}
 																		</Text>
 																	</View>
 
 																	<View style={{ marginHorizontal: 12 }}>
 																		<Text
 																			style={{
-																				margin: 16,
-																				fontSize: 24,
+																				fontSize: 22,
 																				textAlign: "center",
+																				fontWeight: "500",
+																				color: "#47B5FF",
+																				marginBottom: 8,
 																			}}
 																		>
 																			Vacancy:{" "}
@@ -487,11 +576,12 @@ const EventsScreen = ({ navigation, route }) => {
 																				marginHorizontal: 12,
 																				marginVertical: 8,
 																				fontSize: 16,
+																				fontWeight: "400",
+																				color: "#256D85",
 																			}}
 																		>
 																			{item.description.length > 150
-																				? item.description.substring(0, 150) +
-																				  "..."
+																				? item.description.substring(0, 150) + "..."
 																				: item.description}
 																		</Text>
 																	</View>
@@ -505,7 +595,8 @@ const EventsScreen = ({ navigation, route }) => {
 																					<Button
 																						mode="contained-tonal"
 																						style={{
-																							backgroundColor: "green",
+																							alignSelf: "center",
+																							backgroundColor: "#00C851",
 																							justifyContent: "center",
 																						}}
 																						disabled={disabledButtons[index]}
@@ -521,16 +612,19 @@ const EventsScreen = ({ navigation, route }) => {
 																						<Text
 																							style={{
 																								color: "white",
+																								fontSize: 14,
+																								textTransform: "uppercase",
 																							}}
 																						>
-																							Already Registered! Unregister?
+																							Unregister
 																						</Text>
 																					</Button>
 																				) : (
 																					<Button
 																						mode="contained-tonal"
 																						style={{
-																							backgroundColor: "red",
+																							alignSelf: "center",
+																							backgroundColor: "#FF4444",
 																							justifyContent: "center",
 																						}}
 																						disabled={disabledButtons[index]}
@@ -545,7 +639,9 @@ const EventsScreen = ({ navigation, route }) => {
 																					>
 																						<Text
 																							style={{
+																								fontSize: 14,
 																								color: "white",
+																								textTransform: "uppercase",
 																							}}
 																						>
 																							Register
@@ -586,9 +682,11 @@ const EventsScreen = ({ navigation, route }) => {
 																	<View style={{ marginHorizontal: 12 }}>
 																		<Text
 																			style={{
-																				margin: 16,
 																				fontSize: 24,
 																				textAlign: "center",
+																				fontWeight: "600",
+																				color: "#111111",
+																				marginBottom: 8,
 																			}}
 																		>
 																			{item.name}
@@ -598,20 +696,28 @@ const EventsScreen = ({ navigation, route }) => {
 																	<View>
 																		<Text
 																			style={{
+																				textAlign: "left",
 																				fontSize: 14,
-																				fontWeight: "bold",
+																				fontWeight: "500",
+																				color: "#47B5FF",
+																				marginBottom: 8,
 																			}}
 																		>
-																			{item.date} {item.time}
+																			{moment(item.date, "DD-MM-YYYY").format(
+																				"DD/MM/YYYY"
+																			)}{" "}
+																			{item.time}
 																		</Text>
 																	</View>
 
 																	<View style={{ marginHorizontal: 12 }}>
 																		<Text
 																			style={{
-																				margin: 16,
-																				fontSize: 24,
+																				fontSize: 22,
 																				textAlign: "center",
+																				fontWeight: "500",
+																				color: "#47B5FF",
+																				marginBottom: 8,
 																			}}
 																		>
 																			Vacancy:{" "}
@@ -627,11 +733,12 @@ const EventsScreen = ({ navigation, route }) => {
 																				marginHorizontal: 12,
 																				marginVertical: 8,
 																				fontSize: 16,
+																				fontWeight: "400",
+																				color: "#256D85",
 																			}}
 																		>
 																			{item.description.length > 150
-																				? item.description.substring(0, 150) +
-																				  "..."
+																				? item.description.substring(0, 150) + "..."
 																				: item.description}
 																		</Text>
 																	</View>
@@ -645,7 +752,8 @@ const EventsScreen = ({ navigation, route }) => {
 																					<Button
 																						mode="contained-tonal"
 																						style={{
-																							backgroundColor: "green",
+																							alignSelf: "center",
+																							backgroundColor: "#00C851",
 																							justifyContent: "center",
 																						}}
 																						disabled={disabledButtons[index]}
@@ -661,16 +769,19 @@ const EventsScreen = ({ navigation, route }) => {
 																						<Text
 																							style={{
 																								color: "white",
+																								fontSize: 14,
+																								textTransform: "uppercase",
 																							}}
 																						>
-																							Already Registered
+																							Unregister
 																						</Text>
 																					</Button>
 																				) : (
 																					<Button
 																						mode="contained-tonal"
 																						style={{
-																							backgroundColor: "red",
+																							alignSelf: "center",
+																							backgroundColor: "#FF4444",
 																							justifyContent: "center",
 																						}}
 																						disabled={disabledButtons[index]}
@@ -685,7 +796,9 @@ const EventsScreen = ({ navigation, route }) => {
 																					>
 																						<Text
 																							style={{
+																								fontSize: 14,
 																								color: "white",
+																								textTransform: "uppercase",
 																							}}
 																						>
 																							Register
@@ -721,14 +834,16 @@ export default EventsScreen;
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 5,
+		marginBottom: 12,
 		marginHorizontal: 32,
-		padding: 15,
+		padding: 16,
 		backgroundColor: "#fff",
 		borderTopLeftRadius: 16,
 		borderBottomRightRadius: 16,
 		borderTopRightRadius: 4,
 		borderBottomLeftRadius: 4,
+		borderColor: "#06283D",
+		borderWidth: 1.5,
 	},
 	innerBox: {
 		borderTopLeftRadius: 16,

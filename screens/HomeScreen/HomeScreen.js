@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
 					icon="chat"
 					visible={isFocused}
 					label="Chat Room"
-					color="#06283D"
+					color="#fff"
 					style={{
 						position: "absolute",
 						alignSelf: 'center',
