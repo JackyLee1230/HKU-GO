@@ -133,10 +133,7 @@ const ProfileScreen = ({ navigation }) => {
 	};
 
 	return (
-		<LinearGradient
-			colors={["#C3E8FD", "#EFF8FD"]}
-			style={{flex: 1}}
-		>
+		<LinearGradient colors={["#C3E8FD", "#EFF8FD"]} style={{ flex: 1 }}>
 			<ScrollView
 				contentContainerStyle={{
 					flexDirection: "column",
@@ -176,7 +173,7 @@ const ProfileScreen = ({ navigation }) => {
 								marginBottom: 24,
 							}}
 						/>
-						
+
 						<TouchableOpacity
 							activeOpacity={0.6}
 							style={{
@@ -192,7 +189,7 @@ const ProfileScreen = ({ navigation }) => {
 									alignItems: "center",
 								}}
 							>
-								<Text 
+								<Text
 									style={{
 										fontSize: 20,
 										fontWeight: "700",
@@ -228,7 +225,7 @@ const ProfileScreen = ({ navigation }) => {
 						<TouchableOpacity
 							onPress={() => setHideUID((prev) => !prev)}
 							style={{
-								alignSelf: 'center', 
+								alignSelf: "center",
 								borderRadius: 24,
 								shadowOffset: { width: 0, height: 1 },
 								shadowOpacity: 0.5,
@@ -263,7 +260,7 @@ const ProfileScreen = ({ navigation }) => {
 						<TouchableOpacity
 							onPress={() => setHideUID((prev) => !prev)}
 							style={{
-								alignSelf: 'center', 
+								alignSelf: "center",
 								borderRadius: 24,
 								shadowOffset: { width: 0, height: 1 },
 								shadowOpacity: 0.5,
@@ -306,7 +303,11 @@ const ProfileScreen = ({ navigation }) => {
 						marginBottom: 24,
 					}}
 				>
-					<Button color= '#FF8787' onPress={showModal} title="Change User Name" />
+					<Button
+						color="#FF8787"
+						onPress={showModal}
+						title="Change User Name"
+					/>
 				</View>
 
 				<View
@@ -318,7 +319,7 @@ const ProfileScreen = ({ navigation }) => {
 						marginBottom: 24,
 					}}
 				>
-					<Text style={{ color: "#256D85", fontSize: 16, marginBottom: 4}}>
+					<Text style={{ color: "#256D85", fontSize: 16, marginBottom: 4 }}>
 						Email: {auth?.currentUser?.email ?? 0}
 					</Text>
 					<Text style={{ color: "#256D85", fontSize: 16, marginBottom: 4 }}>
@@ -329,7 +330,7 @@ const ProfileScreen = ({ navigation }) => {
 						{events && events.length !== 0 ? events.length : 0}
 					</Text>
 					<Text style={{ color: "#66AAC0", fontSize: 12 }}>
-						* GO Points and Register Events Count are updated every 2 minutes,
+						* GO Points and Register Events Count are updated every 2 minutes
 					</Text>
 				</View>
 
@@ -340,7 +341,7 @@ const ProfileScreen = ({ navigation }) => {
 						}}
 					>
 						<Button
-							color= '#7FB77E'
+							color="#7FB77E"
 							title="VIEW REGISTERED EVENTS"
 							onPress={() => {
 								navigation.navigate("EventsStack", {
@@ -372,7 +373,7 @@ const ProfileScreen = ({ navigation }) => {
 							}}
 							value={notification}
 						>
-							<Text 
+							<Text
 								style={{
 									fontSize: 22,
 									fontWeight: "700",
@@ -427,16 +428,16 @@ const ProfileScreen = ({ navigation }) => {
 								paddingVertical: 12,
 								borderRadius: 8,
 								elevation: 1,
-								shadowColor: '#171717',
+								shadowColor: "#171717",
 							}}
 						>
-							<Text 
+							<Text
 								style={{
 									width: "100%",
 									fontWeight: "500",
 									fontSize: 18,
 									textAlign: "center",
-									color: '#fff',
+									color: "#fff",
 								}}
 							>
 								SIGN OUT
@@ -455,7 +456,7 @@ const ProfileScreen = ({ navigation }) => {
 							navigation.reset({
 								index: 0,
 								routes: [{ name: "Login" }],
-							})
+							});
 						}}
 					>
 						<LinearGradient
@@ -467,16 +468,16 @@ const ProfileScreen = ({ navigation }) => {
 								paddingVertical: 12,
 								borderRadius: 8,
 								elevation: 1,
-								shadowColor: '#171717',
+								shadowColor: "#171717",
 							}}
 						>
-							<Text 
+							<Text
 								style={{
 									width: "100%",
 									fontWeight: "500",
 									fontSize: 18,
 									textAlign: "center",
-									color: '#fff',
+									color: "#fff",
 								}}
 							>
 								SIGN IN
@@ -499,7 +500,7 @@ const styles = StyleSheet.create({
 		marginBottom: 16,
 		overflow: "hidden",
 		borderWidth: 2,
-		borderColor: "#06283D"
+		borderColor: "#06283D",
 	},
 	userName: {
 		fontSize: 24,
