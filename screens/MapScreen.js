@@ -47,10 +47,30 @@ const MapScreen = ({ navigation }) => {
 		navigation.setOptions({
 			userName: auth?.currentUser?.displayName ?? "Anonymous",
 			userPoint: points,
-			userAvatar: auth?.currentUser
-			? auth?.currentUser?.userImg ||
-			  "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
-			: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
+			userAvatar: () => <TouchableOpacity
+									stlye={{
+										justifyContent: "center",
+										alignSelf: "center",
+										alignItem: "center",
+									}}
+									onPress={() => {
+										navigation.navigate("ProfileStack");
+									}}
+								>
+									<Image
+										style={{
+											height: 40,
+											width: 40,
+											borderRadius: 100,
+										}}
+										source={{
+											uri: auth?.currentUser
+												? auth?.currentUser?.userImg ||
+												"https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
+												: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
+										}}
+									/>
+								</TouchableOpacity>
 		});
 	});
 

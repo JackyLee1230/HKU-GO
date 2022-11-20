@@ -1,9 +1,9 @@
 import React from "react";
-import { Text, Image, View } from "react-native";
+import { Text, Image, View, TouchableOpacity } from "react-native";
 import { Appbar } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function NavBar(scene) {
+export default function NavBar(scene, navigation) {
 	const { userName, userPoint, userAvatar } = scene.options;
 
 	return (
@@ -15,23 +15,7 @@ export default function NavBar(scene) {
 				justifyContent: "space-between",
 			}}
 		>
-			<View
-				stlye={{
-					justifyContent: "center",
-					alignSelf: "center",
-					alignItem: "center",
-				}}
-			>
-				<Text
-					style={{
-						fontWeight: "500",
-						fontSize: 24,
-						color: "#FFFFFF",
-					}}
-				>
-					{userName}
-				</Text>
-			</View>
+            <Appbar.Content title={userName} titleStyle={{color: "white", fontWeight: "700", fontSize: 20}} />
 			<View
 				style={{
 					flex: 1,
@@ -42,40 +26,23 @@ export default function NavBar(scene) {
 				<Icon
 					name={"star"}
 					color={"#FFFFFF"}
-					size={24}
-					style={{ marginLeft: 36 }}
+					size={20}
+					style={{ marginLeft: 48 }}
 				/>
 				<Text
 					style={{
 						fontWeight: "500",
-						fontSize: 24,
+						fontSize: 20,
 						color: "#FFFFFF",
 						marginLeft: 12,
-						marginRight: 36,
+						marginRight: 24,
 					}}
 				>
 					{userPoint}
 				</Text>
 			</View>
 
-			<View
-				stlye={{
-					justifyContent: "center",
-					alignSelf: "center",
-					alignItem: "center",
-				}}
-			>
-				<Image
-					style={{
-						height: 48,
-						width: 48,
-						borderRadius: 100,
-					}}
-					source={{
-						uri: userAvatar,
-					}}
-				/>
-			</View>
+            {typeof userAvatar === 'function' ? userAvatar() : userAvatar}
 		</Appbar.Header>
 	);
 }
