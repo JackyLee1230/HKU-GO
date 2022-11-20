@@ -7,9 +7,15 @@ import {
 	Image,
 	TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { FAB, Searchbar, Button, Portal, ActivityIndicator } from "react-native-paper";
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import {
+	FAB,
+	Searchbar,
+	Button,
+	Portal,
+	ActivityIndicator,
+} from "react-native-paper";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase";
 import { useDebounce } from "use-debounce";
 import {
@@ -25,9 +31,10 @@ import {
 } from "firebase/firestore";
 import { LinearGradient } from "expo-linear-gradient";
 import moment from "moment";
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const EventsScreen = ({ navigation, route }) => {
+	const scrollRef = useRef();
 	const [isLoading, setIsLoading] = useState(true);
 	const [events, setEvents] = useState([]);
 	const [registered, setRegistered] = useState([]);
@@ -39,6 +46,7 @@ const EventsScreen = ({ navigation, route }) => {
 	const [filter, setFilter] = useState("All");
 	const isFocused = useIsFocused();
 	const [loadingIndication, setLoadingIndication] = useState(false);
+	const [onTop, setOnTop] = useState(true);
 
 	const { type } = route.params;
 	useEffect(() => {
@@ -94,7 +102,6 @@ const EventsScreen = ({ navigation, route }) => {
 	useEffect(() => {
 		setOpen(false);
 	}, [isFocused]);
-	
 
 	const registerEvent = async (id, eventID, index, registered) => {
 		setLoadingIndication(true);
@@ -227,11 +234,38 @@ const EventsScreen = ({ navigation, route }) => {
 		setLoadingIndication(false);
 	};
 
+	const handleScroll = (event) => {
+		if (event.nativeEvent.contentOffset.y != 0) {
+			setOnTop(false);
+		} else {
+			setOnTop(true);
+		}
+	};
+
 	const onChangeSearch = (query) => setSearch(query);
 
 	return (
 		<LinearGradient colors={["#C3E8FD", "#EFF8FD"]} style={{ flex: 1 }}>
 			<Portal>
+				{!onTop ? (
+					<FAB
+						visible={isFocused}
+						icon={"arrow-up-drop-circle-outline"}
+						style={{
+							position: "absolute",
+							margin: 16,
+							right: 0,
+							bottom: "18%",
+						}}
+						onPress={() => {
+							scrollRef.current?.scrollToOffset({
+								y: 0,
+								animated: true,
+							});
+						}}
+					/>
+				) : null}
+
 				<FAB.Group
 					visible={isFocused}
 					open={open}
@@ -251,7 +285,7 @@ const EventsScreen = ({ navigation, route }) => {
 							style: {
 								backgroundColor: "#FF8787",
 							},
-							color: "#fff"
+							color: "#fff",
 						},
 						{
 							icon: "account-cancel",
@@ -265,7 +299,7 @@ const EventsScreen = ({ navigation, route }) => {
 							style: {
 								backgroundColor: "#FF8787",
 							},
-							color: "#fff"
+							color: "#fff",
 						},
 						{
 							icon: "file-table",
@@ -279,7 +313,7 @@ const EventsScreen = ({ navigation, route }) => {
 							style: {
 								backgroundColor: "#FF8787",
 							},
-							color: "#fff"
+							color: "#fff",
 						},
 					]}
 					onStateChange={onStateChange}
@@ -294,7 +328,7 @@ const EventsScreen = ({ navigation, route }) => {
 							textAlign: "center",
 						},
 						container: {
-							flexDirection: 'row',
+							flexDirection: "row",
 						},
 						action: {
 							flex: 1,
@@ -305,25 +339,24 @@ const EventsScreen = ({ navigation, route }) => {
 					}}
 				/>
 			</Portal>
-	
-			{loadingIndication &&
-				<View style={{
-					position: "absolute",
-					zIndex: 1,
-					left: 0,
-					right: 0,
-					top: 0,
-					bottom: 0,
-					alignItems: "center",
-					justifyContent: "center",
-					backgroundColor: "#F5FCFF88",
-				}}>
-					<ActivityIndicator
-						color={"#47B5FF"}
-						size={"large"}
-					/>
+
+			{loadingIndication && (
+				<View
+					style={{
+						position: "absolute",
+						zIndex: 1,
+						left: 0,
+						right: 0,
+						top: 0,
+						bottom: 0,
+						alignItems: "center",
+						justifyContent: "center",
+						backgroundColor: "#F5FCFF88",
+					}}
+				>
+					<ActivityIndicator color={"#47B5FF"} size={"large"} />
 				</View>
-			}
+			)}
 
 			<View style={{ flex: 1 }}>
 				<Searchbar
@@ -339,15 +372,17 @@ const EventsScreen = ({ navigation, route }) => {
 						borderWidth: 2,
 						backgroundColor: "#EFF5FF",
 					}}
-					placeholderTextColor={'#g5g5g5'}
+					placeholderTextColor={"#g5g5g5"}
 					inputStyle={{
 						color: "#06283D",
 					}}
 				/>
 
 				<FlatList
+					ref={scrollRef}
 					data={events}
 					style={{ height: "100%" }}
+					onScroll={handleScroll}
 					numColumns={1}
 					keyExtractor={(item, index) => item.id.toString()}
 					renderItem={({ item, index }) => (
@@ -581,7 +616,8 @@ const EventsScreen = ({ navigation, route }) => {
 																			}}
 																		>
 																			{item.description.length > 150
-																				? item.description.substring(0, 150) + "..."
+																				? item.description.substring(0, 150) +
+																				  "..."
 																				: item.description}
 																		</Text>
 																	</View>
@@ -738,7 +774,8 @@ const EventsScreen = ({ navigation, route }) => {
 																			}}
 																		>
 																			{item.description.length > 150
-																				? item.description.substring(0, 150) + "..."
+																				? item.description.substring(0, 150) +
+																				  "..."
 																				: item.description}
 																		</Text>
 																	</View>

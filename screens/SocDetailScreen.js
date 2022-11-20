@@ -9,9 +9,9 @@ import {
 	Image,
 	Linking,
 } from "react-native";
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { FAB, Button } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { FAB, Button, Portal } from "react-native-paper";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { auth, db } from "../firebase";
 import {
 	collection,
@@ -30,10 +30,14 @@ import Swiper from "react-native-swiper";
 const SocDetailScreen = ({ route, navigation }) => {
 	const { id, name } = route.params;
 
+	const scrollRef = useRef();
+	const isFocused = useIsFocused();
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [soc, setSoc] = useState([]);
 	const [events, setEvents] = useState([]);
 	const [hideDesc, setHideDesc] = useState(true);
+	const [onTop, setOnTop] = useState(true);
 	useLayoutEffect(() => {
 		navigation.setOptions({
 			headerBackTitle: "Back To Home Page",
@@ -76,9 +80,38 @@ const SocDetailScreen = ({ route, navigation }) => {
 		loadSocs();
 	}
 
+	const handleScroll = (event) => {
+		if (event.nativeEvent.contentOffset.y != 0) {
+			setOnTop(false);
+		} else {
+			setOnTop(true);
+		}
+	};
+
 	return (
 		<LinearGradient colors={["#C3E8FD", "#EFF8FD"]} style={{ flex: 1 }}>
-			<ScrollView>
+			{!onTop ? (
+				<Portal>
+					<FAB
+						visible={isFocused}
+						icon={"arrow-up-drop-circle-outline"}
+						style={{
+							position: "absolute",
+							margin: 16,
+							right: 5,
+							bottom: "10%",
+						}}
+						onPress={() => {
+							scrollRef.current?.scrollTo({
+								y: 0,
+								animated: true,
+							});
+						}}
+					/>
+				</Portal>
+			) : null}
+
+			<ScrollView ref={scrollRef} onScroll={handleScroll}>
 				{soc && soc.name ? (
 					<View style={{ flex: 1 }}>
 						<View
@@ -156,8 +189,8 @@ const SocDetailScreen = ({ route, navigation }) => {
 										<Button
 											mode="contained"
 											onPress={() => setHideDesc((prev) => !prev)}
-											style={{ 
-												alignSelf: 'center', 
+											style={{
+												alignSelf: "center",
 												marginBottom: 8,
 												backgroundColor: "#FF8787",
 											}}
@@ -295,9 +328,9 @@ const SocDetailScreen = ({ route, navigation }) => {
 							<Swiper
 								autoplay
 								autoplayTimeout={4}
-								style={{ 
+								style={{
 									height: 280,
-									alignItems: 'center',
+									alignItems: "center",
 									marginBottom: 24,
 								}}
 								activeDotColor={"#47B5FF"}
@@ -305,7 +338,7 @@ const SocDetailScreen = ({ route, navigation }) => {
 								{soc.images.map((image, index) => (
 									<View key={index}>
 										<Image
-											style={{ 
+											style={{
 												aspectRatio: 3.5 / 3,
 											}}
 											source={{ uri: image }}
@@ -317,10 +350,12 @@ const SocDetailScreen = ({ route, navigation }) => {
 						)}
 
 						{events && events.length > 0 && (
-							<View style={{ 
-								width: "100%",
-								marginBottom: 24,
-							}}>
+							<View
+								style={{
+									width: "100%",
+									marginBottom: 24,
+								}}
+							>
 								<Text
 									style={{
 										width: "100%",

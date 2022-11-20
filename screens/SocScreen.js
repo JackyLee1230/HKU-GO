@@ -7,8 +7,9 @@ import {
 	Image,
 	TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { FAB, Searchbar, ActivityIndicator } from "react-native-paper";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { FAB, Searchbar, ActivityIndicator, Portal } from "react-native-paper";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase";
 import { useDebounce } from "use-debounce";
 import {
@@ -24,6 +25,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 
 const SocScreen = ({ navigation }) => {
+	const scrollRef = useRef();
+	const isFocused = useIsFocused();
 	const [isLoading, setIsLoading] = useState(true);
 	let [isRefreshing, setIsRefreshing] = React.useState(false);
 	const [socs, setSocs] = useState([]);
@@ -70,42 +73,57 @@ const SocScreen = ({ navigation }) => {
 
 	return (
 		<>
-			{isLoading && (
-				<ActivityIndicator
-					color={"#47B5FF"}
-					size={"large"}
-				/>
-			)}
+			{!onTop ? (
+				<Portal>
+					<FAB
+						visible={isFocused}
+						icon={"arrow-up-drop-circle-outline"}
+						style={{
+							position: "absolute",
+							margin: 16,
+							right: 5,
+							bottom: "10%",
+						}}
+						onPress={() => {
+							scrollRef.current?.scrollToOffset({
+								y: 0,
+								animated: true,
+							});
+						}}
+					/>
+				</Portal>
+			) : null}
+			{isLoading && <ActivityIndicator color={"#47B5FF"} size={"large"} />}
 			{!isLoading && (
 				<LinearGradient colors={["#C3E8FD", "#EFF8FD"]} style={{ flex: 1 }}>
 					<View style={{ flex: 1 }}>
 						{debouncedOnTop ? (
-							<LinearGradient 
-									colors={["#EF9F9F", "#F8C4B4"]}
-									start={{ x: 0, y: 0 }}
-									end={{ x: 1, y: 0 }}
+							<LinearGradient
+								colors={["#EF9F9F", "#F8C4B4"]}
+								start={{ x: 0, y: 0 }}
+								end={{ x: 1, y: 0 }}
+								style={{
+									backgroundColor: "pink",
+									marginTop: 12,
+									marginHorizontal: 32,
+									borderTopLeftRadius: 8,
+									borderBottomRightRadius: 8,
+									borderTopRightRadius: 32,
+									borderBottomLeftRadius: 32,
+									padding: 16,
+								}}
+							>
+								<Text
 									style={{
-										backgroundColor: "pink",
-										marginTop: 12,
-										marginHorizontal: 32,
-										borderTopLeftRadius: 8,
-										borderBottomRightRadius: 8,
-										borderTopRightRadius: 32,
-										borderBottomLeftRadius: 32,
-										padding: 16,
+										fontSize: 20,
+										fontWeight: "600",
+										lineHeight: 30,
+										textAlign: "center",
+										color: "#06283D",
 									}}
 								>
-									<Text
-										style={{ 
-											fontSize: 20, 
-											fontWeight: "600",
-											lineHeight: 30,
-											textAlign: "center",
-											color: "#06283D",
-										}}
-									>
-										Find out more about the Societies and Faculties @HKU
-									</Text>
+									Find out more about the Societies and Faculties @HKU
+								</Text>
 							</LinearGradient>
 						) : null}
 
@@ -122,13 +140,14 @@ const SocScreen = ({ navigation }) => {
 								borderWidth: 2,
 								backgroundColor: "#EFF5FF",
 							}}
-							placeholderTextColor={'#g5g5g5'}
+							placeholderTextColor={"#g5g5g5"}
 							inputStyle={{
 								color: "#06283D",
 							}}
 						/>
 
 						<FlatList
+							ref={scrollRef}
 							data={socs}
 							style={{ height: "100%" }}
 							numColumns={1}
