@@ -7,8 +7,8 @@ const Stack = createNativeStackNavigator();
 
 const MapStackNavigator = () => {
 	return (
-		<Stack.Navigator headerMode="screen" screenOptions={{ header: NavBar }}>
-			<Stack.Screen 
+		<Stack.Navigator headerMode="screen" screenOptions={{ headerShown: false }}>
+			<Stack.Screen
 				name="Map"
 				component={MapScreen}
 				options={{
