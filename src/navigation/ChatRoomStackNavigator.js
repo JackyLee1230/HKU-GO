@@ -12,6 +12,13 @@ const ChatRoomStackNavigator = () => {
 				component={ChatRoomScreen}
 				options={{
 					title: "Chat Room",
+					headerStyle: {
+						backgroundColor: '#47B5FF',
+					},
+					headerTintColor: '#fff',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
 				}}
 			/>
 		</Stack.Navigator>

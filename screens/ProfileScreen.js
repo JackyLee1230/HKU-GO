@@ -8,7 +8,7 @@ import {
 	ScrollView,
 	RefreshControl,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Modal, Portal, RadioButton, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../firebase";
@@ -37,6 +37,17 @@ const ProfileScreen = ({ navigation }) => {
 	const [visible, setVisible] = useState(false);
 	const [hideUID, setHideUID] = useState(true);
 	const [result, setResult] = useState("");
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			userName: auth?.currentUser?.displayName ?? "Anonymous",
+			userPoint: points,
+			userAvatar: auth?.currentUser
+			? auth?.currentUser?.userImg ||
+			  "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
+			: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
+		});
+	});
 
 	const showModal = () => {
 		setVisible(true);

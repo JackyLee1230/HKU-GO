@@ -10,7 +10,7 @@ import {
 	Animated,
 	Linking,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
 import { Modal, Portal, FAB, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -25,12 +25,14 @@ import {
 	setDoc,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.6;
 const SPACING_FOR_CARD_INSET = (CARD_WIDTH / 0.6) * 0.1 - 5;
 
 const MapScreen = ({ navigation }) => {
+	const [points, setPoints] = useState();
 	const [facName, setFacName] = useState("");
 	const [result, setResult] = useState();
 	const [mapType, setMapType] = useState("standard");
@@ -40,6 +42,49 @@ const MapScreen = ({ navigation }) => {
 		latitudeDelta: 0.00922,
 		longitudeDelta: 0.00421,
 	});
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			userName: auth?.currentUser?.displayName ?? "Anonymous",
+			userPoint: points,
+			userAvatar: auth?.currentUser
+			? auth?.currentUser?.userImg ||
+			  "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
+			: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
+		});
+	});
+
+	let getPoints = async () => {
+		await AsyncStorage.getItem("notification").then((value) => {
+			if (value === "enabled") {
+				setResult("enabled");
+			} else {
+				setResult("disabled");
+			}
+		});
+		const q = query(
+			collection(db, "points"),
+			where("uid", "==", auth?.currentUser?.uid)
+		);
+		const querySnapshot = await getDocs(q);
+		querySnapshot.forEach((doc) => {
+			let temp = doc.data();
+			setPoints(temp.points);
+		});
+	};
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			getPoints();
+		}, 120000);
+		return () => clearInterval(interval);
+	}, []);
+
+	useEffect(() => {
+		if (auth && auth?.currentUser) {
+			getPoints();
+		}
+	}, [navigation]);
 
 	let mapAnimation = new Animated.Value(0);
 	const _map = React.useRef(null);

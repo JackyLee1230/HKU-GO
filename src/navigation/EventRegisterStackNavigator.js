@@ -12,6 +12,13 @@ const EventRegisterStackNavigator = () => {
 				component={EventsScreen}
 				options={{
 					title: "HKU InfoDay Events",
+					headerStyle: {
+						backgroundColor: '#47B5FF',
+					},
+					headerTintColor: '#fff',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
 				}}
 			/>
 		</Stack.Navigator>

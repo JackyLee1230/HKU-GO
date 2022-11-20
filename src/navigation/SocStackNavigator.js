@@ -13,6 +13,13 @@ const SocStackNavigator = () => {
 				component={SocScreen}
 				options={{
 					title: "HKU Societies",
+					headerStyle: {
+						backgroundColor: '#47B5FF',
+					},
+					headerTintColor: '#fff',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
 				}}
 			/>
 			<Stack.Screen
@@ -20,6 +27,13 @@ const SocStackNavigator = () => {
 				component={SocDetailScreen}
 				options={{
 					title: "Societies Detail",
+					headerStyle: {
+						backgroundColor: '#47B5FF',
+					},
+					headerTintColor: '#fff',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
 				}}
 			/>
 		</Stack.Navigator>

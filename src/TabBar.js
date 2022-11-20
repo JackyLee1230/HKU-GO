@@ -2,9 +2,9 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import React from "react";
 import { StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import HomeScreen from "../screens/HomeScreen/HomeScreen";
-import MapScreen from "../screens/MapScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import HomeStackNavigator from "./navigation/HomeStackNavigator";
+import MapStackNavigator from "./navigation/MapStackNavigator";
+import ProfileStackNavigator from "./navigation/ProfileStackNavigator";
 import SocStackNavigator from "./navigation/SocStackNavigator";
 import EventRegisterStackNavigator from "./navigation/EventRegisterStackNavigator";
 import ChatRoomStackNavigator from "./navigation/ChatRoomStackNavigator";
@@ -25,8 +25,8 @@ function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen 
-	  	name="Home" 
-		component={HomeScreen} 
+	  	name="HomeStackNavigator" 
+		component={HomeStackNavigator} 
 		options={{
 			headerShown: false,
 		}}
@@ -83,8 +83,8 @@ export default function TabBar() {
 			/>
 
 			<Tab.Screen
-				name="Map"
-				component={MapScreen}
+				name="MapStack"
+				component={MapStackNavigator}
 				options={{
 					title: "Map",
 					headerStyle: {
@@ -105,8 +105,8 @@ export default function TabBar() {
 			/>
 
 			<Tab.Screen
-				name="Profile"
-				component={ProfileScreen}
+				name="ProfileStack"
+				component={ProfileStackNavigator}
 				options={{
 					title: "Profile",
 					tabBarIcon: ({ focused, color }) => (
