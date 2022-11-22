@@ -99,11 +99,13 @@ const CameraCompo = ({ navigation }) => {
 		console.log(mapHunt);
 
 		setExist(0);
+		let temp = 0;
 
 		// check if the presentedShape is in the mapHunt array
 		if (mapHunt.includes(presentedShape)) {
 			// if yes, do nothing
 			setExist(1);
+			temp = 1;
 		} else {
 			// if no, add the presentedShape to the mapHunt array
 			mapHunt.push(presentedShape);
@@ -114,7 +116,7 @@ const CameraCompo = ({ navigation }) => {
 			});
 		}
 
-		if (exist === 0) {
+		if (exist === 0 || temp === 0) {
 			const q3 = query(
 				collection(db, "points"),
 				where("uid", "==", auth?.currentUser?.uid)
@@ -182,7 +184,6 @@ const CameraCompo = ({ navigation }) => {
 											setPresentedShape("");
 											setIsProcessing(false);
 											await addPoints();
-											console.log(auth?.currentUser.uid);
 										}}
 									>
 										<Text>Dismiss</Text>
