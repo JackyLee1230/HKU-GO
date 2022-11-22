@@ -31,7 +31,7 @@ import { cropPicture } from "../src/image-helper";
 import { updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
-const RESULT_MAPPING = ["Centennial Campus", "Happy Park", "Main Building"];
+const RESULT_MAPPING = ["Main Building", "Centennial Campus", "Yuet Ming Fountain"];
 
 const CameraCompo = ({ navigation }) => {
 	const [type, setType] = useState(CameraType.back);
@@ -40,6 +40,7 @@ const CameraCompo = ({ navigation }) => {
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [presentedShape, setPresentedShape] = useState("");
 	const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
+	const [exist, setExist] = useState(0);
 
 	const changeCameraType = () => {
 		if (cameraType === Camera.Constants.Type.back) {
@@ -67,7 +68,7 @@ const CameraCompo = ({ navigation }) => {
 		console.log(prediction);
 		let highestPrediction = 0;
 		console.log(Math.max.apply(null, prediction));
-		if (Math.max.apply(null, prediction) > 0) {
+		if (Math.max.apply(null, prediction) > 0.6) {
 			highestPrediction = prediction.indexOf(Math.max.apply(null, prediction));
 			setPresentedShape(RESULT_MAPPING[highestPrediction]);
 		} else {
@@ -92,12 +93,12 @@ const CameraCompo = ({ navigation }) => {
 		let mapHunt = result[0].mapHunt;
 		console.log(mapHunt);
 
-		let exist = 0;
+		setExist(0)
 
 		// check if the presentedShape is in the mapHunt array
 		if (mapHunt.includes(presentedShape)) {
 			// if yes, do nothing
-			exist = 1;
+			setExist(1);
 		} else {
 			// if no, add the presentedShape to the mapHunt array
 			mapHunt.push(presentedShape);
@@ -147,12 +148,19 @@ const CameraCompo = ({ navigation }) => {
 								<View style={styles.modalContent}>
 									{presentedShape !== "Not Valid" && presentedShape !== "" ? (
 										<>
-											<Text>Your visited {presentedShape}</Text>
+											<Text><b>{presentedShape}</b></Text>
 											{exist === 0 ? (
 												<Text>You got 20 points!</Text>
 											) : (
 												<Text>You have already visited this place!</Text>
 											)}
+										</>
+									) : null}
+
+									{presentedShape == "Not Valid" ? (
+										<>
+											<Text>Detection failed.</Text>
+											<Text>Please try again.</Text>
 										</>
 									) : null}
 
