@@ -29,7 +29,10 @@ import {
 	RadioButton,
 	TextInput,
 	ActivityIndicator,
+	FAB,
 } from "react-native-paper";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
 
 const filterBotMessages = (message) =>
 	!message.system && message.user && message.user._id && message.user._id === 2;
@@ -75,6 +78,24 @@ export default function ChatScreen({ navigation }) {
 					createdAt: doc.data().createdAt.toDate(),
 					text: doc.data().text,
 					user: doc.data().user,
+					quickReplies: {
+						type: "checkbox", // or 'checkbox',
+						keepIt: false,
+						values: [
+							{
+								title: "😤 Let's Go!",
+								value: "😤 Let's Go!",
+							},
+							{
+								title: "❌ Nah!",
+								value: "❌ Nah!",
+							},
+							{
+								title: "❓ Where?",
+								value: "❓ Where?",
+							},
+						],
+					},
 				}))
 			);
 		});
@@ -124,7 +145,6 @@ export default function ChatScreen({ navigation }) {
 					<ActivityIndicator color={"#47B5FF"} size={"large"} />
 				</View>
 			)}
-
 			<Portal>
 				<Modal
 					visible={visible}
@@ -214,6 +234,13 @@ export default function ChatScreen({ navigation }) {
 				timeTextStyle={{ left: { color: "red" }, right: { color: "yellow" } }}
 				isTyping={isTyping}
 				infiniteScroll
+			/>
+			<FAB
+				icon={"map"}
+				style={styles.camera}
+				onPress={() => {
+					getLocationAsync().then();
+				}}
 			/>
 		</View>
 	);
