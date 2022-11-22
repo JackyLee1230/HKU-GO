@@ -164,7 +164,7 @@ const CameraCompo = ({ navigation }) => {
 													<Text style={{ fontWeight: "bold" }}>
 														{presentedShape}
 													</Text>
-													{isLoading && exist === 0 ? (
+													{exist === 0 ? (
 														<Text>You got 20 points!</Text>
 													) : (
 														<Text>You have already visited this place!</Text>
