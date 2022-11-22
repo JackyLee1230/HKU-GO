@@ -190,10 +190,13 @@ const CameraCompo = ({ navigation }) => {
 									autoFocus={true}
 									whiteBalance={Camera.Constants.WhiteBalance.auto}
 								></Camera>
-								<Pressable
-									onPress={() => handleImageCapture()}
+								<FAB
+									icon="camera"
 									style={styles.captureButton}
-								></Pressable>
+									onPress={async () => {
+										handleImageCapture();
+									}}
+								/>
 							</>
 						)}
 					</View>
@@ -215,13 +218,12 @@ const styles = StyleSheet.create({
 	},
 	captureButton: {
 		position: "absolute",
-		left: Dimensions.get("screen").width / 2 - 50,
-		bottom: 40,
-		width: 100,
-		zIndex: 100,
-		height: 100,
-		backgroundColor: "white",
-		borderRadius: 50,
+		left: Dimensions.get("window").width * 0.39,
+		top: Dimensions.get("window").height * 0.7,
+		backgroundColor: "#FFFFFF",
+		borderRadius: 32,
+		margin: 16,
+		zIndex: 1,
 	},
 	modal: {
 		flex: 1,
