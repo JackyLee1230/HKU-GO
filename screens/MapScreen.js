@@ -8,8 +8,9 @@ import {
 	TouchableOpacity,
 	ScrollView,
 	Animated,
+	Linking,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
 import { Modal, Portal, FAB, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -24,14 +25,17 @@ import {
 	setDoc,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.6;
 const SPACING_FOR_CARD_INSET = (CARD_WIDTH / 0.6) * 0.1 - 5;
 
 const MapScreen = ({ navigation }) => {
+	const [points, setPoints] = useState();
 	const [facName, setFacName] = useState("");
 	const [result, setResult] = useState();
+	const [mapType, setMapType] = useState("standard");
 	const [region, setRegion] = useState({
 		latitude: 22.28333,
 		longitude: 114.13643,
@@ -39,24 +43,84 @@ const MapScreen = ({ navigation }) => {
 		longitudeDelta: 0.00421,
 	});
 
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			userName: auth?.currentUser?.displayName ?? "Anonymous",
+			userPoint: points,
+			userAvatar: () => <TouchableOpacity
+									stlye={{
+										justifyContent: "center",
+										alignSelf: "center",
+										alignItem: "center",
+									}}
+									onPress={() => {
+										navigation.navigate("ProfileStack");
+									}}
+								>
+									<Image
+										style={{
+											height: 40,
+											width: 40,
+											borderRadius: 100,
+										}}
+										source={{
+											uri: auth?.currentUser
+												? auth?.currentUser?.userImg ||
+												"https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
+												: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
+										}}
+									/>
+								</TouchableOpacity>
+		});
+	});
+
+	let getPoints = async () => {
+		await AsyncStorage.getItem("notification").then((value) => {
+			if (value === "enabled") {
+				setResult("enabled");
+			} else {
+				setResult("disabled");
+			}
+		});
+		const q = query(
+			collection(db, "points"),
+			where("uid", "==", auth?.currentUser?.uid)
+		);
+		const querySnapshot = await getDocs(q);
+		querySnapshot.forEach((doc) => {
+			let temp = doc.data();
+			setPoints(temp.points);
+		});
+	};
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			getPoints();
+		}, 120000);
+		return () => clearInterval(interval);
+	}, []);
+
+	useEffect(() => {
+		if (auth && auth?.currentUser) {
+			getPoints();
+		}
+	}, [navigation]);
+
 	let mapAnimation = new Animated.Value(0);
 	const _map = React.useRef(null);
 	let mapIndex = 0;
 
 	let loadFacility = async () => {
-		const q = query(collection(db, "facility"), where("name", "==", facName));
-		const querySnapshot = await getDocs(q);
-
 		let r = [];
-		querySnapshot &&
+		const q = query(collection(db, "facility"), where("name", "==", facName));
+		const querySnapshot = await getDocs(q).then((querySnapshot) => {
 			querySnapshot.forEach((doc) => {
 				let temp = doc.data();
-				console.log(temp);
 				temp.id = doc.id;
 				r.push(temp);
 			});
-
-		setResult(r[0]);
+			setResult(r[0]);
+		});
 	};
 
 	useEffect(() => {
@@ -66,9 +130,18 @@ const MapScreen = ({ navigation }) => {
 		}
 	}, [facName]);
 
+	//  function that change the mapType to hybrid if standard and vice versa
+	const changeMapType = () => {
+		if (mapType == "standard") {
+			setMapType("hybrid");
+		} else {
+			setMapType("standard");
+		}
+	};
+
 	useEffect(() => {
 		mapAnimation.addListener(({ value }) => {
-			let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
+			let index = Math.floor(value / CARD_WIDTH + 0.3);
 			if (index >= markers.length) {
 				index = markers.length - 1;
 			}
@@ -82,13 +155,6 @@ const MapScreen = ({ navigation }) => {
 				if (mapIndex !== index) {
 					mapIndex = index;
 					const { latitude, longitude } = markers[index];
-					_map.current.animateToRegion(
-						{
-							latitude: latitude,
-							longitude: longitude,
-						},
-						350
-					);
 				}
 			}, 10);
 		});
@@ -96,7 +162,6 @@ const MapScreen = ({ navigation }) => {
 
 	const onMarkerPress = (mapEventData) => {
 		const markerID = mapEventData._targetInst.return.key;
-		console.log(markerID);
 
 		let x = markerID * CARD_WIDTH + markerID * 20;
 
@@ -108,6 +173,14 @@ const MapScreen = ({ navigation }) => {
 		{ image: require("../assets/chiwah.png") },
 		{ image: require("../assets/hakingwong.png") },
 		{ image: require("../assets/knowles.png") },
+		{ image: require("../assets/mainbuilding.jpg") },
+		{ image: require("../assets/composite.png") },
+		{ image: require("../assets/chowyeiching.jpeg") },
+		{ image: require("../assets/raysonhuang.png") },
+		{ image: require("../assets/cya.jpg") },
+		{ image: require("../assets/cyp.jpg") },
+		{ image: require("../assets/cyc.jpg") },
+		{ image: require("../assets/mengwah.jpg") },
 	];
 	let markers = [
 		{
@@ -146,40 +219,100 @@ const MapScreen = ({ navigation }) => {
 			image: Images[3].image,
 			ID: 3,
 		},
+		{
+			latitude: 22.28396,
+			longitude: 114.13772673346415,
+			title: "Main Building",
+			subtitle: "HKU",
+			description: "Main Building",
+			image: Images[4].image,
+			ID: 4,
+		},
+		{
+			latitude: 22.28299,
+			longitude: 114.13614,
+			title: "Composite Building",
+			subtitle: "HKU",
+			description: "Composite Building",
+			image: Images[5].image,
+			ID: 5,
+		},
+		{
+			latitude: 22.28299,
+			longitude: 114.13574,
+			title: "Chow Yei Ching Building",
+			subtitle: "HKU",
+			description: "Chow Yei Ching Building",
+			image: Images[6].image,
+			ID: 6,
+		},
+		{
+			latitude: 22.282350359069324,
+			longitude: 114.13843503157959,
+			title: "Rayson Huang Theatre",
+			subtitle: "HKU",
+			description: "Rayson Huang Theatre",
+			image: Images[7].image,
+			ID: 7,
+		},
+		{
+			latitude: 22.282600359069324,
+			longitude: 114.13913503157959,
+			title: "Chong Yuet Ming Amenities Centre",
+			subtitle: "HKU",
+			description: "Chong Yuet Ming Amenities Centre",
+			image: Images[8].image,
+			ID: 8,
+		},
+		{
+			latitude: 22.283150359069324,
+			longitude: 114.13977503157959,
+			title: "Chong Yuet Ming Physics Building",
+			subtitle: "HKU",
+			description: "Chong Yuet Ming Physics Building",
+			image: Images[9].image,
+			ID: 9,
+		},
+		{
+			latitude: 22.282990359069324,
+			longitude: 114.13997503157959,
+			title: "Chong Yuet Ming Chemistry Building",
+			subtitle: "HKU",
+			description: "Chong Yuet Ming Chemistry Building",
+			image: Images[10].image,
+			ID: 10,
+		},
+		{
+			latitude: 22.282200359069324,
+			longitude: 114.13917503157959,
+			title: "Meng Wah Complex",
+			subtitle: "HKU",
+			description: "Meng Wah Complexe",
+			image: Images[11].image,
+			ID: 11,
+		},
 	];
-
-	const interpolations = markers.map((marker, index) => {
-		const inputRange = [
-			(index - 1) * CARD_WIDTH,
-			index * CARD_WIDTH,
-			(index + 1) * CARD_WIDTH,
-		];
-
-		const scale = mapAnimation.interpolate({
-			inputRange,
-			outputRange: [1, 1.5, 1],
-			extrapolate: "clamp",
-		});
-
-		return { scale };
-	});
 
 	function onRegionChange(region) {
 		setRegion({ region });
 	}
 
-	function markerClick() {
-		alert("test");
-	}
-
 	// pop up modal
 	const [visible, setVisible] = React.useState(false);
+	const [hideDesc, setHideDesc] = React.useState(true);
 	const showModal = () => setVisible(true);
 	const hideModal = () => {
 		setVisible(false);
 		setFacName("");
+		setResult();
 	};
-	const containerStyle = { backgroundColor: "white", padding: 20 };
+	const containerStyle = {
+		backgroundColor: "white",
+		padding: 20,
+		width: "80%",
+		alignSelf: "center",
+		borderRadius: 16,
+	};
 
 	const _scrollView = React.useRef(null);
 
@@ -191,49 +324,139 @@ const MapScreen = ({ navigation }) => {
 					onDismiss={hideModal}
 					contentContainerStyle={containerStyle}
 				>
-					<Text>{facName}</Text>
+					<Text style={{ fontSize: 24, alignSelf: "center" }}>
+						{facName}
+						{"\n"}
+					</Text>
+
 					<Text>
 						{result &&
-							result.departments.map((dep, idx) => {
-								return (
-									<Text>
-										{dep}
-										{"\n"}
-									</Text>
-								);
-							})}
+						result.description &&
+						result.description.length > 200 &&
+						hideDesc
+							? result.description.substring(0, 200) + "..."
+							: result && result.description}
 					</Text>
+
+					{result && result.description && result.description.length > 200 && (
+						<Button
+							mode="contained"
+							onPress={() => {
+								setHideDesc(!hideDesc);
+							}}
+						>
+							{hideDesc ? "Show More" : "Show Less"}
+						</Button>
+					)}
+
+					{result && result.departments && result.departments != [] ? (
+						<>
+							<Text>Departments Associated:</Text>
+							<Text>
+								{result &&
+									result.departments.map((dep, idx) => {
+										return (
+											<Text key={idx}>
+												{idx + 1}: {dep}
+												{"\n"}
+											</Text>
+										);
+									})}
+							</Text>
+						</>
+					) : null}
+
+					{result && result.facilities && result.facilities != [] ? (
+						<>
+							<Text>Facilities:</Text>
+							<Text>
+								{result &&
+									result.facilities.map((f, idx) => {
+										return (
+											<Text key={idx}>
+												{f}
+												{"\n"}
+											</Text>
+										);
+									})}
+							</Text>
+						</>
+					) : null}
+
+					{result && result.links && result.links != [] ? (
+						<>
+							{result && result.links && result.links.length !== 0 ? (
+								<Text>Links:</Text>
+							) : (
+								<Text>Links: N/A</Text>
+							)}
+							<Text>
+								{result && result.links
+									? result.links.map((link, idx) => {
+											return (
+												<Text
+													key={idx}
+													style={{ color: "blue" }}
+													onPress={() => Linking.openURL(link)}
+												>
+													{idx + 1}: {link}
+													{"\n"}
+												</Text>
+											);
+									  })
+									: null}
+							</Text>
+						</>
+					) : null}
+
+					<Button
+						mode="contained"
+						onPress={hideModal}
+						style={{
+							marginTop: 24,
+							backgroundColor: "#00C851",
+						}}
+					>
+						CLOSE
+					</Button>
 				</Modal>
 			</Portal>
 			<MapView
-				region={region}
+				region={region || { latitude: 22.28333, longitude: 114.13643 }}
 				onRegionChange={onRegionChange}
 				style={styles.map}
+				mapType={mapType}
 				provider="google"
 				ref={_map}
 			>
-				{markers.map((key) => (
-					<Marker
-						onPress={(e) => onMarkerPress(e)}
-						key={key.ID}
-						coordinate={{
-							latitude: key.latitude,
-							longitude: key.longitude,
-						}}
-						title={key.title}
-						description={key.description}
-					>
-						<Animated.View style={[styles.markerWrap]}>
-							<Animated.Image
-								source={require("../assets/map-marker.png")}
-								style={[styles.marker]}
-								resizeMode="cover"
-							/>
-						</Animated.View>
-					</Marker>
-				))}
+				{markers.map((key, index) => {
+					return (
+						<Marker
+							onPress={(e) => onMarkerPress(e)}
+							key={key.ID}
+							coordinate={{
+								latitude: key.latitude,
+								longitude: key.longitude,
+							}}
+							title={key.title}
+							description={key.description}
+						>
+							<Animated.View style={[styles.markerWrap]}>
+								<Animated.Image
+									source={require("../assets/map-marker.png")}
+									style={[styles.marker]}
+									resizeMode="cover"
+								/>
+							</Animated.View>
+						</Marker>
+					);
+				})}
 			</MapView>
-			<FAB icon="help" style={styles.fab} onPress={() => showModal()} />
+			<FAB
+				icon={mapType === "standard" ? "map-plus" : "map"}
+				style={styles.fab}
+				onPress={() => changeMapType()}
+			/>
 			<Animated.ScrollView
 				ref={_scrollView}
 				horizontal
@@ -284,10 +507,9 @@ const MapScreen = ({ navigation }) => {
 										setRegion({
 											latitude: marker.latitude,
 											longitude: marker.longitude,
-											latitudeDelta: 0.00922,
-											longitudeDelta: 0.00421,
+											latitudeDelta: 0.00222,
+											longitudeDelta: 0.00121,
 										});
-										console.log(marker.longitude, marker.latitude);
 									}}
 								>
 									<Text

@@ -1,20 +1,17 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, LogBox } from "react-native";
-import StackNavigator from "./StackNavigator";
+import { StyleSheet, LogBox } from "react-native";
+import RootStackNavigator from "./src/navigation/RootStackNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import MyNavbar from "./src/Navbar";
 import { Provider as PaperProvider } from "react-native-paper";
 
 export default function App() {
-	LogBox.ignoreLogs([
-		"Warning: Async Storage has been extracted from react-native core",
-	]);
+	// LogBox.ignoreAllLogs();
+
 	return (
 		<PaperProvider>
 			<SafeAreaProvider>
 				<NavigationContainer>
-					<StackNavigator />
+					<RootStackNavigator />
 				</NavigationContainer>
 			</SafeAreaProvider>
 		</PaperProvider>

@@ -12,9 +12,28 @@ import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
 import { Modal, Portal } from "react-native-paper";
 import { Button } from "react-native-paper";
+import { auth } from "../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import * as Device from "expo-device";
 
 const InitialScreen = ({ navigation }) => {
 	const [visible, setVisible] = React.useState(false);
+
+	onAuthStateChanged(auth, (currentUser) => {
+		if (currentUser) {
+			navigation.reset({
+				index: 0,
+				routes: [
+					{
+						name: "WithTab",
+						state: {
+							routes: [{ name: "TabBar" }, { name: "Home" }],
+						},
+					},
+				],
+			});
+		}
+	});
 
 	const showModal = () => {
 		setVisible(true);
@@ -27,11 +46,11 @@ const InitialScreen = ({ navigation }) => {
 	const containerStyle = {
 		backgroundColor: "white",
 		padding: 20,
-		paddingVertical : 40,
+		paddingVertical: 40,
 		marginHorizontal: 64,
 		borderRadius: 8,
 		elevation: 10,
-        shadowColor: '#171717',
+		shadowColor: "#171717",
 	};
 
 	return (
@@ -51,10 +70,24 @@ const InitialScreen = ({ navigation }) => {
 							alignSelf: "center",
 						}}
 					>
-						<Text style={{ fontSize: 20, justifyContent: "center", color: "#256D85" }}>
-							You are about to leave the app {"\n"}
+						<Text
+							style={{
+								fontSize: 16,
+								justifyContent: "center",
+								textAlign: "center",
+								color: "#256D85",
+							}}
+						>
+							You are about to leave HKU GO {"\n"}
 						</Text>
-						<Text style={{ fontSize: 20, justifyContent: "center", color: "#256D85" }}>
+						<Text
+							style={{
+								fontSize: 18,
+								justifyContent: "center",
+								textAlign: "center",
+								color: "#256D85",
+							}}
+						>
 							Do you want to redirct to the HKU Info Day Website?
 						</Text>
 					</View>
@@ -69,24 +102,24 @@ const InitialScreen = ({ navigation }) => {
 					>
 						<Button
 							mode="contained"
-							onPress={hideModal}
-							style={{
-								backgroundColor: "#FF4444"
-							}}
-						>
-							CANCEL
-						</Button>
-						<Button
-							mode="contained"
 							onPress={() => {
 								Linking.openURL("https://www.infoday.hku.hk/");
 								hideModal();
 							}}
 							style={{
-								backgroundColor: "#00C851"
+								backgroundColor: "#00C851",
 							}}
 						>
 							CONFIRM
+						</Button>
+						<Button
+							mode="contained"
+							onPress={hideModal}
+							style={{
+								backgroundColor: "#FF4444",
+							}}
+						>
+							CANCEL
 						</Button>
 					</View>
 				</Modal>
@@ -161,6 +194,16 @@ const InitialScreen = ({ navigation }) => {
 						<Text style={styles.button}>REGISTER</Text>
 					</LinearGradient>
 				</TouchableOpacity>
+				<Text
+					style={{
+						marginTop: 12,
+						color: "grey",
+						fontSize: 12,
+						alignSelf: "center",
+					}}
+				>
+					HKU GO Running on {Device.osName} {Device.osVersion}
+				</Text>
 			</ScrollView>
 		</LinearGradient>
 	);

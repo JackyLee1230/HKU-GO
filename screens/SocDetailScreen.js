@@ -9,9 +9,9 @@ import {
 	Image,
 	Linking,
 } from "react-native";
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { FAB, Button } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { FAB, Button, Portal } from "react-native-paper";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { auth, db } from "../firebase";
 import {
 	collection,
@@ -25,19 +25,30 @@ import {
 } from "firebase/firestore";
 import { LinearGradient } from "expo-linear-gradient";
 import EventCard from "../src/EventCard";
+import Swiper from "react-native-swiper";
 
 const SocDetailScreen = ({ route, navigation }) => {
 	const { id, name } = route.params;
 
+	const scrollRef = useRef();
+	const isFocused = useIsFocused();
+
 	const [isLoading, setIsLoading] = useState(true);
-	let [isRefreshing, setIsRefreshing] = useState(false);
 	const [soc, setSoc] = useState([]);
 	const [events, setEvents] = useState([]);
+	const [hideDesc, setHideDesc] = useState(true);
+	const [onTop, setOnTop] = useState(true);
 	useLayoutEffect(() => {
 		navigation.setOptions({
 			headerBackTitle: "Back To Home Page",
 		});
 	}, [navigation]);
+
+	useEffect(() => {
+		navigation.setOptions({
+			title: soc.name,
+		});
+	}, [soc]);
 
 	let loadSocs = async () => {
 		const q = query(collection(db, "society"), where("name", "==", name));
@@ -60,46 +71,83 @@ const SocDetailScreen = ({ route, navigation }) => {
 			result2.push(temp);
 		});
 
-		console.log(result2);
-
 		setSoc(result[0]);
 		setEvents(result2);
 		setIsLoading(false);
-		setIsRefreshing(false);
 	};
 
 	if (isLoading) {
 		loadSocs();
 	}
 
+	const handleScroll = (event) => {
+		if (event.nativeEvent.contentOffset.y != 0) {
+			setOnTop(false);
+		} else {
+			setOnTop(true);
+		}
+	};
+
 	return (
-		<LinearGradient colors={["#0098FF", "#DFF6FF"]} style={{ flex: 1 }}>
-			<ScrollView>
+		<LinearGradient colors={["#C3E8FD", "#EFF8FD"]} style={{ flex: 1 }}>
+			{!onTop ? (
+				<Portal>
+					<FAB
+						visible={isFocused}
+						icon={"arrow-up-drop-circle-outline"}
+						style={{
+							position: "absolute",
+							margin: 16,
+							right: 5,
+							bottom: "10%",
+						}}
+						onPress={() => {
+							scrollRef.current?.scrollTo({
+								y: 0,
+								animated: true,
+							});
+						}}
+					/>
+				</Portal>
+			) : null}
+
+			<ScrollView ref={scrollRef} onScroll={handleScroll}>
 				{soc && soc.name ? (
 					<View style={{ flex: 1 }}>
 						<View
 							style={{
-								margin: 5,
+								margin: 12,
+								marginBottom: 24,
 								marginHorizontal: 32,
-								padding: 15,
 								backgroundColor: "#fff",
-								borderTopLeftRadius: 16,
+								borderTopLeftRadius: 32,
 								borderBottomRightRadius: 4,
-								borderTopRightRadius: 16,
+								borderTopRightRadius: 32,
 								borderBottomLeftRadius: 4,
+								borderColor: "#06283D",
+								borderWidth: 1.5,
 							}}
 						>
 							<LinearGradient
 								colors={["#7FB77E", "#B6E399"]}
+								start={{ x: 0, y: 0 }}
+								end={{ x: 1, y: 0 }}
 								style={{
 									alignItems: "center",
+									borderTopLeftRadius: 30,
+									borderBottomRightRadius: 0,
+									borderTopRightRadius: 30,
+									borderBottomLeftRadius: 0,
 								}}
 							>
 								<Text
 									style={{
 										fontSize: 28,
+										fontWeight: "700",
+										textAlign: "center",
 										paddingVertical: 12,
-										paddingHorizontal: 32,
+										paddingHorizontal: 24,
+										color: "#FFFFFF",
 									}}
 								>
 									{soc.name}
@@ -128,12 +176,28 @@ const SocDetailScreen = ({ route, navigation }) => {
 											marginHorizontal: 12,
 											marginVertical: 8,
 											fontSize: 16,
+											color: "#256D85",
 										}}
 									>
 										{soc.description.length > 150
-											? soc.description.substring(0, 150) + "..."
+											? hideDesc
+												? soc.description.substring(0, 150) + "..."
+												: soc.description
 											: soc.description}
 									</Text>
+									{soc.description.length > 150 && (
+										<Button
+											mode="contained"
+											onPress={() => setHideDesc((prev) => !prev)}
+											style={{
+												alignSelf: "center",
+												marginBottom: 8,
+												backgroundColor: "#FF8787",
+											}}
+										>
+											{hideDesc ? "Show More" : "Show Less"}
+										</Button>
+									)}
 								</View>
 							</View>
 						</View>
@@ -143,107 +207,173 @@ const SocDetailScreen = ({ route, navigation }) => {
 								style={{
 									width: "100%",
 									flexDirection: "row",
-									alignItems: "flex-start",
+									alignItems: "center",
+									paddingHorizontal: 32,
+									justifyContent: "space-around",
+									marginBottom: 24,
 								}}
 							>
 								{soc.links["instagram"] && (
-									<Button
-										mode="contained-tonal"
-										compact="true"
+									<TouchableOpacity
 										onPress={() => {
 											Linking.openURL(soc.links["instagram"]);
 										}}
+										style={{
+											borderRadius: 8,
+											shadowOffset: { width: 0, height: 1 },
+											shadowOpacity: 0.5,
+											shadowRadius: 1,
+											elevation: 1,
+											shadowColor: "#171717",
+										}}
 									>
-										Instagram
-									</Button>
+										<LinearGradient
+											start={{ x: 0, y: 0 }}
+											end={{ x: 1, y: 0 }}
+											colors={["#FF8787", "#F8C4B4"]}
+											style={{
+												borderRadius: 8,
+												paddingHorizontal: 12,
+												paddingVertical: 8,
+											}}
+										>
+											<Text
+												style={{
+													fontSize: 14,
+													fontWeight: "500",
+													color: "#222222",
+												}}
+											>
+												Instagram
+											</Text>
+										</LinearGradient>
+									</TouchableOpacity>
 								)}
 								{soc.links["facebook"] && (
-									<Button
-										mode="contained-tonal"
-										compact="true"
+									<TouchableOpacity
 										onPress={() => {
-											Linking.openURL(soc.links["facebook"]);
+											Linking.openURL(soc.links["instagram"]);
+										}}
+										style={{
+											borderRadius: 8,
+											shadowOffset: { width: 0, height: 1 },
+											shadowOpacity: 0.5,
+											shadowRadius: 1,
+											elevation: 1,
+											shadowColor: "#171717",
 										}}
 									>
-										Facebook
-									</Button>
+										<LinearGradient
+											start={{ x: 0, y: 0 }}
+											end={{ x: 1, y: 0 }}
+											colors={["#47B5FF", "#9AE3FF"]}
+											style={{
+												borderRadius: 8,
+												paddingHorizontal: 12,
+												paddingVertical: 8,
+											}}
+										>
+											<Text
+												style={{
+													fontSize: 14,
+													fontWeight: "500",
+													color: "#222222",
+												}}
+											>
+												Facebook
+											</Text>
+										</LinearGradient>
+									</TouchableOpacity>
 								)}
 								{soc.links["official"] && (
-									<Button
-										mode="contained-tonal"
-										compact="true"
+									<TouchableOpacity
 										onPress={() => {
-											Linking.openURL(soc.links["official"]);
+											Linking.openURL(soc.links["instagram"]);
+										}}
+										style={{
+											borderRadius: 8,
+											shadowOffset: { width: 0, height: 1 },
+											shadowOpacity: 0.5,
+											shadowRadius: 1,
+											elevation: 1,
+											shadowColor: "#171717",
 										}}
 									>
-										Official Webpage
-									</Button>
+										<LinearGradient
+											start={{ x: 0, y: 0 }}
+											end={{ x: 1, y: 0 }}
+											colors={["#B6E388", "#7FB77E"]}
+											style={{
+												borderRadius: 8,
+												paddingHorizontal: 12,
+												paddingVertical: 8,
+											}}
+										>
+											<Text
+												style={{
+													fontSize: 14,
+													fontWeight: "500",
+													color: "#222222",
+												}}
+											>
+												Official Webpage
+											</Text>
+										</LinearGradient>
+									</TouchableOpacity>
 								)}
 							</View>
 						)}
 
-						<View style={{ width: "100%" }}>
-							<Text
+						{soc.images && soc.images.length !== 0 && (
+							<Swiper
+								autoplay
+								autoplayTimeout={4}
+								style={{
+									height: 280,
+									alignItems: "center",
+									marginBottom: 24,
+								}}
+								activeDotColor={"#47B5FF"}
+							>
+								{soc.images.map((image, index) => (
+									<View key={index}>
+										<Image
+											style={{
+												aspectRatio: 3.5 / 3,
+											}}
+											source={{ uri: image }}
+											resizeMode="contain"
+										></Image>
+									</View>
+								))}
+							</Swiper>
+						)}
+
+						{events && events.length > 0 && (
+							<View
 								style={{
 									width: "100%",
-									textAlign: "center",
+									marginBottom: 24,
 								}}
 							>
-								Join Our Upcoming Events(s):
-							</Text>
+								<Text
+									style={{
+										width: "100%",
+										fontWeight: "700",
+										fontSize: 16,
+										color: "#06283D",
+										textAlign: "center",
+										marginBottom: 12,
+									}}
+								>
+									Join Our Upcoming Events(s):
+								</Text>
 
-							{events.map((event) => (
-								<EventCard event={event} />
-								// <View
-								// 	key={event.name}
-								// 	style={{
-								// 		margin: 5,
-								// 		marginHorizontal: 32,
-								// 		padding: 15,
-								// 		backgroundColor: "#fff",
-								// 		borderTopLeftRadius: 16,
-								// 		borderBottomRightRadius: 4,
-								// 		borderTopRightRadius: 16,
-								// 		borderBottomLeftRadius: 4,
-								// 	}}
-								// >
-								// 	<Text
-								// 		style={{
-								// 			fontSize: 16,
-								// 			fontWeight: "bold",
-								// 		}}
-								// 	>
-								// 		{event.name} By {event.organiser}
-								// 	</Text>
-								// 	<Text
-								// 		style={{
-								// 			fontSize: 14,
-								// 			fontWeight: "bold",
-								// 		}}
-								// 	>
-								// 		{event.date} {event.time}
-								// 	</Text>
-								// 	<Text
-								// 		style={{
-								// 			fontSize: 14,
-								// 			fontWeight: "bold",
-								// 		}}
-								// 	>
-								// 		{event.location}
-								// 	</Text>
-								// 	<Text
-								// 		style={{
-								// 			fontSize: 14,
-								// 			fontWeight: "bold",
-								// 		}}
-								// 	>
-								// 		{event.description.length > 150
-								// 			? event.description.substring(0, 150) + "..."
-								// 			: event.description}
-								// 	</Text>
-								// </View>
-							))}
-						</View>
+								{events.map((event) => (
+									<EventCard key={event.name} event={event} />
+								))}
+							</View>
+						)}
 					</View>
 				) : null}
 			</ScrollView>
