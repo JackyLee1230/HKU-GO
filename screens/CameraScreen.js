@@ -39,6 +39,15 @@ const CameraCompo = ({ navigation }) => {
 	const cameraRef = React.useRef();
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [presentedShape, setPresentedShape] = useState("");
+	const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
+
+	const changeCameraType = () => {
+		if (cameraType === Camera.Constants.Type.back) {
+			setCameraType(Camera.Constants.Type.front);
+		} else {
+			setCameraType(Camera.Constants.Type.back);
+		}
+	};
 
 	const handleImageCapture = async () => {
 		setIsProcessing(true);
@@ -120,12 +129,6 @@ const CameraCompo = ({ navigation }) => {
 		}
 	};
 
-	// useEffect(() => {
-	// 	if (presentedShape !== "" && presentedShape !== "Not Valid") {
-	// 		addPoints();
-	// 	}
-	// }, [presentedShape]);
-
 	return (
 		<>
 			{!permission ? (
@@ -186,8 +189,9 @@ const CameraCompo = ({ navigation }) => {
 								<Camera
 									ref={cameraRef}
 									style={styles.camera}
-									type={Camera.Constants.Type.back}
+									type={cameraType}
 									autoFocus={true}
+									ratio={"16:9"}
 									whiteBalance={Camera.Constants.WhiteBalance.auto}
 								></Camera>
 								<FAB
@@ -195,6 +199,21 @@ const CameraCompo = ({ navigation }) => {
 									style={styles.captureButton}
 									onPress={async () => {
 										handleImageCapture();
+									}}
+								/>
+								<FAB
+									icon="camera-flip-outline"
+									style={{
+										position: "absolute",
+										left: Dimensions.get("window").width * 0.7,
+										top: Dimensions.get("window").height * 0.7,
+										backgroundColor: "#FFFFFF",
+										borderRadius: 32,
+										margin: 16,
+										zIndex: 1,
+									}}
+									onPress={async () => {
+										changeCameraType();
 									}}
 								/>
 							</>

@@ -195,7 +195,7 @@ const MapHuntScreen = ({ navigation, route }) => {
 			</MapView>
 			<Image source={marker.image} style={[styles.image]}></Image>
 
-			<FAB icon="help" style={styles.fab} onPress={() => showModal()} />
+			{/* <FAB icon="help" style={styles.fab} onPress={() => showModal()} /> */}
 			<Animated.ScrollView
 				ref={_scrollView}
 				horizontal
