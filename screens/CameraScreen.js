@@ -36,6 +36,7 @@ const RESULT_MAPPING = ["Centennial Campus", "Happy Park", "Main Building"];
 const CameraCompo = ({ navigation }) => {
 	const [type, setType] = useState(CameraType.back);
 	const [permission, setPermission] = Camera.useCameraPermissions();
+	const [hasPermission, setHasPermission] = useState(null);
 	const cameraRef = React.useRef();
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [presentedShape, setPresentedShape] = useState("");
@@ -181,8 +182,10 @@ const CameraCompo = ({ navigation }) => {
 									onPress={async () => {
 										let res =
 											await Camera.requestCameraPermissionsAsync().then();
+
 										if (res.granted == true) {
 											permission.granted = true;
+											setHasPermission(true);
 										}
 									}}
 									title="grant permission"
