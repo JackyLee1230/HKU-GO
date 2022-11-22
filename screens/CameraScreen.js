@@ -148,7 +148,11 @@ const CameraCompo = ({ navigation }) => {
 									{presentedShape !== "Not Valid" && presentedShape !== "" ? (
 										<>
 											<Text>Your visited {presentedShape}</Text>
-											<Text>20 Pointshave been awarded</Text>
+											{exist === 0 ? (
+												<Text>You got 20 points!</Text>
+											) : (
+												<Text>You have already visited this place!</Text>
+											)}
 										</>
 									) : null}
 
