@@ -235,13 +235,6 @@ export default function ChatScreen({ navigation }) {
 				isTyping={isTyping}
 				infiniteScroll
 			/>
-			<FAB
-				icon={"map"}
-				style={styles.camera}
-				onPress={() => {
-					getLocationAsync().then();
-				}}
-			/>
 		</View>
 	);
 }
