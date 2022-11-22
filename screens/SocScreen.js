@@ -78,11 +78,13 @@ const SocScreen = ({ navigation }) => {
 					<FAB
 						visible={isFocused}
 						icon={"arrow-up-drop-circle-outline"}
+						color="#fff"
 						style={{
 							position: "absolute",
 							margin: 16,
 							right: 5,
 							bottom: "10%",
+							backgroundColor: "#7FB77E",
 						}}
 						onPress={() => {
 							scrollRef.current?.scrollToOffset({

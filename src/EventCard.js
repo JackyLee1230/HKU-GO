@@ -100,7 +100,7 @@ export default function EventCard({ ...props }) {
 									color: "#fff",
 								}}
 							>
-								Expand
+								{!expand ? "Expand" : "Collapse"}
 							</Text>
 						</View>
 					</TouchableOpacity>

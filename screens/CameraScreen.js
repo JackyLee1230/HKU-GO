@@ -232,13 +232,16 @@ const CameraCompo = ({ navigation }) => {
 									whiteBalance={Camera.Constants.WhiteBalance.auto}
 								></Camera>
 								<FAB
+									color="#47B5FF"
 									icon="camera"
+									size="large"
 									style={styles.captureButton}
 									onPress={async () => {
 										handleImageCapture();
 									}}
 								/>
 								<FAB
+									color="#47B5FF"
 									icon="camera-flip-outline"
 									style={{
 										position: "absolute",
@@ -274,10 +277,10 @@ const styles = StyleSheet.create({
 	},
 	captureButton: {
 		position: "absolute",
-		left: Dimensions.get("window").width * 0.39,
-		top: Dimensions.get("window").height * 0.7,
+		left: Dimensions.get("window").width * 0.338,
+		top: Dimensions.get("window").height * 0.65,
 		backgroundColor: "#FFFFFF",
-		borderRadius: 32,
+		borderRadius: 64,
 		margin: 16,
 		zIndex: 1,
 	},

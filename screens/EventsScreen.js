@@ -251,11 +251,13 @@ const EventsScreen = ({ navigation, route }) => {
 					<FAB
 						visible={isFocused}
 						icon={"arrow-up-drop-circle-outline"}
+						color="#fff"
 						style={{
 							position: "absolute",
 							margin: 16,
 							right: 0,
 							bottom: "18%",
+							backgroundColor: "#7FB77E",
 						}}
 						onPress={() => {
 							scrollRef.current?.scrollToOffset({

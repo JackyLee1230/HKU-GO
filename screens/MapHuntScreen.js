@@ -227,6 +227,7 @@ const MapHuntScreen = ({ navigation, route }) => {
 				)}
 			></Animated.ScrollView>
 			<FAB
+				color="#47B5FF"
 				icon={"camera"}
 				style={styles.camera}
 				onPress={() => {

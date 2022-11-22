@@ -8,6 +8,7 @@ import {
 	IMessage,
 	Send,
 	SendProps,
+	InputToolbar,
 } from "react-native-gifted-chat";
 import {
 	collection,
@@ -33,6 +34,7 @@ import {
 } from "react-native-paper";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
+import { LinearGradient } from "expo-linear-gradient";
 
 const filterBotMessages = (message) =>
 	!message.system && message.user && message.user._id && message.user._id === 2;
@@ -127,7 +129,10 @@ export default function ChatScreen({ navigation }) {
 	);
 
 	return (
-		<View style={styles.container}>
+		<LinearGradient 
+			colors={["#C3E8FD", "#EFF8FD"]}
+			style={styles.container}
+		>
 			{loadingIndication && (
 				<View
 					style={{
@@ -198,6 +203,7 @@ export default function ChatScreen({ navigation }) {
 				</Modal>
 			</Portal>
 			<GiftedChat
+				wrapInSafeArea={false}
 				messages={messages}
 				onSend={onSend}
 				loadEarlier={loadEarlier}
@@ -234,15 +240,17 @@ export default function ChatScreen({ navigation }) {
 				timeTextStyle={{ left: { color: "red" }, right: { color: "yellow" } }}
 				isTyping={isTyping}
 				infiniteScroll
+				renderInputToolbar={(props) => (
+					<InputToolbar {...props} containerStyle={{paddingVertical: 8}} />
+				)}
 			/>
-		</View>
+		</LinearGradient>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
 	},
 	userImg: {
 		height: 150,

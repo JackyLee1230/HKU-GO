@@ -95,11 +95,13 @@ const SocDetailScreen = ({ route, navigation }) => {
 					<FAB
 						visible={isFocused}
 						icon={"arrow-up-drop-circle-outline"}
+						color="#fff"
 						style={{
 							position: "absolute",
 							margin: 16,
 							right: 5,
 							bottom: "10%",
+							backgroundColor: "#7FB77E",
 						}}
 						onPress={() => {
 							scrollRef.current?.scrollTo({
@@ -241,7 +243,7 @@ const SocDetailScreen = ({ route, navigation }) => {
 												style={{
 													fontSize: 14,
 													fontWeight: "500",
-													color: "#222222",
+													color: "#fff",
 												}}
 											>
 												Instagram
@@ -252,7 +254,7 @@ const SocDetailScreen = ({ route, navigation }) => {
 								{soc.links["facebook"] && (
 									<TouchableOpacity
 										onPress={() => {
-											Linking.openURL(soc.links["instagram"]);
+											Linking.openURL(soc.links["facebook"]);
 										}}
 										style={{
 											borderRadius: 8,
@@ -277,7 +279,7 @@ const SocDetailScreen = ({ route, navigation }) => {
 												style={{
 													fontSize: 14,
 													fontWeight: "500",
-													color: "#222222",
+													color: "#fff",
 												}}
 											>
 												Facebook
@@ -313,7 +315,7 @@ const SocDetailScreen = ({ route, navigation }) => {
 												style={{
 													fontSize: 14,
 													fontWeight: "500",
-													color: "#222222",
+													color: "#fff",
 												}}
 											>
 												Official Webpage

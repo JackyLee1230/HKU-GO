@@ -36,7 +36,7 @@ const MapStackNavigator = () => {
 				name="Camera"
 				component={CameraScreen}
 				options={{
-					title: "Camera",
+					title: "Map Hunt Camera",
 					headerStyle: {
 						backgroundColor: '#47B5FF',
 					},
