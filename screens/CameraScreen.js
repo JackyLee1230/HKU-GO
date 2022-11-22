@@ -191,9 +191,14 @@ const CameraCompo = ({ navigation }) => {
 									<Pressable
 										style={styles.dismissButton}
 										onPress={async () => {
+											if (
+												presentedShape !== "Not Valid" &&
+												presentedShape !== ""
+											) {
+												await addPoints();
+											}
 											setPresentedShape("");
 											setIsProcessing(false);
-											await addPoints();
 										}}
 									>
 										<Text>Dismiss</Text>
