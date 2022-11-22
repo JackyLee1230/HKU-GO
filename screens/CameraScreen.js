@@ -46,6 +46,7 @@ const CameraCompo = ({ navigation }) => {
 	const [presentedShape, setPresentedShape] = useState("");
 	const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
 	const [exist, setExist] = useState(0);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const changeCameraType = () => {
 		if (cameraType === Camera.Constants.Type.back) {
@@ -83,6 +84,7 @@ const CameraCompo = ({ navigation }) => {
 	};
 
 	const addPoints = async () => {
+		setIsLoading(true);
 		const q = query(
 			collection(db, "points"),
 			where("uid", "==", auth?.currentUser?.uid)
@@ -135,6 +137,7 @@ const CameraCompo = ({ navigation }) => {
 				});
 			}
 		}
+		setIsLoading(false);
 	};
 
 	return (
@@ -153,18 +156,25 @@ const CameraCompo = ({ navigation }) => {
 						>
 							<View style={styles.modal}>
 								<View style={styles.modalContent}>
-									{presentedShape !== "Not Valid" && presentedShape !== "" ? (
+									{!isLoading ? (
 										<>
-											<Text style={{ fontWeight: "bold" }}>
-												{presentedShape}
-											</Text>
-											{exist === 0 ? (
-												<Text>You got 20 points!</Text>
-											) : (
-												<Text>You have already visited this place!</Text>
-											)}
+											{presentedShape !== "Not Valid" &&
+											presentedShape !== "" ? (
+												<>
+													<Text style={{ fontWeight: "bold" }}>
+														{presentedShape}
+													</Text>
+													{isLoading && exist === 0 ? (
+														<Text>You got 20 points!</Text>
+													) : (
+														<Text>You have already visited this place!</Text>
+													)}
+												</>
+											) : null}
 										</>
-									) : null}
+									) : (
+										<ActivityIndicator size="large" />
+									)}
 
 									{presentedShape == "Not Valid" ? (
 										<>
