@@ -317,15 +317,16 @@ const styles = StyleSheet.create({
 		margin: 16,
 		right: 5,
 		top: "3%",
+		zIndex: 1,
 	},
 	camera: {
 		position: "absolute",
-
 		left: Dimensions.get("window").width * 0.39,
-		top: Dimensions.get("window").height * 0.8,
+		top: Dimensions.get("window").height * 0.7,
 		backgroundColor: "#FFFFFF",
 		borderRadius: 32,
 		margin: 16,
+		zIndex: 1,
 	},
 	image: {
 		width: Dimensions.get("window").width,
