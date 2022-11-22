@@ -30,6 +30,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const ProfileScreen = ({ navigation }) => {
 	const [points, setPoints] = useState();
+	const [hunts, setHunts] = useState();
 	const [events, setEvents] = useState();
 	const [notification, setNotification] = React.useState("enabled");
 	const [refreshing, setRefreshing] = React.useState(false);
@@ -42,27 +43,29 @@ const ProfileScreen = ({ navigation }) => {
 		navigation.setOptions({
 			userName: auth?.currentUser?.displayName ?? "Anonymous",
 			userPoint: points,
-			userAvatar: () => <View
-									stlye={{
-										justifyContent: "center",
-										alignSelf: "center",
-										alignItem: "center",
-									}}
-								>
-									<Image
-										style={{
-											height: 40,
-											width: 40,
-											borderRadius: 100,
-										}}
-										source={{
-											uri: auth?.currentUser
-												? auth?.currentUser?.userImg ||
-												"https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
-												: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
-										}}
-									/>
-								</View>
+			userAvatar: () => (
+				<View
+					stlye={{
+						justifyContent: "center",
+						alignSelf: "center",
+						alignItem: "center",
+					}}
+				>
+					<Image
+						style={{
+							height: 40,
+							width: 40,
+							borderRadius: 100,
+						}}
+						source={{
+							uri: auth?.currentUser
+								? auth?.currentUser?.userImg ||
+								  "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
+								: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
+						}}
+					/>
+				</View>
+			),
 		});
 	});
 
@@ -90,6 +93,7 @@ const ProfileScreen = ({ navigation }) => {
 		querySnapshot.forEach((doc) => {
 			let temp = doc.data();
 			setPoints(temp.points);
+			setHunts(temp.mapHunt.length);
 		});
 	};
 
@@ -353,6 +357,9 @@ const ProfileScreen = ({ navigation }) => {
 					</Text>
 					<Text style={{ color: "#256D85", fontSize: 16, marginBottom: 4 }}>
 						GO Points: {points ?? 0}
+					</Text>
+					<Text style={{ color: "#256D85", fontSize: 16, marginBottom: 4 }}>
+						MapHunt Completed: {hunts ?? 0}
 					</Text>
 					<Text style={{ color: "#256D85", fontSize: 16, marginBottom: 2 }}>
 						Registered Events:{" "}

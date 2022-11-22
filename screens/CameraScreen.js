@@ -31,7 +31,11 @@ import { cropPicture } from "../src/image-helper";
 import { updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
-const RESULT_MAPPING = ["Main Building", "Centennial Campus", "Yuet Ming Fountain"];
+const RESULT_MAPPING = [
+	"Main Building",
+	"Centennial Campus",
+	"Yuet Ming Fountain",
+];
 
 const CameraCompo = ({ navigation }) => {
 	const [type, setType] = useState(CameraType.back);
@@ -94,7 +98,7 @@ const CameraCompo = ({ navigation }) => {
 		let mapHunt = result[0].mapHunt;
 		console.log(mapHunt);
 
-		setExist(0)
+		setExist(0);
 
 		// check if the presentedShape is in the mapHunt array
 		if (mapHunt.includes(presentedShape)) {
@@ -149,7 +153,9 @@ const CameraCompo = ({ navigation }) => {
 								<View style={styles.modalContent}>
 									{presentedShape !== "Not Valid" && presentedShape !== "" ? (
 										<>
-											<Text><b>{presentedShape}</b></Text>
+											<Text style={{ fontWeight: "bold" }}>
+												{presentedShape}
+											</Text>
 											{exist === 0 ? (
 												<Text>You got 20 points!</Text>
 											) : (
