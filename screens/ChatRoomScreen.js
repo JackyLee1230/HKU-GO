@@ -69,6 +69,12 @@ export default function ChatScreen({ navigation }) {
 		});
 	};
 
+	const renderChatFooter = () => {
+		return(
+		  <View style={{height:16}}></View>
+		)
+	}	
+
 	useEffect(() => {
 		const collectionRef = collection(db, "chats");
 		const q = query(collectionRef, orderBy("createdAt", "desc"));
@@ -241,8 +247,16 @@ export default function ChatScreen({ navigation }) {
 				isTyping={isTyping}
 				infiniteScroll
 				renderInputToolbar={(props) => (
-					<InputToolbar {...props} containerStyle={{paddingVertical: 8}} />
+					<InputToolbar 
+						{...props} 
+						containerStyle={{
+							paddingVertical: 8,
+							borderColor: "#888888",
+							borderBottomWidth: 0.2,
+						}} 
+					/>
 				)}
+				renderChatFooter={renderChatFooter}
 			/>
 		</LinearGradient>
 	);
