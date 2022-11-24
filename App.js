@@ -5,7 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as PaperProvider } from "react-native-paper";
 
 export default function App() {
-	// LogBox.ignoreAllLogs();
+	LogBox.ignoreAllLogs();
 
 	return (
 		<PaperProvider>

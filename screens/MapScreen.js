@@ -330,14 +330,21 @@ const MapScreen = ({ navigation }) => {
 					contentContainerStyle={containerStyle}
 				>
 					<ScrollView>
-						<Text style={{ fontSize: 24, fontWeight: "700", color:"#06283D", alignSelf: "center" }}>
+						<Text
+							style={{
+								fontSize: 24,
+								fontWeight: "700",
+								color: "#06283D",
+								alignSelf: "center",
+							}}
+						>
 							{facName}
 							{"\n"}
 						</Text>
 
 						<View
 							style={{
-								padding:8,
+								padding: 8,
 								borderRadius: 4,
 								borderColor: "#06283D",
 								borderWidth: 1.5,
@@ -464,7 +471,7 @@ const MapScreen = ({ navigation }) => {
 														{"\n"}
 													</Text>
 												);
-										})
+										  })
 										: null}
 								</Text>
 							</>
@@ -557,10 +564,16 @@ const MapScreen = ({ navigation }) => {
 							resizeMode="cover"
 						/>
 						<View style={styles.textContent}>
-							<Text numberOfLines={1} style={styles.cardtitle}>
+							<Text
+								numberOfLines={1}
+								style={[styles.cardtitle, { textAlign: "center" }]}
+							>
 								{marker.title}
 							</Text>
-							<Text numberOfLines={1} style={styles.cardDescription}>
+							<Text
+								numberOfLines={1}
+								style={{ textAlign: "center", fontSize: 12, color: "#444" }}
+							>
 								{marker.description}
 							</Text>
 							<View>
@@ -573,12 +586,18 @@ const MapScreen = ({ navigation }) => {
 											longitudeDelta: 0.00121,
 										});
 									}}
+									style={{
+										marginTop: 4,
+										backgroundColor: "#FF6347",
+										borderRadius: 5,
+									}}
 								>
 									<Text
 										style={[
 											styles.textSign,
 											{
-												color: "#FF6347",
+												color: "white",
+												textAlign: "center",
 											},
 										]}
 									>
@@ -589,12 +608,18 @@ const MapScreen = ({ navigation }) => {
 									onPress={() => {
 										navigation.navigate("MapHunt", { marker: markers[index] });
 									}}
+									style={{
+										marginTop: 4,
+										backgroundColor: "#FF6347",
+										borderRadius: 5,
+									}}
 								>
 									<Text
 										style={[
 											styles.textSign,
 											{
-												color: "#FF6347",
+												color: "white",
+												textAlign: "center",
 											},
 										]}
 									>
@@ -605,12 +630,19 @@ const MapScreen = ({ navigation }) => {
 									onPress={(e) => {
 										setFacName(marker.title);
 									}}
+									style={{
+										marginTop: 4,
+										// backgroundColor: "#E9E1DF",
+										backgroundColor: "#FF6347",
+										borderRadius: 5,
+									}}
 								>
 									<Text
 										style={[
 											styles.textSign,
 											{
-												color: "#FF6347",
+												color: "white",
+												textAlign: "center",
 											},
 										]}
 									>
@@ -652,8 +684,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 20,
 		elevation: 2,
 		backgroundColor: "#FFF",
-		borderTopLeftRadius: 5,
-		borderTopRightRadius: 5,
+		borderRadius: 5,
 		marginHorizontal: 10,
 		shadowColor: "#000",
 		shadowRadius: 5,
