@@ -70,10 +70,8 @@ export default function ChatScreen({ navigation }) {
 	};
 
 	const renderChatFooter = () => {
-		return(
-		  <View style={{height:16}}></View>
-		)
-	}	
+		return <View style={{ height: 16 }}></View>;
+	};
 
 	useEffect(() => {
 		const collectionRef = collection(db, "chats");
@@ -86,24 +84,6 @@ export default function ChatScreen({ navigation }) {
 					createdAt: doc.data().createdAt.toDate(),
 					text: doc.data().text,
 					user: doc.data().user,
-					quickReplies: {
-						type: "checkbox", // or 'checkbox',
-						keepIt: false,
-						values: [
-							{
-								title: "😤 Let's Go!",
-								value: "😤 Let's Go!",
-							},
-							{
-								title: "❌ Nah!",
-								value: "❌ Nah!",
-							},
-							{
-								title: "❓ Where?",
-								value: "❓ Where?",
-							},
-						],
-					},
 				}))
 			);
 		});
@@ -135,10 +115,7 @@ export default function ChatScreen({ navigation }) {
 	);
 
 	return (
-		<LinearGradient 
-			colors={["#C3E8FD", "#EFF8FD"]}
-			style={styles.container}
-		>
+		<LinearGradient colors={["#C3E8FD", "#EFF8FD"]} style={styles.container}>
 			{loadingIndication && (
 				<View
 					style={{
@@ -247,13 +224,13 @@ export default function ChatScreen({ navigation }) {
 				isTyping={isTyping}
 				infiniteScroll
 				renderInputToolbar={(props) => (
-					<InputToolbar 
-						{...props} 
+					<InputToolbar
+						{...props}
 						containerStyle={{
 							paddingVertical: 8,
 							borderColor: "#888888",
 							borderBottomWidth: 0.2,
-						}} 
+						}}
 					/>
 				)}
 				renderChatFooter={renderChatFooter}
