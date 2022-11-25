@@ -690,7 +690,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 5,
 		shadowOpacity: 0.3,
 		shadowOffset: { x: 2, y: -2 },
-		height: 220,
+		height: 255,
 		width: CARD_WIDTH,
 		overflow: "hidden",
 	},
