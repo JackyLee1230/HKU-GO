@@ -47,30 +47,32 @@ const MapScreen = ({ navigation }) => {
 		navigation.setOptions({
 			userName: auth?.currentUser?.displayName ?? "Anonymous",
 			userPoint: points,
-			userAvatar: () => <TouchableOpacity
-									stlye={{
-										justifyContent: "center",
-										alignSelf: "center",
-										alignItem: "center",
-									}}
-									onPress={() => {
-										navigation.navigate("ProfileStack");
-									}}
-								>
-									<Image
-										style={{
-											height: 40,
-											width: 40,
-											borderRadius: 100,
-										}}
-										source={{
-											uri: auth?.currentUser
-												? auth?.currentUser?.userImg ||
-												"https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
-												: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
-										}}
-									/>
-								</TouchableOpacity>
+			userAvatar: () => (
+				<TouchableOpacity
+					stlye={{
+						justifyContent: "center",
+						alignSelf: "center",
+						alignItem: "center",
+					}}
+					onPress={() => {
+						navigation.navigate("ProfileStack");
+					}}
+				>
+					<Image
+						style={{
+							height: 40,
+							width: 40,
+							borderRadius: 100,
+						}}
+						source={{
+							uri: auth?.currentUser
+								? auth?.currentUser?.userImg ||
+								  "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
+								: "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
+						}}
+					/>
+				</TouchableOpacity>
+			),
 		});
 	});
 
@@ -309,9 +311,11 @@ const MapScreen = ({ navigation }) => {
 	const containerStyle = {
 		backgroundColor: "white",
 		padding: 20,
-		width: "80%",
-		alignSelf: "center",
-		borderRadius: 16,
+		paddingVertical: 16,
+		marginHorizontal: 42,
+		borderRadius: 8,
+		elevation: 10,
+		shadowColor: "#171717",
 	};
 
 	const _scrollView = React.useRef(null);
@@ -320,105 +324,169 @@ const MapScreen = ({ navigation }) => {
 		<View style={styles.container}>
 			<Portal>
 				<Modal
+					propagateSwipe={true}
 					visible={visible}
 					onDismiss={hideModal}
 					contentContainerStyle={containerStyle}
 				>
-					<Text style={{ fontSize: 24, alignSelf: "center" }}>
-						{facName}
-						{"\n"}
-					</Text>
-
-					<Text>
-						{result &&
-						result.description &&
-						result.description.length > 200 &&
-						hideDesc
-							? result.description.substring(0, 200) + "..."
-							: result && result.description}
-					</Text>
-
-					{result && result.description && result.description.length > 200 && (
-						<Button
-							mode="contained"
-							onPress={() => {
-								setHideDesc(!hideDesc);
+					<ScrollView>
+						<Text
+							style={{
+								fontSize: 24,
+								fontWeight: "700",
+								color: "#06283D",
+								alignSelf: "center",
 							}}
 						>
-							{hideDesc ? "Show More" : "Show Less"}
-						</Button>
-					)}
+							{facName}
+							{"\n"}
+						</Text>
 
-					{result && result.departments && result.departments != [] ? (
-						<>
-							<Text>Departments Associated:</Text>
-							<Text>
+						<View
+							style={{
+								padding: 8,
+								borderRadius: 4,
+								borderColor: "#06283D",
+								borderWidth: 1.5,
+							}}
+						>
+							<Text
+								style={{
+									fontSize: 14,
+									color: "#444444",
+								}}
+							>
 								{result &&
-									result.departments.map((dep, idx) => {
-										return (
-											<Text key={idx}>
-												{idx + 1}: {dep}
-												{"\n"}
-											</Text>
-										);
-									})}
+								result.description &&
+								result.description.length > 200 &&
+								hideDesc
+									? result.description.substring(0, 200) + "..."
+									: result && result.description}
 							</Text>
-						</>
-					) : null}
+						</View>
 
-					{result && result.facilities && result.facilities != [] ? (
-						<>
-							<Text>Facilities:</Text>
-							<Text>
-								{result &&
-									result.facilities.map((f, idx) => {
-										return (
-											<Text key={idx}>
-												{f}
-												{"\n"}
-											</Text>
-										);
-									})}
-							</Text>
-						</>
-					) : null}
+						{result && result.description && result.description.length > 200 && (
+							<Button
+								mode="contained"
+								onPress={() => {
+									setHideDesc(!hideDesc);
+								}}
+								style={{
+									alignSelf: "center",
+									marginTop: 4,
+									marginBottom: 16,
+									backgroundColor: "#FF8787",
+								}}
+							>
+								{hideDesc ? "Show More" : "Show Less"}
+							</Button>
+						)}
 
-					{result && result.links && result.links != [] ? (
-						<>
-							{result && result.links && result.links.length !== 0 ? (
-								<Text>Links:</Text>
-							) : (
-								<Text>Links: N/A</Text>
-							)}
-							<Text>
-								{result && result.links
-									? result.links.map((link, idx) => {
+						{result && result.departments && result.departments != [] ? (
+							<>
+								<Text
+									style={{
+										fontSize: 18,
+										color: "#222222",
+										fontWeight: "600",
+									}}
+								>
+									Departments Associated:
+								</Text>
+								<Text>
+									{result &&
+										result.departments.map((dep, idx) => {
 											return (
-												<Text
-													key={idx}
-													style={{ color: "blue" }}
-													onPress={() => Linking.openURL(link)}
-												>
-													{idx + 1}: {link}
+												<Text key={idx}>
+													{idx + 1}: {dep}
 													{"\n"}
 												</Text>
 											);
-									  })
-									: null}
-							</Text>
-						</>
-					) : null}
+										})}
+								</Text>
+							</>
+						) : null}
 
-					<Button
-						mode="contained"
-						onPress={hideModal}
-						style={{
-							marginTop: 24,
-							backgroundColor: "#00C851",
-						}}
-					>
-						CLOSE
-					</Button>
+						{result && result.facilities && result.facilities != [] ? (
+							<>
+								<Text
+									style={{
+										fontSize: 18,
+										color: "#222222",
+										fontWeight: "600",
+									}}
+								>
+									Facilities:
+								</Text>
+								<Text>
+									{result &&
+										result.facilities.map((f, idx) => {
+											return (
+												<Text key={idx}>
+													{f}
+													{"\n"}
+												</Text>
+											);
+										})}
+								</Text>
+							</>
+						) : null}
+
+						{result && result.links && result.links != [] ? (
+							<>
+								{result && result.links && result.links.length !== 0 ? (
+									<Text
+										style={{
+											fontSize: 18,
+											color: "#222222",
+											fontWeight: "600",
+										}}
+									>
+										Links:
+									</Text>
+								) : (
+									<>
+										<Text
+											style={{
+												fontSize: 18,
+												color: "#222222",
+												fontWeight: "600",
+											}}
+										>
+											Links:
+										</Text>
+										<Text>N/A</Text>
+									</>
+								)}
+								<Text>
+									{result && result.links
+										? result.links.map((link, idx) => {
+												return (
+													<Text
+														key={idx}
+														style={{ color: "blue" }}
+														onPress={() => Linking.openURL(link)}
+													>
+														{idx + 1}: {link}
+														{"\n"}
+													</Text>
+												);
+										  })
+										: null}
+								</Text>
+							</>
+						) : null}
+
+						<Button
+							mode="contained"
+							onPress={hideModal}
+							style={{
+								backgroundColor: "#00C851",
+							}}
+						>
+							CLOSE
+						</Button>
+					</ScrollView>
 				</Modal>
 			</Portal>
 			<MapView
@@ -453,6 +521,7 @@ const MapScreen = ({ navigation }) => {
 				})}
 			</MapView>
 			<FAB
+				color="#fff"
 				icon={mapType === "standard" ? "map-plus" : "map"}
 				style={styles.fab}
 				onPress={() => changeMapType()}
@@ -495,13 +564,19 @@ const MapScreen = ({ navigation }) => {
 							resizeMode="cover"
 						/>
 						<View style={styles.textContent}>
-							<Text numberOfLines={1} style={styles.cardtitle}>
+							<Text
+								numberOfLines={1}
+								style={[styles.cardtitle, { textAlign: "center" }]}
+							>
 								{marker.title}
 							</Text>
-							<Text numberOfLines={1} style={styles.cardDescription}>
+							<Text
+								numberOfLines={1}
+								style={{ textAlign: "center", fontSize: 12, color: "#444" }}
+							>
 								{marker.description}
 							</Text>
-							<View style={styles.button}>
+							<View>
 								<TouchableOpacity
 									onPress={(e) => {
 										setRegion({
@@ -511,12 +586,18 @@ const MapScreen = ({ navigation }) => {
 											longitudeDelta: 0.00121,
 										});
 									}}
+									style={{
+										marginTop: 4,
+										backgroundColor: "#FF6347",
+										borderRadius: 5,
+									}}
 								>
 									<Text
 										style={[
 											styles.textSign,
 											{
-												color: "#FF6347",
+												color: "white",
+												textAlign: "center",
 											},
 										]}
 									>
@@ -524,15 +605,44 @@ const MapScreen = ({ navigation }) => {
 									</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
-									onPress={(e) => {
-										setFacName(marker.title);
+									onPress={() => {
+										navigation.navigate("MapHunt", { marker: markers[index] });
+									}}
+									style={{
+										marginTop: 4,
+										backgroundColor: "#FF6347",
+										borderRadius: 5,
 									}}
 								>
 									<Text
 										style={[
 											styles.textSign,
 											{
-												color: "#FF6347",
+												color: "white",
+												textAlign: "center",
+											},
+										]}
+									>
+										Start the Hunt
+									</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									onPress={(e) => {
+										setFacName(marker.title);
+									}}
+									style={{
+										marginTop: 4,
+										// backgroundColor: "#E9E1DF",
+										backgroundColor: "#FF6347",
+										borderRadius: 5,
+									}}
+								>
+									<Text
+										style={[
+											styles.textSign,
+											{
+												color: "white",
+												textAlign: "center",
 											},
 										]}
 									>
@@ -556,7 +666,8 @@ const styles = StyleSheet.create({
 		borderRadius: 6,
 		borderColor: "#ccc",
 		borderWidth: 0.5,
-		padding: 15,
+		paddingHorizontal: 16,
+		paddingVertical: 24,
 		width: 150,
 	},
 	name: {
@@ -570,11 +681,10 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	card: {
-		padding: 10,
+		paddingBottom: 20,
 		elevation: 2,
 		backgroundColor: "#FFF",
-		borderTopLeftRadius: 5,
-		borderTopRightRadius: 5,
+		borderRadius: 5,
 		marginHorizontal: 10,
 		shadowColor: "#000",
 		shadowRadius: 5,
@@ -600,7 +710,6 @@ const styles = StyleSheet.create({
 	},
 	cardtitle: {
 		fontSize: 12,
-		// marginTop: 5,
 		fontWeight: "bold",
 	},
 	cardDescription: {
@@ -629,6 +738,7 @@ const styles = StyleSheet.create({
 		margin: 16,
 		right: 5,
 		top: "3%",
+		backgroundColor: "#47B5FF",
 	},
 	image: {
 		width: 80,

@@ -1,13 +1,11 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, LogBox } from "react-native";
+import { StyleSheet, LogBox } from "react-native";
 import RootStackNavigator from "./src/navigation/RootStackNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import TabBar from "./src/TabBar";
 import { Provider as PaperProvider } from "react-native-paper";
 
 export default function App() {
-	// LogBox.ignoreAllLogs();
+	LogBox.ignoreAllLogs();
 
 	return (
 		<PaperProvider>

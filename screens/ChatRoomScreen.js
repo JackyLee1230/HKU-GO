@@ -8,6 +8,7 @@ import {
 	IMessage,
 	Send,
 	SendProps,
+	InputToolbar,
 } from "react-native-gifted-chat";
 import {
 	collection,
@@ -29,7 +30,11 @@ import {
 	RadioButton,
 	TextInput,
 	ActivityIndicator,
+	FAB,
 } from "react-native-paper";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
+import { LinearGradient } from "expo-linear-gradient";
 
 const filterBotMessages = (message) =>
 	!message.system && message.user && message.user._id && message.user._id === 2;
@@ -64,6 +69,12 @@ export default function ChatScreen({ navigation }) {
 		});
 	};
 
+	const renderChatFooter = () => {
+		return(
+		  <View style={{height:16}}></View>
+		)
+	}	
+
 	useEffect(() => {
 		const collectionRef = collection(db, "chats");
 		const q = query(collectionRef, orderBy("createdAt", "desc"));
@@ -75,6 +86,24 @@ export default function ChatScreen({ navigation }) {
 					createdAt: doc.data().createdAt.toDate(),
 					text: doc.data().text,
 					user: doc.data().user,
+					quickReplies: {
+						type: "checkbox", // or 'checkbox',
+						keepIt: false,
+						values: [
+							{
+								title: "😤 Let's Go!",
+								value: "😤 Let's Go!",
+							},
+							{
+								title: "❌ Nah!",
+								value: "❌ Nah!",
+							},
+							{
+								title: "❓ Where?",
+								value: "❓ Where?",
+							},
+						],
+					},
 				}))
 			);
 		});
@@ -106,7 +135,10 @@ export default function ChatScreen({ navigation }) {
 	);
 
 	return (
-		<View style={styles.container}>
+		<LinearGradient 
+			colors={["#C3E8FD", "#EFF8FD"]}
+			style={styles.container}
+		>
 			{loadingIndication && (
 				<View
 					style={{
@@ -124,7 +156,6 @@ export default function ChatScreen({ navigation }) {
 					<ActivityIndicator color={"#47B5FF"} size={"large"} />
 				</View>
 			)}
-
 			<Portal>
 				<Modal
 					visible={visible}
@@ -178,6 +209,7 @@ export default function ChatScreen({ navigation }) {
 				</Modal>
 			</Portal>
 			<GiftedChat
+				wrapInSafeArea={false}
 				messages={messages}
 				onSend={onSend}
 				loadEarlier={loadEarlier}
@@ -214,15 +246,25 @@ export default function ChatScreen({ navigation }) {
 				timeTextStyle={{ left: { color: "red" }, right: { color: "yellow" } }}
 				isTyping={isTyping}
 				infiniteScroll
+				renderInputToolbar={(props) => (
+					<InputToolbar 
+						{...props} 
+						containerStyle={{
+							paddingVertical: 8,
+							borderColor: "#888888",
+							borderBottomWidth: 0.2,
+						}} 
+					/>
+				)}
+				renderChatFooter={renderChatFooter}
 			/>
-		</View>
+		</LinearGradient>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
 	},
 	userImg: {
 		height: 150,

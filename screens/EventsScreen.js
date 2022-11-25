@@ -6,6 +6,7 @@ import {
 	Pressable,
 	Image,
 	TouchableOpacity,
+	Keyboard,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import {
@@ -47,6 +48,27 @@ const EventsScreen = ({ navigation, route }) => {
 	const isFocused = useIsFocused();
 	const [loadingIndication, setLoadingIndication] = useState(false);
 	const [onTop, setOnTop] = useState(true);
+	const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+	useEffect(() => {
+		const keyboardDidShowListener = Keyboard.addListener(
+		  'keyboardDidShow',
+		  () => {
+			setKeyboardVisible(true); // or some other action
+		  }
+		);
+		const keyboardDidHideListener = Keyboard.addListener(
+		  'keyboardDidHide',
+		  () => {
+			setKeyboardVisible(false); // or some other action
+		  }
+		);
+	
+		return () => {
+		  keyboardDidHideListener.remove();
+		  keyboardDidShowListener.remove();
+		};
+	  }, []);
 
 	const { type } = route.params;
 	useEffect(() => {
@@ -251,11 +273,13 @@ const EventsScreen = ({ navigation, route }) => {
 					<FAB
 						visible={isFocused}
 						icon={"arrow-up-drop-circle-outline"}
+						color="#fff"
 						style={{
 							position: "absolute",
 							margin: 16,
 							right: 0,
-							bottom: "18%",
+							bottom: isKeyboardVisible ? "12%" : "18%",
+							backgroundColor: "#7FB77E",
 						}}
 						onPress={() => {
 							scrollRef.current?.scrollToOffset({
@@ -323,7 +347,9 @@ const EventsScreen = ({ navigation, route }) => {
 						}
 					}}
 					style={{
-						marginBottom: 82,
+						position: "absolute",
+						right: 0,
+						bottom: isKeyboardVisible ? 0 : "10%",
 						fabText: {
 							textAlign: "center",
 						},

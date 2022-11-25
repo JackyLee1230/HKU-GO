@@ -21,17 +21,44 @@ const BeforeLoginStackNavigator = () => {
 			<Stack.Screen
 				name="Login"
 				component={LoginScreen}
-				options={{ title: "Sign In" }}
+				options={{ 
+					title: "Sign In",
+					headerStyle: {
+						backgroundColor: '#47B5FF',
+					},
+					headerTintColor: '#fff',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
+				}}
 			/>
 			<Stack.Screen
 				name="ResetPassword"
 				component={ResetPasswordScreen}
-				options={{ title: "Reset Password" }}
+				options={{ 
+					headerStyle: {
+						backgroundColor: '#47B5FF',
+					},
+					headerTintColor: '#fff',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
+					title: "Reset Password" 
+				}}
 			/>
 			<Stack.Screen 
 				name="Register" 
 				component={RegisterScreen} 
-				options={{ title: "Register Account" }}
+				options={{ 
+					headerStyle: {
+						backgroundColor: '#47B5FF',
+					},
+					headerTintColor: '#fff',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
+					title: "Register Account" 
+				}}
 			/>
 		</Stack.Navigator>
 	);
