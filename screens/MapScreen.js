@@ -362,6 +362,8 @@ const MapScreen = ({ navigation }) => {
 								hideDesc
 									? result.description.substring(0, 200) + "..."
 									: result && result.description}
+
+								{!result || !result.description && "No Information Available"}
 							</Text>
 						</View>
 
