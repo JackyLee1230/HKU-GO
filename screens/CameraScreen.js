@@ -161,13 +161,13 @@ const CameraCompo = ({ navigation }) => {
 											{presentedShape !== "Not Valid" &&
 											presentedShape !== "" ? (
 												<>
-													<Text style={{ fontWeight: "bold" }}>
+													<Text style={{ fontWeight: "bold", fontSize: 22, color: "#256D85"}}>
 														{presentedShape}
 													</Text>
 													{exist === 0 ? (
-														<Text>You got 20 points!</Text>
+														<Text style={{ fontSize: 16, color: "#256D85"}}>You got 20 points!</Text>
 													) : (
-														<Text>You have already visited this place!</Text>
+														<Text style={{ fontSize: 16, color: "#256D85"}}>You have already visited this place!</Text>
 													)}
 												</>
 											) : null}
@@ -178,8 +178,8 @@ const CameraCompo = ({ navigation }) => {
 
 									{presentedShape == "Not Valid" ? (
 										<>
-											<Text>Detection failed.</Text>
-											<Text>Please try again.</Text>
+											<Text style={{ fontWeight: "bold", fontSize: 22, color: "#256D85"}}>Detection failed.</Text>
+											<Text style={{ fontSize: 16, color: "#256D85"}}>Please try again.</Text>
 										</>
 									) : null}
 
@@ -201,7 +201,7 @@ const CameraCompo = ({ navigation }) => {
 											setIsProcessing(false);
 										}}
 									>
-										<Text>Dismiss</Text>
+										<Text style={{ fontWeight: "bold", fontSize: 18, color: "#fff"}}>Dismiss</Text>
 									</Pressable>
 								</View>
 							</View>
@@ -290,6 +290,8 @@ const styles = StyleSheet.create({
 		height: "100%",
 		alignItems: "center",
 		justifyContent: "center",
+		elevation: 10,
+		shadowColor: "#171717",
 	},
 	modalContent: {
 		alignItems: "center",
@@ -297,7 +299,7 @@ const styles = StyleSheet.create({
 		width: 300,
 		height: 300,
 		borderRadius: 24,
-		backgroundColor: "gray",
+		backgroundColor: "white",
 	},
 	dismissButton: {
 		width: 150,
@@ -307,7 +309,7 @@ const styles = StyleSheet.create({
 		color: "white",
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "red",
+		backgroundColor: "#FF4444",
 	},
 });
 
