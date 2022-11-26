@@ -176,9 +176,16 @@ const CameraCompo = ({ navigation }) => {
 										<ActivityIndicator size="large" />
 									)}
 
-									{presentedShape == "Not Valid" ? (
+									{!presentedShape || presentedShape === "" &&(
 										<>
-											<Text style={{ fontWeight: "bold", fontSize: 22, color: "#256D85"}}>Detection failed.</Text>
+											<Text style={{ fontWeight: "bold", fontSize: 22, color: "#256D85"}}>Loading...</Text>
+											<Text style={{ fontSize: 16, color: "#256D85"}}>Please wait.</Text>
+										</>
+									)}
+
+									{presentedShape === "Not Valid" ? (
+										<>
+											<Text style={{ fontWeight: "bold", fontSize: 22, color: "#256D85"}}>Detection Failed.</Text>
 											<Text style={{ fontSize: 16, color: "#256D85"}}>Please try again.</Text>
 										</>
 									) : null}
