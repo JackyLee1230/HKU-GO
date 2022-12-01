@@ -176,7 +176,7 @@ const CameraCompo = ({ navigation }) => {
 										<ActivityIndicator size="large" />
 									)}
 
-									{!presentedShape || presentedShape === "" &&(
+									{(!presentedShape || presentedShape === "") &&(
 										<>
 											<Text style={{ fontWeight: "bold", fontSize: 22, color: "#256D85"}}>Loading...</Text>
 											<Text style={{ fontSize: 16, color: "#256D85"}}>Please wait.</Text>
